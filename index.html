@@ -1,0 +1,1786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AvicnKnov Exchange</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  --bg: #000000;
+  --surface: #0a0a0a;
+  --surface2: #111111;
+  --surface3: #1a1a1a;
+  --border: #222222;
+  --border2: #2e2e2e;
+  --text: #ffffff;
+  --text2: #aaaaaa;
+  --text3: #666666;
+  --accent: #ffffff;
+  --accent2: #cccccc;
+  --danger: #ff4444;
+  --success: #44ff88;
+  --glow: rgba(255,255,255,0.05);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+html{scroll-behavior:smooth}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Inter',sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+  cursor:default;
+}
+
+/* NOISE TEXTURE OVERLAY */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;
+  z-index:9999;
+  opacity:0.4;
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:#000}
+::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
+
+/* ===== NAVBAR ===== */
+.navbar{
+  position:fixed;
+  top:0;left:0;right:0;
+  height:64px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 24px;
+  background:rgba(0,0,0,0.85);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  z-index:1000;
+}
+
+.nav-left{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.nav-logo{
+  width:36px;height:36px;
+  background:#fff;
+  border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+  padding:3px;
+}
+
+.nav-logo img{width:100%;height:100%;object-fit:contain;filter:invert(1)}
+
+.nav-brand{
+  font-family:'Syne',sans-serif;
+  font-weight:800;
+  font-size:18px;
+  letter-spacing:0.02em;
+  color:#fff;
+}
+
+.nav-brand span{color:var(--text3)}
+
+.nav-center{
+  flex:1;
+  max-width:400px;
+  margin:0 32px;
+  position:relative;
+}
+
+.search-wrapper{
+  position:relative;
+}
+
+.search-input{
+  width:100%;
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:9px 44px 9px 16px;
+  color:#fff;
+  font-family:'Inter',sans-serif;
+  font-size:13px;
+  outline:none;
+  transition:all 0.2s;
+}
+
+.search-input::placeholder{color:var(--text3)}
+.search-input:focus{border-color:var(--border2);background:var(--surface3)}
+
+.search-icon{
+  position:absolute;
+  right:12px;top:50%;transform:translateY(-50%);
+  color:var(--text3);
+  cursor:pointer;
+  display:flex;align-items:center;
+  font-size:15px;
+  transition:color 0.2s;
+}
+.search-icon:hover{color:#fff}
+
+.search-dropdown{
+  position:absolute;
+  top:calc(100% + 8px);
+  left:0;right:0;
+  background:var(--surface2);
+  border:1px solid var(--border2);
+  border-radius:12px;
+  overflow:hidden;
+  display:none;
+  z-index:200;
+  box-shadow:0 20px 60px rgba(0,0,0,0.8);
+}
+
+.search-dropdown.active{display:block;animation:fadeDown 0.15s ease}
+
+@keyframes fadeDown{
+  from{opacity:0;transform:translateY(-6px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.search-item{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px 16px;
+  cursor:pointer;
+  transition:background 0.15s;
+  border-bottom:1px solid var(--border);
+}
+.search-item:last-child{border-bottom:none}
+.search-item:hover{background:var(--surface3)}
+
+.search-token-icon{
+  width:32px;height:32px;
+  border-radius:50%;
+  background:var(--surface3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;
+  overflow:hidden;
+}
+.search-token-icon img{width:100%;height:100%;object-fit:cover}
+
+.search-token-name{font-size:13px;font-weight:600}
+.search-token-symbol{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace}
+.search-token-price{margin-left:auto;font-family:'DM Mono',monospace;font-size:12px;color:var(--text2)}
+
+.search-no-result{
+  padding:20px;
+  text-align:center;
+  color:var(--text3);
+  font-size:13px;
+}
+
+.nav-right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+/* NAV ICON BUTTONS */
+.nav-icon-btn{
+  width:38px;height:38px;
+  border-radius:9px;
+  background:var(--surface2);
+  border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  color:var(--text2);
+  transition:all 0.2s;
+  position:relative;
+}
+.nav-icon-btn:hover{background:var(--surface3);color:#fff;border-color:var(--border2)}
+
+/* SIDEBAR PANEL */
+.side-panel{
+  position:fixed;
+  top:64px;right:0;
+  width:280px;
+  height:calc(100vh - 64px);
+  background:var(--surface);
+  border-left:1px solid var(--border);
+  transform:translateX(100%);
+  transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);
+  z-index:900;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+.side-panel.open{transform:translateX(0)}
+
+.panel-header{
+  padding:20px;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.panel-title{font-family:'Syne',sans-serif;font-weight:700;font-size:15px}
+
+.panel-close{
+  width:28px;height:28px;
+  border-radius:7px;
+  background:var(--surface2);
+  border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  color:var(--text2);
+  font-size:14px;
+  transition:all 0.2s;
+}
+.panel-close:hover{background:var(--surface3);color:#fff}
+
+.panel-content{padding:16px;flex:1;overflow-y:auto}
+
+.panel-item{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:14px;
+  border-radius:10px;
+  cursor:pointer;
+  transition:background 0.15s;
+  margin-bottom:4px;
+}
+.panel-item:hover{background:var(--surface2)}
+
+.panel-item-icon{
+  width:36px;height:36px;
+  border-radius:9px;
+  background:var(--surface2);
+  border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;
+}
+.panel-item-text{}
+.panel-item-label{font-size:13px;font-weight:600;margin-bottom:2px}
+.panel-item-desc{font-size:11px;color:var(--text3)}
+
+/* AUTH BUTTONS */
+.btn-login{
+  padding:9px 20px;
+  border-radius:9px;
+  background:var(--surface2);
+  border:1px solid var(--border2);
+  color:var(--text2);
+  font-family:'Inter',sans-serif;
+  font-size:13px;
+  font-weight:500;
+  cursor:pointer;
+  transition:all 0.2s;
+}
+.btn-login:hover{background:var(--surface3);color:#fff}
+
+.btn-signup{
+  padding:9px 20px;
+  border-radius:9px;
+  background:#fff;
+  border:1px solid #fff;
+  color:#000;
+  font-family:'Inter',sans-serif;
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all 0.2s;
+}
+.btn-signup:hover{background:#ddd;border-color:#ddd}
+
+/* ===== MODAL ===== */
+.modal-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.8);
+  backdrop-filter:blur(8px);
+  z-index:2000;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+.modal-overlay.active{display:flex;animation:overlayIn 0.2s ease}
+
+@keyframes overlayIn{from{opacity:0}to{opacity:1}}
+
+.modal{
+  background:var(--surface);
+  border:1px solid var(--border2);
+  border-radius:20px;
+  width:100%;
+  max-width:420px;
+  max-height:90vh;
+  overflow-y:auto;
+  padding:32px;
+  position:relative;
+  animation:modalIn 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+
+@keyframes modalIn{
+  from{opacity:0;transform:scale(0.95) translateY(10px)}
+  to{opacity:1;transform:scale(1) translateY(0)}
+}
+
+.modal-close-btn{
+  position:absolute;
+  top:16px;right:16px;
+  width:32px;height:32px;
+  border-radius:8px;
+  background:var(--surface2);
+  border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  color:var(--text2);
+  font-size:16px;
+  transition:all 0.2s;
+}
+.modal-close-btn:hover{background:var(--surface3);color:#fff}
+
+.modal-logo{
+  width:48px;height:48px;
+  background:#fff;
+  border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:20px;
+  padding:4px;
+  overflow:hidden;
+}
+.modal-logo img{width:100%;height:100%;object-fit:contain;filter:invert(1)}
+
+.modal-title{
+  font-family:'Syne',sans-serif;
+  font-weight:800;
+  font-size:24px;
+  margin-bottom:6px;
+}
+.modal-subtitle{color:var(--text3);font-size:13px;margin-bottom:28px}
+
+/* FORM */
+.form-group{margin-bottom:16px;position:relative}
+
+.form-label{
+  display:block;
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  color:var(--text3);
+  margin-bottom:8px;
+}
+
+.form-input{
+  width:100%;
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:12px 16px;
+  color:#fff;
+  font-family:'Inter',sans-serif;
+  font-size:14px;
+  outline:none;
+  transition:all 0.2s;
+}
+.form-input::placeholder{color:var(--text3)}
+.form-input:focus{border-color:var(--border2);background:var(--surface3)}
+.form-input.error{border-color:var(--danger)}
+
+.input-with-icon{position:relative}
+.input-with-icon .form-input{padding-right:44px}
+.input-eye{
+  position:absolute;
+  right:14px;top:50%;transform:translateY(-50%);
+  cursor:pointer;
+  color:var(--text3);
+  font-size:16px;
+  transition:all 0.2s;
+  user-select:none;
+}
+.input-eye:hover{color:var(--text2)}
+
+/* SELECT */
+.form-select{
+  width:100%;
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:12px 16px;
+  color:#fff;
+  font-family:'Inter',sans-serif;
+  font-size:14px;
+  outline:none;
+  appearance:none;
+  cursor:pointer;
+  transition:all 0.2s;
+}
+.form-select:focus{border-color:var(--border2)}
+.form-select option{background:#111;color:#fff}
+
+.select-wrap{position:relative}
+.select-wrap::after{
+  content:'▾';
+  position:absolute;
+  right:14px;top:50%;transform:translateY(-50%);
+  color:var(--text3);
+  pointer-events:none;
+  font-size:12px;
+}
+
+/* DATE OF BIRTH */
+.dob-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+
+/* PHONE ROW */
+.phone-row{display:flex;gap:8px}
+.phone-code{width:90px;flex-shrink:0}
+
+/* ERROR MSG */
+.form-error{
+  font-size:11px;
+  color:var(--danger);
+  margin-top:6px;
+  display:none;
+}
+.form-error.show{display:block}
+
+.form-hint{font-size:11px;color:var(--text3);margin-top:6px}
+
+/* DIVIDER */
+.form-divider{
+  display:flex;align-items:center;gap:12px;
+  margin:20px 0;
+  color:var(--text3);font-size:12px;
+}
+.form-divider::before,.form-divider::after{
+  content:'';flex:1;height:1px;background:var(--border);
+}
+
+/* FORGOT LINK */
+.forgot-link{
+  font-size:12px;color:var(--text3);
+  text-decoration:none;
+  transition:color 0.2s;
+  cursor:pointer;
+  display:block;
+  text-align:right;
+  margin-top:-8px;
+  margin-bottom:16px;
+}
+.forgot-link:hover{color:#fff}
+
+/* SUBMIT BTN */
+.btn-submit{
+  width:100%;
+  padding:14px;
+  border-radius:10px;
+  background:#fff;
+  border:none;
+  color:#000;
+  font-family:'Syne',sans-serif;
+  font-weight:700;
+  font-size:14px;
+  cursor:pointer;
+  transition:all 0.2s;
+  margin-top:4px;
+  letter-spacing:0.03em;
+}
+.btn-submit:hover{background:#e0e0e0;transform:translateY(-1px)}
+.btn-submit:active{transform:translateY(0)}
+.btn-submit:disabled{background:#333;color:#666;cursor:not-allowed;transform:none}
+
+.btn-submit-secondary{
+  width:100%;
+  padding:14px;
+  border-radius:10px;
+  background:transparent;
+  border:1px solid var(--border2);
+  color:var(--text2);
+  font-family:'Syne',sans-serif;
+  font-weight:600;
+  font-size:14px;
+  cursor:pointer;
+  transition:all 0.2s;
+  margin-top:10px;
+}
+.btn-submit-secondary:hover{background:var(--surface2);color:#fff}
+
+/* SWITCH AUTH */
+.switch-auth{
+  text-align:center;
+  margin-top:20px;
+  font-size:13px;
+  color:var(--text3);
+}
+.switch-auth span{color:#fff;cursor:pointer;font-weight:600}
+.switch-auth span:hover{text-decoration:underline}
+
+/* SUCCESS MESSAGE */
+.success-box{
+  background:rgba(68,255,136,0.05);
+  border:1px solid rgba(68,255,136,0.2);
+  border-radius:10px;
+  padding:16px;
+  text-align:center;
+  display:none;
+}
+.success-box.show{display:block}
+.success-box h3{color:var(--success);font-family:'Syne',sans-serif;margin-bottom:8px}
+.success-box p{color:var(--text2);font-size:13px;line-height:1.6}
+
+/* ===== HERO SECTION ===== */
+.hero{
+  min-height:100vh;
+  padding:120px 24px 60px;
+  max-width:1200px;
+  margin:0 auto;
+}
+
+.hero-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background:var(--surface2);
+  border:1px solid var(--border2);
+  border-radius:100px;
+  padding:6px 14px;
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  color:var(--text2);
+  margin-bottom:32px;
+}
+
+.badge-dot{
+  width:6px;height:6px;
+  border-radius:50%;
+  background:var(--success);
+  animation:pulse 2s infinite;
+}
+
+@keyframes pulse{
+  0%,100%{opacity:1;transform:scale(1)}
+  50%{opacity:0.5;transform:scale(0.8)}
+}
+
+.hero-title{
+  font-family:'Syne',sans-serif;
+  font-weight:800;
+  font-size:clamp(40px,6vw,80px);
+  line-height:1.05;
+  letter-spacing:-0.02em;
+  margin-bottom:24px;
+}
+
+.hero-title .dim{color:var(--text3)}
+
+.hero-sub{
+  font-size:16px;
+  color:var(--text2);
+  max-width:520px;
+  line-height:1.7;
+  margin-bottom:48px;
+}
+
+.hero-stats{
+  display:flex;
+  gap:40px;
+  flex-wrap:wrap;
+  margin-bottom:64px;
+}
+
+.stat{
+  border-left:2px solid var(--border2);
+  padding-left:20px;
+}
+.stat-val{
+  font-family:'DM Mono',monospace;
+  font-size:22px;
+  font-weight:500;
+  color:#fff;
+  margin-bottom:4px;
+}
+.stat-label{font-size:12px;color:var(--text3)}
+
+/* ===== MARQUEE ===== */
+.marquee-section{
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  padding:14px 0;
+  overflow:hidden;
+  position:relative;
+  margin-bottom:80px;
+  background:var(--surface);
+}
+
+.marquee-track{
+  display:flex;
+  gap:0;
+  animation:marquee 30s linear infinite;
+  width:max-content;
+}
+
+@keyframes marquee{
+  from{transform:translateX(0)}
+  to{transform:translateX(-50%)}
+}
+
+.marquee-item{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:0 24px;
+  border-right:1px solid var(--border);
+  white-space:nowrap;
+}
+
+.marquee-name{font-size:12px;font-weight:600;color:var(--text2)}
+.marquee-price{font-family:'DM Mono',monospace;font-size:12px;color:#fff}
+.marquee-change{font-family:'DM Mono',monospace;font-size:11px}
+.marquee-change.pos{color:var(--success)}
+.marquee-change.neg{color:var(--danger)}
+
+/* ===== TOKEN GRID ===== */
+.section{
+  max-width:1200px;
+  margin:0 auto;
+  padding:0 24px 80px;
+}
+
+.section-header{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  margin-bottom:28px;
+}
+
+.section-title{
+  font-family:'Syne',sans-serif;
+  font-weight:800;
+  font-size:28px;
+}
+.section-title-sub{color:var(--text3);font-weight:400}
+
+.section-label{
+  font-size:11px;
+  color:var(--text3);
+  font-family:'DM Mono',monospace;
+  text-transform:uppercase;
+  letter-spacing:0.1em;
+}
+
+.token-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:16px;
+}
+
+.token-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:20px;
+  cursor:pointer;
+  transition:all 0.25s;
+  position:relative;
+  overflow:hidden;
+}
+
+.token-card::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.02) 0%, transparent 60%);
+  pointer-events:none;
+}
+
+.token-card:hover{
+  border-color:var(--border2);
+  transform:translateY(-2px);
+  box-shadow:0 20px 40px rgba(0,0,0,0.5);
+}
+
+.token-card-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:16px;
+}
+
+.token-icon-wrap{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.token-icon{
+  width:44px;height:44px;
+  border-radius:50%;
+  background:var(--surface2);
+  border:1px solid var(--border2);
+  overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;
+}
+.token-icon img{width:100%;height:100%;object-fit:cover}
+
+.token-name-block{}
+.token-card-name{font-weight:700;font-size:15px}
+.token-card-symbol{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:2px}
+
+.token-badge-live{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  background:rgba(68,255,136,0.08);
+  border:1px solid rgba(68,255,136,0.15);
+  border-radius:100px;
+  padding:4px 10px;
+  font-size:10px;
+  font-weight:600;
+  color:var(--success);
+  letter-spacing:0.05em;
+}
+.token-badge-live .dot{width:5px;height:5px;border-radius:50%;background:var(--success);animation:pulse 2s infinite}
+
+.token-price{
+  font-family:'DM Mono',monospace;
+  font-size:22px;
+  font-weight:500;
+  margin-bottom:4px;
+}
+
+.token-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:16px;
+  padding-top:16px;
+  border-top:1px solid var(--border);
+}
+
+.token-meta{font-size:11px;color:var(--text3)}
+.token-meta-val{font-size:11px;color:var(--text2);font-family:'DM Mono',monospace}
+
+/* ===== FEATURES SECTION ===== */
+.features-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:16px;
+}
+
+.feature-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:28px;
+  transition:all 0.2s;
+}
+.feature-card:hover{border-color:var(--border2)}
+
+.feature-icon{
+  font-size:28px;
+  margin-bottom:16px;
+  display:block;
+}
+
+.feature-title{
+  font-family:'Syne',sans-serif;
+  font-weight:700;
+  font-size:17px;
+  margin-bottom:10px;
+}
+
+.feature-desc{
+  font-size:13px;
+  color:var(--text2);
+  line-height:1.7;
+}
+
+/* ===== FOOTER ===== */
+.footer{
+  border-top:1px solid var(--border);
+  padding:32px 24px;
+  max-width:1200px;
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:16px;
+}
+
+.footer-brand{font-family:'Syne',sans-serif;font-weight:800;font-size:14px}
+.footer-copy{font-size:12px;color:var(--text3)}
+
+/* SPINNER */
+.spinner{
+  display:inline-block;
+  width:16px;height:16px;
+  border:2px solid #333;
+  border-top-color:#fff;
+  border-radius:50%;
+  animation:spin 0.7s linear infinite;
+  vertical-align:middle;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* TOAST */
+.toast-container{
+  position:fixed;
+  bottom:24px;right:24px;
+  z-index:9998;
+  display:flex;flex-direction:column;gap:10px;
+}
+
+.toast{
+  background:var(--surface2);
+  border:1px solid var(--border2);
+  border-radius:12px;
+  padding:14px 18px;
+  font-size:13px;
+  color:#fff;
+  box-shadow:0 8px 32px rgba(0,0,0,0.6);
+  animation:toastIn 0.3s ease;
+  max-width:300px;
+}
+.toast.success{border-color:rgba(68,255,136,0.3);color:var(--success)}
+.toast.error{border-color:rgba(255,68,68,0.3);color:var(--danger)}
+@keyframes toastIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* STEP INDICATOR */
+.step-indicator{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:24px;
+}
+.step{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--border2);
+  transition:all 0.3s;
+}
+.step.active{background:#fff;width:20px;border-radius:3px}
+.step.done{background:var(--success)}
+
+/* UPLOAD AREA  (unused but left for extensibility) */
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:768px){
+  .nav-center{display:none}
+  .hero-stats{gap:24px}
+  .token-grid{grid-template-columns:1fr 1fr}
+  .modal{padding:24px}
+}
+@media(max-width:480px){
+  .token-grid{grid-template-columns:1fr}
+  .dob-row{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-left">
+    <div class="nav-logo">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAANSSURBVGiB7ZlNaBNBFMd/u2mSbWKSJpqoiIgHURA8KEjBk3pQwYMHQTx4E0Tp0aIgnrwUBA+iBwUPCiIeFEQEwYMHERQRBA+eRAQRRPCgIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiL+M9z/3QC4TwdqegAAAABJRU5ErkJggg==" alt="X" id="logoImg" style="width:100%;height:100%;object-fit:contain"/>
+    </div>
+    <span class="nav-brand">Avicn<span>Knov</span></span>
+  </div>
+
+  <div class="nav-center">
+    <div class="search-wrapper">
+      <input class="search-input" id="searchInput" placeholder="Search tokens, markets…" autocomplete="off"/>
+      <div class="search-icon" id="searchClose" style="display:none">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </div>
+      <div class="search-icon" id="searchIconBtn" style="">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l2.5 2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+      <div class="search-dropdown" id="searchDropdown"></div>
+    </div>
+  </div>
+
+  <div class="nav-right">
+    <div class="nav-icon-btn" id="helpBtn" title="Help & Support">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.5"/><path d="M6.5 6C6.5 5.17 7.17 4.5 8 4.5s1.5.67 1.5 1.5c0 1-1.5 1.5-1.5 2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="11" r="0.75" fill="currentColor"/></svg>
+    </div>
+    <div class="nav-icon-btn" id="exchangeBtn" title="Exchange">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 5h12M10 2l4 3-4 3M14 11H2M6 8l-4 3 4 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="nav-icon-btn" id="settingsBtn" title="Settings">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.5v1M8 13.5v1M1.5 8h1M13.5 8h1M3.4 3.4l.7.7M11.9 11.9l.7.7M3.4 12.6l.7-.7M11.9 4.1l.7-.7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </div>
+    <button class="btn-login" id="loginBtn">Log In</button>
+    <button class="btn-signup" id="signupBtn">Sign Up</button>
+  </div>
+</nav>
+
+<!-- SIDE PANELS -->
+<div class="side-panel" id="helpPanel">
+  <div class="panel-header">
+    <span class="panel-title">Help & Support</span>
+    <div class="panel-close" onclick="closeAllPanels()">✕</div>
+  </div>
+  <div class="panel-content">
+    <div class="panel-item"><div class="panel-item-icon">📖</div><div class="panel-item-text"><div class="panel-item-label">Documentation</div><div class="panel-item-desc">Guides and tutorials</div></div></div>
+    <div class="panel-item"><div class="panel-item-icon">💬</div><div class="panel-item-text"><div class="panel-item-label">Live Chat</div><div class="panel-item-desc">Talk to our support team</div></div></div>
+    <div class="panel-item"><div class="panel-item-icon">📧</div><div class="panel-item-text"><div class="panel-item-label">Email Support</div><div class="panel-item-desc">support@avicnknov.com</div></div></div>
+    <div class="panel-item"><div class="panel-item-icon">🐦</div><div class="panel-item-text"><div class="panel-item-label">Twitter / X</div><div class="panel-item-desc">@AvicnKnov</div></div></div>
+    <div class="panel-item"><div class="panel-item-icon">📢</div><div class="panel-item-text"><div class="panel-item-label">Announcements</div><div class="panel-item-desc">Latest updates</div></div></div>
+  </div>
+</div>
+
+<div class="side-panel" id="exchangePanel">
+  <div class="panel-header">
+    <span class="panel-title">Exchange</span>
+    <div class="panel-close" onclick="closeAllPanels()">✕</div>
+  </div>
+  <div class="panel-content">
+    <div class="panel-item"><div class="panel-item-icon">💱</div><div class="panel-item-text"><div class="panel-item-label">Spot Trading</div><div class="panel-item-desc">Buy and sell instantly</div></div></div>
+    <div class="panel-item"><div class="panel-item-icon">📈</div><div class="panel-item-text"><div class="panel-item-label">Margin Trading</div><div class="panel-item-desc">Trade with leverage</div></div></div>
+    <div class="panel-item"><div class="panel-item-icon">🔄</div><div class="panel-item-text"><div class="panel-item-label">P2P Trading</div><div class="panel-item-desc">Trade peer-to-peer</div></div></div>
+    <div class="panel-item"><div class="panel-item-icon">📊</div><div class="panel-item-text"><div class="panel-item-label">Markets</div><div class="panel-item-desc">View all markets</div></div></div>
+    <div class="panel-item"><div class="panel-item-icon">💰</div><div class="panel-item-text"><div class="panel-item-label">Earn</div><div class="panel-item-desc">Staking & yield products</div></div></div>
+  </div>
+</div>
+
+<div class="side-panel" id="settingsPanel">
+  <div class="panel-header">
+    <span class="panel-title">Settings</span>
+    <div class="panel-close" onclick="closeAllPanels()">✕</div>
+  </div>
+  <div class="panel-content">
+    <div class="panel-item"><div class="panel-item-icon">👤</div><div class="panel-item-text"><div class="panel-item-label">Profile</div><div class="panel-item-desc">Manage your account</div></div></div>
+    <div class="panel-item"><div class="panel-item-icon">🔒</div><div class="panel-item-text"><div class="panel-item-label">Security</div><div class="panel-item-desc">2FA and password</div></div></div>
+    <div class="panel-item"><div class="panel-item-icon">🌐</div><div class="panel-item-text"><div class="panel-item-label">Language</div><div class="panel-item-desc">English (default)</div></div></div>
+    <div class="panel-item"><div class="panel-item-icon">🔔</div><div class="panel-item-text"><div class="panel-item-label">Notifications</div><div class="panel-item-desc">Alerts and updates</div></div></div>
+    <div class="panel-item"><div class="panel-item-icon">🎨</div><div class="panel-item-text"><div class="panel-item-label">Appearance</div><div class="panel-item-desc">Theme preferences</div></div></div>
+    <div class="panel-item"><div class="panel-item-icon">📜</div><div class="panel-item-text"><div class="panel-item-label">Terms of Service</div><div class="panel-item-desc">Legal information</div></div></div>
+  </div>
+</div>
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <button class="modal-close-btn" onclick="closeModal('loginModal')">✕</button>
+    <div class="modal-logo"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAANSSURBVGiB7ZlNaBNBFMd/u2mSbWKSJpqoiIgHURA8KEjBk3pQwYMHQTx4E0Tp0aIgnrwUBA+iBwUPCiIeFEQEwYMHERQRBA+eRAQRRPCgIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiL+M9z/3QC4TwdqegAAAABJRU5ErkJggg==" alt="X" id="modalLogoImg"/></div>
+    <h2 class="modal-title">Welcome back</h2>
+    <p class="modal-subtitle">Log in to your AvicnKnov account</p>
+    <div id="loginForm">
+      <div class="form-group">
+        <label class="form-label">Email or Phone Number</label>
+        <input class="form-input" id="loginIdentifier" type="text" placeholder="Enter email or phone number"/>
+        <div class="form-error" id="loginIdentifierErr">Please enter a valid email or phone number</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <div class="input-with-icon">
+          <input class="form-input" id="loginPassword" type="password" placeholder="Enter your password"/>
+          <span class="input-eye" id="loginEye" onclick="toggleEye('loginPassword','loginEye')">👁</span>
+        </div>
+        <div class="form-error" id="loginPasswordErr">Incorrect password</div>
+      </div>
+      <a class="forgot-link" onclick="openModal('forgotModal');closeModal('loginModal')">Forgot password?</a>
+      <button class="btn-submit" id="loginSubmitBtn" onclick="handleLogin()">Log In</button>
+      <div class="switch-auth">Don't have an account? <span onclick="openModal('signupModal');closeModal('loginModal')">Sign Up</span></div>
+    </div>
+    <div class="success-box" id="loginSuccess">
+      <h3>✓ Logged In!</h3>
+      <p>Welcome back to AvicnKnov Exchange.</p>
+    </div>
+  </div>
+</div>
+
+<!-- FORGOT PASSWORD MODAL -->
+<div class="modal-overlay" id="forgotModal">
+  <div class="modal">
+    <button class="modal-close-btn" onclick="closeModal('forgotModal')">✕</button>
+    <div class="modal-logo"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAANSSURBVGiB7ZlNaBNBFMd/u2mSbWKSJpqoiIgHURA8KEjBk3pQwYMHQTx4E0Tp0aIgnrwUBA+iBwUPCiIeFEQEwYMHERQRBA+eRAQRRPCgIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiL+M9z/3QC4TwdqegAAAABJRU5ErkJggg==" alt="X"/></div>
+    <h2 class="modal-title">Forgot Password</h2>
+    <p class="modal-subtitle">Enter your email to receive a reset link</p>
+    <div id="forgotForm">
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input class="form-input" id="forgotEmail" type="email" placeholder="Enter your registered email"/>
+        <div class="form-error" id="forgotEmailErr">Please enter a valid email address</div>
+      </div>
+      <button class="btn-submit" id="forgotSubmitBtn" onclick="handleForgotPassword()">Send Reset Link</button>
+      <button class="btn-submit-secondary" onclick="closeModal('forgotModal');openModal('loginModal')">Back to Login</button>
+    </div>
+    <div class="success-box" id="forgotSuccess">
+      <h3>✉ Email Sent!</h3>
+      <p>A password reset link has been sent to your email. Please check your inbox and follow the instructions.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SIGNUP MODAL -->
+<div class="modal-overlay" id="signupModal">
+  <div class="modal" style="max-width:460px">
+    <button class="modal-close-btn" onclick="closeModal('signupModal')">✕</button>
+    <div class="modal-logo"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAANSSURBVGiB7ZlNaBNBFMd/u2mSbWKSJpqoiIgHURA8KEjBk3pQwYMHQTx4E0Tp0aIgnrwUBA+iBwUPCiIeFEQEwYMHERQRBA+eRAQRRPCgIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiL+M9z/3QC4TwdqegAAAABJRU5ErkJggg==" alt="X"/></div>
+    <h2 class="modal-title">Create Account</h2>
+    <p class="modal-subtitle">Join AvicnKnov — the premium crypto exchange</p>
+    <div class="step-indicator">
+      <div class="step active" id="step1"></div>
+      <div class="step" id="step2"></div>
+      <div class="step" id="step3"></div>
+    </div>
+    <div id="signupForm">
+      <!-- STEP 1 -->
+      <div id="signupStep1">
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input class="form-input" id="sfullname" type="text" placeholder="Enter your full name"/>
+          <div class="form-error" id="sfullnameErr">Please enter your full name</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Username</label>
+          <input class="form-input" id="susername" type="text" placeholder="Choose a username"/>
+          <div class="form-error" id="susernameErr">Username is required</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Date of Birth (Must be 18+)</label>
+          <div class="dob-row">
+            <div class="select-wrap">
+              <select class="form-select" id="sdobDay">
+                <option value="">Day</option>
+              </select>
+            </div>
+            <div class="select-wrap">
+              <select class="form-select" id="sdobMonth">
+                <option value="">Month</option>
+                <option value="1">January</option><option value="2">February</option><option value="3">March</option>
+                <option value="4">April</option><option value="5">May</option><option value="6">June</option>
+                <option value="7">July</option><option value="8">August</option><option value="9">September</option>
+                <option value="10">October</option><option value="11">November</option><option value="12">December</option>
+              </select>
+            </div>
+            <div class="select-wrap">
+              <select class="form-select" id="sdobYear">
+                <option value="">Year</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-error" id="sdobErr">You must be 18 years or older</div>
+        </div>
+        <button class="btn-submit" onclick="signupStep1Next()">Continue →</button>
+      </div>
+      <!-- STEP 2 -->
+      <div id="signupStep2" style="display:none">
+        <div class="form-group">
+          <label class="form-label">Gender</label>
+          <div class="select-wrap">
+            <select class="form-select" id="sgender">
+              <option value="">Select gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="non_binary">Non-Binary</option>
+              <option value="genderqueer">Genderqueer</option>
+              <option value="genderfluid">Genderfluid</option>
+              <option value="agender">Agender</option>
+              <option value="bigender">Bigender</option>
+              <option value="two_spirit">Two-Spirit</option>
+              <option value="prefer_not">Prefer not to say</option>
+            </select>
+          </div>
+          <div class="form-error" id="sgenderErr">Please select your gender</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Country</label>
+          <div class="select-wrap">
+            <select class="form-select" id="scountry">
+              <option value="">Select country</option>
+            </select>
+          </div>
+          <div class="form-error" id="scountryErr">Please select your country</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone Number</label>
+          <div class="phone-row">
+            <div class="select-wrap phone-code">
+              <select class="form-select" id="sphoneCode">
+                <option value="+1">+1</option>
+                <option value="+44">+44</option>
+                <option value="+91">+91</option>
+                <option value="+92">+92</option>
+                <option value="+86">+86</option>
+                <option value="+81">+81</option>
+                <option value="+49">+49</option>
+                <option value="+33">+33</option>
+                <option value="+971">+971</option>
+                <option value="+966">+966</option>
+              </select>
+            </div>
+            <input class="form-input" id="sphone" type="tel" placeholder="Phone number" style="flex:1"/>
+          </div>
+          <div class="form-error" id="sphoneErr">Please enter a valid phone number</div>
+        </div>
+        <div style="display:flex;gap:10px">
+          <button class="btn-submit-secondary" style="flex:1;margin-top:0" onclick="showStep(1)">← Back</button>
+          <button class="btn-submit" style="flex:2" onclick="signupStep2Next()">Continue →</button>
+        </div>
+      </div>
+      <!-- STEP 3 -->
+      <div id="signupStep3" style="display:none">
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input class="form-input" id="semail" type="email" placeholder="Enter your email address"/>
+          <div class="form-error" id="semailErr">Please enter a valid email address</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <div class="input-with-icon">
+            <input class="form-input" id="spassword" type="password" placeholder="Create a strong password"/>
+            <span class="input-eye" id="spassEye" onclick="toggleEye('spassword','spassEye')">👁</span>
+          </div>
+          <div class="form-hint">Minimum 8 characters with letters and numbers</div>
+          <div class="form-error" id="spasswordErr">Password must be at least 8 characters</div>
+        </div>
+        <div style="display:flex;gap:10px">
+          <button class="btn-submit-secondary" style="flex:1;margin-top:0" onclick="showStep(2)">← Back</button>
+          <button class="btn-submit" style="flex:2" id="signupSubmitBtn" onclick="handleSignup()">Create Account</button>
+        </div>
+      </div>
+    </div>
+    <div class="success-box" id="signupSuccess">
+      <h3>✓ Verify Your Email</h3>
+      <p>A verification link has been sent to your email address. Please check your inbox and click the link to activate your account.</p>
+    </div>
+    <div class="switch-auth" id="signupSwitchAuth">Already have an account? <span onclick="openModal('loginModal');closeModal('signupModal')">Log In</span></div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<main>
+  <!-- HERO -->
+  <section class="hero" id="heroSection">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      Platform Live · All Systems Operational
+    </div>
+    <h1 class="hero-title">
+      Trade Crypto<br>
+      <span class="dim">With Precision.</span>
+    </h1>
+    <p class="hero-sub">
+      AvicnKnov is a next-generation cryptocurrency exchange built for serious traders. 
+      Ultra-low fees, real-time prices, and institutional-grade security — all in one place.
+    </p>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-val">$2.4B+</div>
+        <div class="stat-label">24h Trading Volume</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">180+</div>
+        <div class="stat-label">Countries Supported</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">0.08%</div>
+        <div class="stat-label">Lowest Trading Fees</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">99.99%</div>
+        <div class="stat-label">Platform Uptime</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-section">
+    <div class="marquee-track" id="marqueeTrack">
+      <!-- JS fills this -->
+    </div>
+  </div>
+
+  <!-- TOKEN GRID -->
+  <section class="section">
+    <div class="section-header">
+      <div>
+        <div class="section-label">Live Markets</div>
+        <h2 class="section-title">Listed <span class="section-title-sub">Tokens</span></h2>
+      </div>
+      <div class="section-label" id="tokenLastUpdate">Updating…</div>
+    </div>
+    <div class="token-grid" id="tokenGrid">
+      <div style="color:var(--text3);font-size:13px;padding:20px;grid-column:1/-1">Loading tokens…</div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="section">
+    <div class="section-header">
+      <div>
+        <div class="section-label">Why AvicnKnov</div>
+        <h2 class="section-title">Built for <span class="section-title-sub">Traders</span></h2>
+      </div>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <span class="feature-icon">⚡</span>
+        <div class="feature-title">Lightning Fast Execution</div>
+        <div class="feature-desc">Sub-millisecond order matching engine processes millions of transactions per second with zero downtime.</div>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🔐</span>
+        <div class="feature-title">Bank-Grade Security</div>
+        <div class="feature-desc">Multi-layered encryption, cold storage for 95% of funds, and real-time fraud monitoring protect every asset.</div>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">📊</span>
+        <div class="feature-title">Advanced Analytics</div>
+        <div class="feature-desc">Professional-grade charting tools, real-time order books, and deep market analytics for informed decisions.</div>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🌍</span>
+        <div class="feature-title">Global Access</div>
+        <div class="feature-desc">Available in 180+ countries with local payment methods, fiat on-ramps, and 24/7 multilingual support.</div>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">💎</span>
+        <div class="feature-title">Premium Trading Pairs</div>
+        <div class="feature-desc">Access hundreds of carefully selected tokens with high liquidity, low spreads, and transparent listing criteria.</div>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🤖</span>
+        <div class="feature-title">Smart Portfolio Tools</div>
+        <div class="feature-desc">Automated rebalancing, DCA strategies, and AI-powered insights to maximize your portfolio performance.</div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="footer-brand">AvicnKnov Exchange</div>
+  <div class="footer-copy">© 2025 AvicnKnov. All rights reserved. Trade responsibly.</div>
+</footer>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+// ===== SUPABASE CONFIG =====
+const { createClient } = supabase;
+
+// Main DB (users)
+const MAIN_URL = 'https://kjxnbofpwfvheuzmeynd.supabase.co';
+const MAIN_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqeG5ib2Zwd2Z2aGV1em1leW5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxODUxMTEsImV4cCI6MjA5Mjc2MTExMX0.OBVQFJCWUJh5gTx0Nk8E7EMZEprRNq1L-jCTRFJRbOo';
+const mainDb = createClient(MAIN_URL, MAIN_KEY);
+
+// Token DB
+const TOKEN_URL = 'https://hwrvqyipozrsxyjdpqag.supabase.co';
+const TOKEN_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh3cnZxeWlwb3pyc3h5amRwcWFnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA5MDc2NzksImV4cCI6MjA2NjQ4MzY3OX0.s43NjpUGDAJhs9qEmnwIXEY5aOh3gl6XqPdEveodFZM';
+const tokenDb = createClient(TOKEN_URL, TOKEN_KEY);
+
+// ===== LOGO (use uploaded X icon) =====
+// We'll use a data URI of the white X logo
+const LOGO_B64 = 'data:image/svg+xml;base64,' + btoa(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M10 10 L45 50 L10 90 L25 90 L50 62 L75 90 L90 90 L55 50 L90 10 L75 10 L50 38 L25 10 Z" fill="white"/><polygon points="35,75 50,60 65,75 50,90" fill="white"/></svg>`);
+
+document.querySelectorAll('.modal-logo img, #logoImg').forEach(img => {
+  img.src = LOGO_B64;
+});
+
+// ===== TOAST =====
+function showToast(msg, type='info') {
+  const c = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), 4000);
+}
+
+// ===== MODAL HELPERS =====
+function openModal(id) {
+  document.getElementById(id).classList.add('active');
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('active');
+}
+document.querySelectorAll('.modal-overlay').forEach(o => {
+  o.addEventListener('click', e => { if(e.target === o) o.classList.remove('active'); });
+});
+
+document.getElementById('loginBtn').addEventListener('click', () => openModal('loginModal'));
+document.getElementById('signupBtn').addEventListener('click', () => openModal('signupModal'));
+
+// ===== PANEL HELPERS =====
+function openPanel(id) {
+  closeAllPanels();
+  document.getElementById(id).classList.add('open');
+}
+function closeAllPanels() {
+  document.querySelectorAll('.side-panel').forEach(p => p.classList.remove('open'));
+}
+document.getElementById('helpBtn').addEventListener('click', () => openPanel('helpPanel'));
+document.getElementById('exchangeBtn').addEventListener('click', () => openPanel('exchangePanel'));
+document.getElementById('settingsBtn').addEventListener('click', () => openPanel('settingsPanel'));
+
+// Close panels on outside click
+document.addEventListener('click', e => {
+  const panels = document.querySelectorAll('.side-panel');
+  const btns = document.querySelectorAll('.nav-icon-btn');
+  let inside = false;
+  panels.forEach(p => { if(p.contains(e.target)) inside = true; });
+  btns.forEach(b => { if(b.contains(e.target)) inside = true; });
+  if(!inside) closeAllPanels();
+});
+
+// ===== PASSWORD TOGGLE =====
+function toggleEye(inputId, eyeId) {
+  const inp = document.getElementById(inputId);
+  const eye = document.getElementById(eyeId);
+  if(inp.type === 'password') {
+    inp.type = 'text';
+    eye.textContent = '🙈';
+    inp.style.transition = 'all 0.2s';
+  } else {
+    inp.type = 'password';
+    eye.textContent = '👁';
+  }
+}
+
+// ===== DOB POPULATION =====
+(function() {
+  const dayEl = document.getElementById('sdobDay');
+  const yearEl = document.getElementById('sdobYear');
+  for(let d=1;d<=31;d++) dayEl.innerHTML += `<option value="${d}">${d}</option>`;
+  const curYear = new Date().getFullYear();
+  for(let y=curYear-18;y>=curYear-100;y--) yearEl.innerHTML += `<option value="${y}">${y}</option>`;
+})();
+
+// ===== COUNTRY POPULATION =====
+(function() {
+  const countries = [
+    "Afghanistan","Albania","Algeria","Andorra","Angola","Antigua and Barbuda","Argentina","Armenia","Australia","Austria",
+    "Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bhutan","Bolivia",
+    "Bosnia and Herzegovina","Botswana","Brazil","Brunei","Bulgaria","Burkina Faso","Burundi","Cabo Verde","Cambodia",
+    "Cameroon","Canada","Central African Republic","Chad","Chile","China","Colombia","Comoros","Congo","Costa Rica",
+    "Croatia","Cuba","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt",
+    "El Salvador","Equatorial Guinea","Eritrea","Estonia","Eswatini","Ethiopia","Fiji","Finland","France","Gabon",
+    "Gambia","Georgia","Germany","Ghana","Greece","Grenada","Guatemala","Guinea","Guinea-Bissau","Guyana","Haiti",
+    "Honduras","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Israel","Italy","Jamaica","Japan",
+    "Jordan","Kazakhstan","Kenya","Kiribati","Kosovo","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho",
+    "Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Madagascar","Malawi","Malaysia","Maldives","Mali",
+    "Malta","Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro",
+    "Morocco","Mozambique","Myanmar","Namibia","Nauru","Nepal","Netherlands","New Zealand","Nicaragua","Niger","Nigeria",
+    "North Korea","North Macedonia","Norway","Oman","Pakistan","Palau","Palestine","Panama","Papua New Guinea","Paraguay",
+    "Peru","Philippines","Poland","Portugal","Qatar","Romania","Russia","Rwanda","Saint Kitts and Nevis","Saint Lucia",
+    "Saint Vincent and the Grenadines","Samoa","San Marino","Sao Tome and Principe","Saudi Arabia","Senegal","Serbia",
+    "Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Korea",
+    "South Sudan","Spain","Sri Lanka","Sudan","Suriname","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania",
+    "Thailand","Timor-Leste","Togo","Tonga","Trinidad and Tobago","Tunisia","Turkey","Turkmenistan","Tuvalu","Uganda",
+    "Ukraine","United Arab Emirates","United Kingdom","United States","Uruguay","Uzbekistan","Vanuatu","Vatican City",
+    "Venezuela","Vietnam","Yemen","Zambia","Zimbabwe"
+  ];
+  const sel = document.getElementById('scountry');
+  countries.forEach(c => sel.innerHTML += `<option value="${c}">${c}</option>`);
+})();
+
+// ===== SIGNUP STEPS =====
+let signupStep = 1;
+function showStep(n) {
+  signupStep = n;
+  for(let i=1;i<=3;i++) {
+    document.getElementById('signupStep'+i).style.display = (i===n)?'block':'none';
+    const s = document.getElementById('step'+i);
+    s.classList.remove('active','done');
+    if(i===n) s.classList.add('active');
+    else if(i<n) s.classList.add('done');
+  }
+}
+
+function signupStep1Next() {
+  const fullname = document.getElementById('sfullname').value.trim();
+  const username = document.getElementById('susername').value.trim();
+  const day = document.getElementById('sdobDay').value;
+  const month = document.getElementById('sdobMonth').value;
+  const year = document.getElementById('sdobYear').value;
+  let ok = true;
+
+  if(!fullname) { showErr('sfullnameErr'); ok=false; } else hideErr('sfullnameErr');
+  if(!username) { showErr('susernameErr'); ok=false; } else hideErr('susernameErr');
+
+  if(!day||!month||!year) { showErr('sdobErr'); ok=false; }
+  else {
+    const dob = new Date(year, month-1, day);
+    const age = Math.floor((Date.now() - dob) / (365.25*24*3600*1000));
+    if(age < 18 || age > 100) { showErr('sdobErr'); ok=false; } else hideErr('sdobErr');
+  }
+
+  if(ok) showStep(2);
+}
+
+function signupStep2Next() {
+  const gender = document.getElementById('sgender').value;
+  const country = document.getElementById('scountry').value;
+  const phone = document.getElementById('sphone').value.trim();
+  let ok = true;
+  if(!gender) { showErr('sgenderErr'); ok=false; } else hideErr('sgenderErr');
+  if(!country) { showErr('scountryErr'); ok=false; } else hideErr('scountryErr');
+  if(!phone || phone.length < 7) { showErr('sphoneErr'); ok=false; } else hideErr('sphoneErr');
+  if(ok) showStep(3);
+}
+
+function showErr(id) { document.getElementById(id).classList.add('show'); }
+function hideErr(id) { document.getElementById(id).classList.remove('show'); }
+
+// ===== HANDLE SIGNUP =====
+async function handleSignup() {
+  const email = document.getElementById('semail').value.trim();
+  const password = document.getElementById('spassword').value;
+  let ok = true;
+
+  const emailRx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if(!emailRx.test(email)) { showErr('semailErr'); ok=false; } else hideErr('semailErr');
+  if(password.length < 8) { showErr('spasswordErr'); ok=false; } else hideErr('spasswordErr');
+  if(!ok) return;
+
+  const btn = document.getElementById('signupSubmitBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>';
+
+  try {
+    // Check if email/phone already exists in user_verify table
+    const phone = document.getElementById('sphoneCode').value + document.getElementById('sphone').value.trim();
+    const { data: existing } = await mainDb.from('user_verify').select('id').or(`email.eq.${email},phone.eq.${phone}`).limit(1);
+
+    if(existing && existing.length > 0) {
+      showToast('An account with this email or phone already exists.', 'error');
+      document.getElementById('semailErr').textContent = 'Email or phone already linked to an account';
+      showErr('semailErr');
+      btn.disabled=false; btn.textContent='Create Account';
+      return;
+    }
+
+    // Save to user_verify_process table (pending verification)
+    const processData = {
+      full_name: document.getElementById('sfullname').value.trim(),
+      username: document.getElementById('susername').value.trim(),
+      dob_day: document.getElementById('sdobDay').value,
+      dob_month: document.getElementById('sdobMonth').value,
+      dob_year: document.getElementById('sdobYear').value,
+      gender: document.getElementById('sgender').value,
+      country: document.getElementById('scountry').value,
+      phone: phone,
+      email: email,
+      password_hash: btoa(password), // In production: use proper hashing
+      status: 'pending',
+      created_at: new Date().toISOString()
+    };
+    await mainDb.from('user_verify_process').insert([processData]);
+
+    // Sign up with Supabase Auth (sends verification email)
+    const { error: authError } = await mainDb.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          full_name: processData.full_name,
+          username: processData.username
+        },
+        emailRedirectTo: window.location.origin
+      }
+    });
+
+    if(authError) throw authError;
+
+    // Show success
+    document.getElementById('signupForm').style.display='none';
+    document.getElementById('signupSwitchAuth').style.display='none';
+    document.getElementById('signupSuccess').classList.add('show');
+
+  } catch(e) {
+    showToast(e.message || 'Signup failed. Please try again.', 'error');
+    btn.disabled=false; btn.textContent='Create Account';
+  }
+}
+
+// ===== HANDLE LOGIN =====
+async function handleLogin() {
+  const identifier = document.getElementById('loginIdentifier').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  let ok = true;
+
+  if(!identifier) { showErr('loginIdentifierErr'); ok=false; } else hideErr('loginIdentifierErr');
+  if(!password) { showErr('loginPasswordErr'); ok=false; } else hideErr('loginPasswordErr');
+  if(!ok) return;
+
+  const btn = document.getElementById('loginSubmitBtn');
+  btn.disabled=true; btn.innerHTML='<span class="spinner"></span>';
+
+  try {
+    // Determine if email or phone
+    const emailRx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    let email = identifier;
+
+    if(!emailRx.test(identifier)) {
+      // Try to find email from phone in user_verify table
+      const { data: userRow } = await mainDb.from('user_verify').select('email').eq('phone', identifier).limit(1);
+      if(userRow && userRow.length > 0) email = userRow[0].email;
+      else { showToast('No account found with this phone number.', 'error'); btn.disabled=false; btn.textContent='Log In'; return; }
+    }
+
+    const { data, error } = await mainDb.auth.signInWithPassword({ email, password });
+    if(error) throw error;
+
+    document.getElementById('loginForm').style.display='none';
+    document.getElementById('loginSuccess').classList.add('show');
+    showToast('Welcome back!', 'success');
+    setTimeout(() => closeModal('loginModal'), 2000);
+
+  } catch(e) {
+    showToast(e.message || 'Login failed.', 'error');
+    showErr('loginPasswordErr');
+    document.getElementById('loginPasswordErr').textContent = e.message || 'Invalid credentials';
+    btn.disabled=false; btn.textContent='Log In';
+  }
+}
+
+// ===== HANDLE FORGOT PASSWORD =====
+async function handleForgotPassword() {
+  const email = document.getElementById('forgotEmail').value.trim();
+  const emailRx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if(!emailRx.test(email)) { showErr('forgotEmailErr'); return; }
+  hideErr('forgotEmailErr');
+
+  const btn = document.getElementById('forgotSubmitBtn');
+  btn.disabled=true; btn.innerHTML='<span class="spinner"></span>';
+
+  try {
+    const { error } = await mainDb.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin + '?reset=true'
+    });
+    if(error) throw error;
+
+    document.getElementById('forgotForm').style.display='none';
+    document.getElementById('forgotSuccess').classList.add('show');
+
+  } catch(e) {
+    showToast(e.message || 'Failed to send reset email.', 'error');
+    btn.disabled=false; btn.textContent='Send Reset Link';
+  }
+}
+
+// ===== SEARCH =====
+let allTokens = [];
+const searchInput = document.getElementById('searchInput');
+const searchDropdown = document.getElementById('searchDropdown');
+const searchClose = document.getElementById('searchClose');
+const searchIconBtn = document.getElementById('searchIconBtn');
+
+searchInput.addEventListener('input', () => {
+  const q = searchInput.value.trim().toLowerCase();
+  if(!q) { searchDropdown.classList.remove('active'); searchClose.style.display='none'; searchIconBtn.style.display=''; return; }
+  searchClose.style.display=''; searchIconBtn.style.display='none';
+  const results = allTokens.filter(t =>
+    t.name?.toLowerCase().includes(q) || t.symbol?.toLowerCase().includes(q) || t.full_name?.toLowerCase().includes(q)
+  );
+  if(!results.length) {
+    searchDropdown.innerHTML = '<div class="search-no-result">No result found</div>';
+  } else {
+    searchDropdown.innerHTML = results.slice(0,8).map(t => `
+      <div class="search-item">
+        <div class="search-token-icon">${getIconHtml(t)}</div>
+        <div>
+          <div class="search-token-name">${t.full_name||t.name}</div>
+          <div class="search-token-symbol">${t.symbol||''}</div>
+        </div>
+        <div class="search-token-price">${formatPrice(getLivePrice(t))}</div>
+      </div>
+    `).join('');
+  }
+  searchDropdown.classList.add('active');
+});
+
+searchClose.addEventListener('click', () => {
+  searchInput.value='';
+  searchDropdown.classList.remove('active');
+  searchClose.style.display='none';
+  searchIconBtn.style.display='';
+});
+
+document.addEventListener('click', e => {
+  if(!e.target.closest('.search-wrapper')) searchDropdown.classList.remove('active');
+});
+
+// ===== TOKENS =====
+let tokenPrices = {}; // cache for live prices
+
+function getLivePrice(token) {
+  if(token.is_live_api && token.api_url) {
+    return tokenPrices[token.symbol] ?? token.manual_price ?? 0;
+  }
+  return token.manual_price ?? 0;
+}
+
+function formatPrice(p) {
+  if(!p && p!==0) return '—';
+  p = parseFloat(p);
+  if(p >= 1000) return '$' + p.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+  if(p >= 1) return '$' + p.toFixed(4);
+  return '$' + p.toFixed(8);
+}
+
+function getIconHtml(token) {
+  if(token.icon_url) return `<img src="${token.icon_url}" onerror="this.style.display='none';this.parentNode.textContent='${(token.symbol||'?')[0]}'" alt="${token.symbol}"/>`;
+  return (token.symbol||'?')[0].toUpperCase();
+}
+
+async function fetchLiveApiPrices(tokens) {
+  const apiTokens = tokens.filter(t => t.is_live_api && t.api_url);
+  await Promise.allSettled(apiTokens.map(async t => {
+    try {
+      const r = await fetch(t.api_url);
+      const d = await r.json();
+      // Try common API response shapes
+      let price = d.price ?? d.current_price ?? d.last ?? d.data?.price ?? d.data?.priceUsd ?? null;
+      if(Array.isArray(d) && d[0]) price = d[0].current_price ?? d[0].price ?? null;
+      if(price !== null) tokenPrices[t.symbol] = parseFloat(price);
+    } catch(e) {}
+  }));
+}
+
+function renderTokenGrid(tokens) {
+  const grid = document.getElementById('tokenGrid');
+  if(!tokens.length) { grid.innerHTML='<div style="color:var(--text3);font-size:13px;padding:20px;grid-column:1/-1">No tokens listed yet.</div>'; return; }
+
+  grid.innerHTML = tokens.map(t => {
+    const price = getLivePrice(t);
+    const isLive = t.is_live_api;
+    const change = t.manual_change_p ?? 0;
+    const changeColor = change >= 0 ? 'var(--success)' : 'var(--danger)';
+    const changeSign = change >= 0 ? '+' : '';
+
+    return `
+    <div class="token-card">
+      <div class="token-card-top">
+        <div class="token-icon-wrap">
+          <div class="token-icon">${getIconHtml(t)}</div>
+          <div class="token-name-block">
+            <div class="token-card-name">${t.full_name||t.name}</div>
+            <div class="token-card-symbol">${t.symbol||''}</div>
+          </div>
+        </div>
+        <div class="token-badge-live"><span class="dot"></span>${isLive?'LIVE':'LIVE'}</div>
+      </div>
+      <div class="token-price" id="price_${t.id}">${formatPrice(price)}</div>
+      <div class="token-row">
+        <div>
+          <div class="token-meta">24h Change</div>
+          <div class="token-meta-val" style="color:${changeColor}">${changeSign}${change}%</div>
+        </div>
+        <div>
+          <div class="token-meta">Volume</div>
+          <div class="token-meta-val">${t.volume||'—'}</div>
+        </div>
+        <div>
+          <div class="token-meta">Supply</div>
+          <div class="token-meta-val">${t.total_supply||'—'}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function updatePriceDisplays(tokens) {
+  tokens.forEach(t => {
+    const el = document.getElementById('price_'+t.id);
+    if(el) {
+      const p = getLivePrice(t);
+      const formatted = formatPrice(p);
+      if(el.textContent !== formatted) {
+        el.textContent = formatted;
+        el.style.transition='color 0.3s';
+        el.style.color='var(--success)';
+        setTimeout(()=>el.style.color='',600);
+      }
+    }
+  });
+  document.getElementById('tokenLastUpdate').textContent = 'Updated ' + new Date().toLocaleTimeString();
+}
+
+function renderMarquee(tokens) {
+  const track = document.getElementById('marqueeTrack');
+  const items = tokens.map(t => {
+    const price = getLivePrice(t);
+    const change = t.manual_change_p ?? 0;
+    return `<div class="marquee-item">
+      <span style="font-size:13px">${getIconHtml(t)}</span>
+      <span class="marquee-name">${t.symbol||t.name}</span>
+      <span class="marquee-price">${formatPrice(price)}</span>
+      <span class="marquee-change ${change>=0?'pos':'neg'}">${change>=0?'+':''}${change}%</span>
+    </div>`;
+  }).join('');
+  // Duplicate for seamless loop
+  track.innerHTML = items + items;
+}
+
+async function loadTokens() {
+  try {
+    const { data, error } = await tokenDb.from('crypto_token_control').select('*').order('id');
+    if(error) throw error;
+    allTokens = data || [];
+
+    await fetchLiveApiPrices(allTokens);
+    renderTokenGrid(allTokens);
+    renderMarquee(allTokens);
+
+  } catch(e) {
+    console.error('Token load error:', e);
+    document.getElementById('tokenGrid').innerHTML = '<div style="color:var(--text3);font-size:13px;padding:20px;grid-column:1/-1">Could not load tokens. Please try again later.</div>';
+  }
+}
+
+// Live price update interval (1 second)
+async function livePriceUpdate() {
+  if(!allTokens.length) return;
+  await fetchLiveApiPrices(allTokens);
+
+  // For table-based prices: re-fetch from DB
+  try {
+    const manualTokenIds = allTokens.filter(t => !t.is_live_api).map(t => t.id);
+    if(manualTokenIds.length) {
+      const { data } = await tokenDb.from('crypto_token_control').select('id,manual_price,manual_change_p').in('id', manualTokenIds);
+      if(data) data.forEach(row => {
+        const t = allTokens.find(x => x.id===row.id);
+        if(t) { t.manual_price=row.manual_price; t.manual_change_p=row.manual_change_p; }
+      });
+    }
+  } catch(e) {}
+
+  updatePriceDisplays(allTokens);
+}
+
+// Init
+loadTokens();
+setInterval(livePriceUpdate, 1000);
+
+// ===== AUTH STATE CHANGE =====
+mainDb.auth.onAuthStateChange((event, session) => {
+  if(session) {
+    document.getElementById('loginBtn').textContent = 'Dashboard';
+    document.getElementById('signupBtn').style.display='none';
+  }
+});
+
+// Check if password reset redirect
+if(window.location.search.includes('reset=true')) {
+  // Could show a reset password form here
+}
+</script>
+</body>
+</html>
