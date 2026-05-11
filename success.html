@@ -152,7 +152,7 @@ body::before{
     <div class="logo-icon-wrap">
       <img class="logo-icon" src="1000006970.png" onerror="this.style.display='none'" alt="AvicnKnov"/>
     </div>
-    <span style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;">AvicnKnov</span>
+    <span class="logo-text">AvicnKnov</span>
   </div>
 
   <div class="check-ring">
@@ -165,7 +165,7 @@ body::before{
 
   <div class="success-label">Verification Complete</div>
   <h1 class="success-title">Account Verified</h1>
-  <p class="success-sub">Your AvicnKnov account has been successfully verified and activated. You now have full access to the world's most advanced crypto trading ecosystem.</p>
+  <p class="success-sub" id="statusText">Your AvicnKnov account has been successfully verified and activated. We are finalizing your dashboard access.</p>
 
   <div class="timer-wrap">
     <div class="timer-label">
@@ -183,7 +183,7 @@ body::before{
 </div>
 
 <script>
-// Mark account as verified in DB
+// Final Data Transfer Logic
 (async()=>{
   try{
     const { createClient } = supabase;
@@ -191,30 +191,66 @@ body::before{
       'https://kjxnbofpwfvheuzmeynd.supabase.co',
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqeG5ib2Zwd2Z2aGV1em1leW5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxODUxMTEsImV4cCI6MjA5Mjc2MTExMX0.OBVQFJCWUJh5gTx0Nk8E7EMZEprRNq1L-jCTRFJRbOo'
     );
-    // Get the current session user's email from Supabase auth
+
+    // 1. Get user from session
     const { data: { user } } = await authSupabase.auth.getUser();
+    
     if(user && user.email){
-      // Mark verified in user_verify
-      await authSupabase.from('user_verify').update({verified:true}).eq('email',user.email);
-      // Also copy from process table if not done yet
-      const {data:proc} = await authSupabase.from('user_verify_process').select('*').eq('email',user.email).single();
+      const uEmail = user.email;
+
+      // 2. Process table se data uthao
+      const { data: proc } = await authSupabase
+        .from('user_verify_process')
+        .select('*')
+        .eq('email', uEmail)
+        .maybeSingle();
+
       if(proc){
-        const {data:existing} = await authSupabase.from('user_verify').select('id').eq('email',user.email).single().catch(()=>({data:null}));
+        // 3. Check karo main table mein hai ya nahi
+        const { data: existing } = await authSupabase
+          .from('user_verify')
+          .select('email')
+          .eq('email', uEmail)
+          .maybeSingle();
+
         if(!existing){
-          await authSupabase.from('user_verify').insert({...proc, verified:true});
+          // 4. Main table mein shift karo
+          await authSupabase.from('user_verify').insert([{
+            full_name: proc.full_name,
+            username: proc.username,
+            dob: proc.dob,
+            gender: proc.gender,
+            country: proc.country,
+            phone: proc.phone,
+            email: proc.email,
+            password: proc.password,
+            verified: true,
+            created_at: new Date().toISOString()
+          }]);
+          
+          // Cleanup (Optional): Process table se delete
+          await authSupabase.from('user_verify_process').delete().eq('email', uEmail);
+        } else {
+          // Agar pehle se hai toh sirf verified status update karo
+          await authSupabase.from('user_verify').update({verified:true}).eq('email', uEmail);
         }
       }
     }
-  }catch(e){}
+  }catch(e){
+    console.error("System Sync Error:", e);
+  }
 })();
 
-// Countdown and redirect
+// Countdown and redirect logic
 let secs = 5;
 const display = document.getElementById('countdownDisplay');
 const iv = setInterval(()=>{
   secs--;
   display.textContent = secs+'s';
-  if(secs<=0){ clearInterval(iv); window.location.href='index.html'; }
+  if(secs<=0){ 
+    clearInterval(iv); 
+    window.location.href='index.html'; // Yahan apne login page ka sahi naam check kar lena
+  }
 },1000);
 </script>
 </body>
