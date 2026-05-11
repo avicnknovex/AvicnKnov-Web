@@ -3,1020 +3,624 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>AvicnKnov Exchange</title>
+<title>AvicnKnov Web</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
-  --bg:#0a0a0a;
-  --surface:#111111;
-  --surface2:#1a1a1a;
-  --border:#222;
-  --border2:#333;
-  --white:#ffffff;
-  --gray:#888;
-  --gray2:#555;
-  --accent:#ffffff;
-  --red:#ff3b3b;
-  --green:#00e676;
+  --bg:#050505; --surface:#0a0a0a; --surface2:#141414;
+  --border:#1f1f1f; --border2:#2e2e2e; --white:#ffffff;
+  --gray:#888; --gray2:#555; --accent:#ffffff;
+  --red:#ff3b3b; --green:#00e676;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-html,body{height:100%;background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;overflow-x:hidden;}
-
-/* SCROLLBAR */
+html,body{height:100%;background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;overflow-x:hidden;scroll-behavior:smooth;}
 ::-webkit-scrollbar{width:4px;}
-::-webkit-scrollbar-track{background:#0a0a0a;}
-::-webkit-scrollbar-thumb{background:#333;border-radius:2px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
 
-/* NOISE OVERLAY */
-body::before{
-  content:'';position:fixed;inset:0;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-  pointer-events:none;z-index:9999;opacity:0.4;
-}
-
-/* ===== HEADER ===== */
+/* HEADER */
 header{
   position:fixed;top:0;left:0;right:0;z-index:100;
   display:flex;align-items:center;justify-content:space-between;
-  padding:0 24px;height:64px;
-  background:rgba(10,10,10,0.92);
-  backdrop-filter:blur(20px);
+  padding:0 24px;height:70px;
+  background:rgba(5,5,5,0.85);backdrop-filter:blur(24px);
   border-bottom:1px solid var(--border);
 }
-.logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
-.logo-icon{width:36px;height:36px;object-fit:contain;filter:brightness(0) invert(1);}
-.logo-text{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:var(--white);}
-
-/* SEARCH */
-.search-wrap{position:relative;flex:1;max-width:420px;margin:0 32px;}
+.header-left{flex:1;display:flex;}
 .search-bar{
   display:flex;align-items:center;gap:8px;
   background:var(--surface2);border:1px solid var(--border2);
-  border-radius:10px;padding:0 14px;height:40px;cursor:pointer;
-  transition:border-color .2s,box-shadow .2s;
+  border-radius:12px;padding:0 14px;height:42px;width:100%;max-width:320px;cursor:pointer;
+  transition:all .2s;
 }
-.search-bar:hover{border-color:#444;box-shadow:0 0 0 1px #333;}
-.search-icon{color:var(--gray);font-size:14px;}
+.search-bar:hover{border-color:#444;box-shadow:0 0 0 1px #222;}
+.search-icon{color:var(--gray);}
 .search-placeholder{color:var(--gray);font-size:13px;}
-.search-shortcut{margin-left:auto;background:#222;border:1px solid #333;border-radius:4px;padding:2px 6px;font-size:10px;color:var(--gray2);font-family:'Space Mono',monospace;}
+.header-center{
+  position:absolute;left:50%;transform:translateX(-50%);
+  display:flex;align-items:center;justify-content:center;
+}
+.logo-glass{
+  display:flex;align-items:center;gap:10px;text-decoration:none;
+  background:rgba(255,255,255,0.03);backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,0.08);border-radius:100px;
+  padding:6px 16px;transition:background .2s;
+}
+.logo-glass:hover{background:rgba(255,255,255,0.06);}
+.logo-icon{height:22px;filter:brightness(0) invert(1);}
+.logo-text{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;color:var(--white);}
 
-/* SEARCH OVERLAY */
-.search-overlay{
-  position:fixed;inset:0;z-index:200;
-  background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);
-  opacity:0;pointer-events:none;transition:opacity .25s;
-}
-.search-overlay.open{opacity:1;pointer-events:all;}
-.search-box{
-  position:absolute;top:80px;left:50%;transform:translateX(-50%);
-  width:min(600px,90vw);
-  background:var(--surface);border:1px solid var(--border2);
-  border-radius:16px;overflow:hidden;
-  box-shadow:0 32px 80px rgba(0,0,0,0.8);
-  animation:slideDown .25s ease;
-}
-@keyframes slideDown{from{transform:translateX(-50%) translateY(-20px);opacity:0;}to{transform:translateX(-50%) translateY(0);opacity:1;}}
-.search-input-wrap{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--border);}
-.search-input-wrap svg{color:var(--gray);flex-shrink:0;}
-#searchInput{flex:1;background:none;border:none;outline:none;color:var(--white);font-family:'DM Sans',sans-serif;font-size:16px;}
-#searchInput::placeholder{color:var(--gray);}
-.search-close-btn{background:var(--surface2);border:1px solid var(--border2);color:var(--white);border-radius:6px;padding:4px 10px;font-size:12px;cursor:pointer;transition:background .2s;}
-.search-close-btn:hover{background:#2a2a2a;}
-.search-results{max-height:340px;overflow-y:auto;}
-.search-result-item{
-  display:flex;align-items:center;gap:12px;padding:14px 20px;
-  cursor:pointer;transition:background .15s;border-bottom:1px solid var(--border);
-}
-.search-result-item:hover{background:var(--surface2);}
-.search-result-item:last-child{border-bottom:none;}
-.result-icon{width:32px;height:32px;border-radius:50%;background:#222;display:flex;align-items:center;justify-content:center;font-size:14px;}
-.result-name{font-size:14px;font-weight:500;}
-.result-sub{font-size:12px;color:var(--gray);}
-.no-result{text-align:center;padding:40px 20px;color:var(--gray);font-size:14px;}
-.no-result svg{display:block;margin:0 auto 12px;}
-
-/* HEADER RIGHT */
-.header-right{display:flex;align-items:center;gap:12px;}
+.header-right{flex:1;display:flex;justify-content:flex-end;gap:12px;}
 .btn-login{
   background:none;border:1px solid var(--border2);color:var(--white);
-  padding:8px 18px;border-radius:8px;font-family:'DM Sans',sans-serif;
-  font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;
+  padding:8px 20px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;
 }
 .btn-login:hover{border-color:#555;background:#111;}
-.btn-signup{
-  background:var(--white);border:1px solid var(--white);color:#000;
-  padding:8px 18px;border-radius:8px;font-family:'DM Sans',sans-serif;
-  font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;
-}
-.btn-signup:hover{background:#e0e0e0;}
-
-/* SIDEBAR TOGGLE */
 .sidebar-toggle{
-  width:36px;height:36px;border-radius:8px;
+  width:42px;height:42px;border-radius:10px;
   background:var(--surface2);border:1px solid var(--border2);
   display:flex;align-items:center;justify-content:center;
-  cursor:pointer;transition:background .2s;color:var(--white);
+  cursor:pointer;transition:all .2s;color:var(--white);
 }
-.sidebar-toggle:hover{background:#2a2a2a;}
+.sidebar-toggle:hover{background:#222;}
 
-/* ===== SIDEBAR ===== */
+/* SIDEBAR */
 .sidebar{
-  position:fixed;right:0;top:64px;bottom:0;width:64px;
+  position:fixed;right:0;top:70px;bottom:0;width:70px;
   background:var(--surface);border-left:1px solid var(--border);
   display:flex;flex-direction:column;align-items:center;
-  padding:16px 0;gap:8px;z-index:90;
+  padding:20px 0;gap:12px;z-index:90;
   transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);
 }
 .sidebar.open{transform:translateX(0);}
 .sidebar-item{
-  width:44px;height:44px;border-radius:10px;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
-  cursor:pointer;transition:background .2s;color:var(--gray);
-  position:relative;text-decoration:none;
+  width:48px;height:48px;border-radius:12px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  cursor:pointer;transition:all .2s;color:var(--gray);text-decoration:none;
 }
-.sidebar-item:hover{background:var(--surface2);color:var(--white);}
+.sidebar-item:hover{background:var(--surface2);color:var(--white);transform:translateY(-2px);}
 .sidebar-item svg{width:18px;height:18px;}
-.sidebar-item span{font-size:8px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;}
-.sidebar-divider{width:30px;height:1px;background:var(--border);margin:4px 0;}
-.sidebar-close{
-  margin-top:auto;width:44px;height:44px;border-radius:10px;
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;transition:background .2s;color:var(--gray);
-}
-.sidebar-close:hover{background:var(--surface2);color:var(--white);}
+.sidebar-item span{font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;}
 
-/* ===== MAIN ===== */
-main{padding-top:64px;min-height:100vh;}
-
-/* HERO */
+/* MAIN HERO */
+main{padding-top:70px;}
 .hero{
-  padding:80px 40px 60px;
+  padding:120px 20px 80px;
   display:flex;flex-direction:column;align-items:center;
-  text-align:center;position:relative;overflow:hidden;
+  text-align:center;position:relative;
 }
 .hero::before{
-  content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);
-  width:600px;height:600px;
-  background:radial-gradient(circle,rgba(255,255,255,0.04) 0%,transparent 70%);
+  content:'';position:absolute;top:-50px;left:50%;transform:translateX(-50%);
+  width:80vw;height:500px;
+  background:radial-gradient(ellipse at top,rgba(255,255,255,0.06) 0%,transparent 60%);
   pointer-events:none;
 }
 .hero-badge{
-  display:inline-flex;align-items:center;gap:6px;
+  display:inline-flex;align-items:center;gap:8px;
   background:var(--surface2);border:1px solid var(--border2);
-  border-radius:100px;padding:5px 14px;font-size:12px;
-  color:var(--gray);margin-bottom:28px;
+  border-radius:100px;padding:6px 16px;font-size:12px;font-weight:600;
+  color:var(--white);margin-bottom:30px;
   animation:fadeUp .6s ease both;
 }
 .hero-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
 h1.hero-title{
-  font-family:'Bebas Neue',sans-serif;
-  font-size:clamp(56px,8vw,120px);
-  letter-spacing:4px;line-height:.9;
-  margin-bottom:20px;
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(60px,10vw,140px);
+  letter-spacing:6px;line-height:0.9;margin-bottom:24px;
   animation:fadeUp .6s .1s ease both;
 }
 h1.hero-title span{color:var(--gray2);}
 .hero-sub{
-  font-size:16px;color:var(--gray);max-width:480px;line-height:1.7;
-  animation:fadeUp .6s .2s ease both;margin-bottom:40px;
+  font-size:16px;color:var(--gray);max-width:600px;line-height:1.8;
+  animation:fadeUp .6s .2s ease both;margin-bottom:50px;
 }
-@keyframes fadeUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+.hero-actions{
+  display:flex;gap:16px;animation:fadeUp .6s .3s ease both;
+}
+.btn-mega{
+  background:var(--white);color:#000;border:none;border-radius:100px;
+  padding:16px 40px;font-size:15px;font-weight:700;letter-spacing:1px;
+  cursor:pointer;transition:transform .2s, box-shadow .2s;text-transform:uppercase;
+}
+.btn-mega:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(255,255,255,0.15);}
+.btn-glass-mega{
+  background:rgba(255,255,255,0.05);color:var(--white);border:1px solid rgba(255,255,255,0.1);
+  border-radius:100px;padding:16px 40px;font-size:15px;font-weight:700;letter-spacing:1px;
+  cursor:pointer;transition:all .2s;text-transform:uppercase;
+}
+.btn-glass-mega:hover{background:rgba(255,255,255,0.1);transform:translateY(-2px);}
 
-/* STATS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+
+/* STATS FROM DB */
 .stats{
-  display:flex;gap:40px;margin-bottom:60px;
-  animation:fadeUp .6s .3s ease both;
+  display:flex;gap:40px;margin-bottom:40px;flex-wrap:wrap;justify-content:center;
+  animation:fadeUp .6s .4s ease both;
 }
 .stat{text-align:center;}
-.stat-val{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;}
-.stat-lab{font-size:12px;color:var(--gray);text-transform:uppercase;letter-spacing:1px;}
+.stat-val{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:2px;color:var(--white);}
+.stat-lab{font-size:12px;color:var(--gray);text-transform:uppercase;letter-spacing:1px;margin-top:4px;font-weight:600;}
 
 /* MARQUEE */
 .marquee-wrap{
-  width:100%;overflow:hidden;border-top:1px solid var(--border);
-  border-bottom:1px solid var(--border);
-  background:var(--surface);padding:12px 0;margin-bottom:0;
+  width:100%;overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  background:var(--surface);padding:14px 0;margin-bottom:0;
 }
 .marquee{display:flex;gap:0;animation:marquee 30s linear infinite;width:max-content;}
-.marquee-item{
-  display:flex;align-items:center;gap:8px;padding:0 32px;
-  border-right:1px solid var(--border);white-space:nowrap;
-}
-.marquee-sym{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;}
-.marquee-price{font-size:13px;color:var(--gray);}
-.marquee-chg{font-size:12px;}
-.up{color:var(--green);}
-.down{color:var(--red);}
+.marquee-item{display:flex;align-items:center;gap:12px;padding:0 40px;border-right:1px solid var(--border);white-space:nowrap;}
+.marquee-sym{font-family:'Space Mono',monospace;font-size:14px;font-weight:700;}
+.marquee-price{font-size:14px;color:var(--gray);}
 @keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
 
 /* TOKEN TABLE */
-.section{padding:60px 40px;}
-.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;}
-.section-title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:3px;}
-.section-sub{font-size:12px;color:var(--gray);text-transform:uppercase;letter-spacing:1px;}
+.section{padding:80px 40px;max-width:1400px;margin:0 auto;}
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:40px;}
+.section-title{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:3px;}
 .token-table{width:100%;border-collapse:collapse;}
 .token-table th{
-  font-family:'Space Mono',monospace;font-size:10px;
-  text-transform:uppercase;letter-spacing:1px;color:var(--gray2);
-  padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);
+  font-family:'Space Mono',monospace;font-size:11px;
+  text-transform:uppercase;letter-spacing:1px;color:var(--gray);
+  padding:16px 20px;text-align:left;border-bottom:1px solid var(--border);
 }
-.token-table td{padding:14px 16px;border-bottom:1px solid var(--border);}
-.token-table tr{transition:background .15s;}
-.token-table tbody tr:hover{background:var(--surface2);}
-.tok-rank{font-family:'Space Mono',monospace;font-size:12px;color:var(--gray2);}
-.tok-info{display:flex;align-items:center;gap:12px;}
-.tok-icon{width:36px;height:36px;border-radius:50%;background:#222;display:flex;align-items:center;justify-content:center;font-size:16px;overflow:hidden;}
+.token-table td{padding:20px;border-bottom:1px solid var(--border);}
+.token-table tbody tr:hover{background:rgba(255,255,255,0.02);}
+.tok-rank{font-family:'Space Mono',monospace;font-size:13px;color:var(--gray2);}
+.tok-info{display:flex;align-items:center;gap:14px;}
+.tok-icon{width:40px;height:40px;border-radius:50%;background:#111;display:flex;align-items:center;justify-content:center;font-size:16px;overflow:hidden;}
 .tok-icon img{width:100%;height:100%;object-fit:cover;}
-.tok-name{font-weight:600;font-size:14px;}
-.tok-sym{font-size:12px;color:var(--gray);font-family:'Space Mono',monospace;}
-.tok-price{font-family:'Space Mono',monospace;font-size:14px;}
-.tok-chg{font-size:13px;font-weight:600;}
-.tok-vol{font-size:13px;color:var(--gray);}
-.live-badge{
-  display:inline-flex;align-items:center;gap:4px;
-  background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.2);
-  color:var(--green);border-radius:4px;padding:2px 7px;font-size:10px;font-weight:700;
-  font-family:'Space Mono',monospace;
-}
-.live-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite;}
+.tok-name{font-weight:700;font-size:15px;letter-spacing:.5px;}
+.tok-sym{font-size:13px;color:var(--gray);font-family:'Space Mono',monospace;}
+.tok-price{font-family:'Space Mono',monospace;font-size:16px;font-weight:700;}
+.tok-chg{font-size:14px;font-weight:700;}
+.tok-vol{font-size:14px;color:var(--gray);}
 
 /* FEATURES */
-.features{padding:60px 40px;background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
-.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);}
+.features{padding:80px 40px;background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.feat-grid{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;}
 .feat-card{
-  background:var(--surface);padding:32px 28px;
-  transition:background .2s;
+  background:var(--bg);border:1px solid var(--border);border-radius:24px;
+  padding:40px 32px;transition:transform .3s, border-color .3s;
 }
-.feat-card:hover{background:var(--surface2);}
-.feat-icon{font-size:28px;margin-bottom:16px;}
-.feat-title{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;margin-bottom:8px;}
-.feat-desc{font-size:13px;color:var(--gray);line-height:1.6;}
-
-/* ===== MODALS ===== */
-.modal-backdrop{
-  position:fixed;inset:0;z-index:300;
-  background:rgba(0,0,0,0.75);backdrop-filter:blur(10px);
-  display:flex;align-items:center;justify-content:center;
-  opacity:0;pointer-events:none;transition:opacity .25s;
-}
-.modal-backdrop.open{opacity:1;pointer-events:all;}
-.modal{
-  background:var(--surface);border:1px solid var(--border2);
-  border-radius:20px;width:min(440px,95vw);
-  box-shadow:0 40px 100px rgba(0,0,0,0.9);
-  animation:modalIn .25s ease;overflow:hidden;max-height:90vh;overflow-y:auto;
-}
-@keyframes modalIn{from{transform:scale(.96) translateY(20px);opacity:0;}to{transform:scale(1) translateY(0);opacity:1;}}
-.modal-header{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:24px 28px 0;
-}
-.modal-title{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:3px;}
-.modal-close{
-  width:32px;height:32px;border-radius:8px;background:var(--surface2);
-  border:1px solid var(--border2);color:var(--gray);cursor:pointer;
-  display:flex;align-items:center;justify-content:center;font-size:16px;
-  transition:all .2s;
-}
-.modal-close:hover{background:#2a2a2a;color:var(--white);}
-.modal-body{padding:24px 28px 28px;}
-.form-group{margin-bottom:16px;}
-.form-label{display:block;font-size:12px;font-weight:600;letter-spacing:.5px;color:var(--gray);text-transform:uppercase;margin-bottom:8px;}
-.form-control{
-  width:100%;background:var(--surface2);border:1px solid var(--border2);
-  border-radius:10px;padding:12px 16px;color:var(--white);
-  font-family:'DM Sans',sans-serif;font-size:14px;outline:none;
-  transition:border-color .2s,box-shadow .2s;
-}
-.form-control:focus{border-color:#555;box-shadow:0 0 0 3px rgba(255,255,255,.04);}
-.form-control::placeholder{color:var(--gray2);}
-.input-wrap{position:relative;}
-.input-wrap .form-control{padding-right:46px;}
-.eye-btn{
-  position:absolute;right:14px;top:50%;transform:translateY(-50%);
-  background:none;border:none;color:var(--gray);cursor:pointer;
-  display:flex;align-items:center;transition:color .2s;
-}
-.eye-btn:hover{color:var(--white);}
-select.form-control option{background:#1a1a1a;}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.btn-primary{
-  width:100%;padding:14px;background:var(--white);color:#000;
-  border:none;border-radius:10px;font-family:'DM Sans',sans-serif;
-  font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;
-  letter-spacing:.5px;margin-top:8px;
-}
-.btn-primary:hover{background:#e0e0e0;transform:translateY(-1px);}
-.btn-primary:active{transform:translateY(0);}
-.btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none;}
-.form-link{font-size:13px;color:var(--gray);text-align:center;margin-top:14px;}
-.form-link a{color:var(--white);text-decoration:none;font-weight:600;}
-.form-link a:hover{text-decoration:underline;}
-.form-divider{display:flex;align-items:center;gap:12px;margin:16px 0;color:var(--gray2);font-size:12px;}
-.form-divider::before,.form-divider::after{content:'';flex:1;height:1px;background:var(--border);}
-.alert{
-  padding:12px 16px;border-radius:8px;font-size:13px;margin-bottom:14px;
-  border:1px solid transparent;
-}
-.alert-error{background:rgba(255,59,59,.08);border-color:rgba(255,59,59,.2);color:#ff6b6b;}
-.alert-success{background:rgba(0,230,118,.08);border-color:rgba(0,230,118,.2);color:var(--green);}
+.feat-card:hover{transform:translateY(-5px);border-color:#444;}
+.feat-icon{margin-bottom:24px;color:var(--white);}
+.feat-title{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;margin-bottom:12px;}
+.feat-desc{font-size:14px;color:var(--gray);line-height:1.7;}
 
 /* FOOTER */
 footer{
-  background:var(--surface);border-top:1px solid var(--border);
-  padding:48px 40px;display:grid;
-  grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;
+  padding:60px 40px;display:grid;
+  grid-template-columns:2fr 1fr 1fr;gap:40px;max-width:1400px;margin:0 auto;
 }
-.foot-brand{}
-.foot-logo{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:3px;margin-bottom:12px;}
-.foot-desc{font-size:13px;color:var(--gray);line-height:1.6;max-width:240px;}
-.foot-col-title{font-family:'Space Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--gray2);margin-bottom:16px;}
-.foot-links{list-style:none;display:flex;flex-direction:column;gap:10px;}
-.foot-links a{text-decoration:none;color:var(--gray);font-size:13px;transition:color .2s;}
+.foot-col-title{font-family:'Space Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--gray2);margin-bottom:20px;}
+.foot-links{list-style:none;display:flex;flex-direction:column;gap:12px;}
+.foot-links a{text-decoration:none;color:var(--gray);font-size:14px;font-weight:500;transition:color .2s;}
 .foot-links a:hover{color:var(--white);}
 .foot-bottom{
-  background:var(--surface);border-top:1px solid var(--border);
-  padding:20px 40px;display:flex;align-items:center;justify-content:space-between;
+  border-top:1px solid var(--border);
+  padding:24px 40px;display:flex;align-items:center;justify-content:space-between;
+  max-width:1400px;margin:0 auto;
 }
-.foot-bottom-text{font-size:12px;color:var(--gray2);}
+.foot-bottom-text{font-size:13px;color:var(--gray2);font-weight:500;text-transform:uppercase;letter-spacing:1px;}
 
-/* FORGOT PASSWORD */
-.forgot-link{
-  display:block;text-align:right;font-size:12px;color:var(--gray);
-  text-decoration:none;margin-top:-8px;margin-bottom:8px;
-  transition:color .2s;
+/* MODALS */
+.modal-backdrop{
+  position:fixed;inset:0;z-index:300;
+  background:rgba(0,0,0,0.8);backdrop-filter:blur(16px);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .3s;
 }
+.modal-backdrop.open{opacity:1;pointer-events:all;}
+.modal{
+  background:var(--bg);border:1px solid var(--border2);
+  border-radius:28px;width:min(480px,95vw);
+  box-shadow:0 40px 100px rgba(0,0,0,1);
+  transform:scale(.95) translateY(20px);transition:transform .3s cubic-bezier(.4,0,.2,1);
+  overflow:hidden;max-height:90vh;overflow-y:auto;
+}
+.modal-backdrop.open .modal{transform:scale(1) translateY(0);}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:32px 32px 0;}
+.modal-title{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:3px;}
+.modal-close{
+  width:36px;height:36px;border-radius:12px;background:var(--surface2);
+  border:1px solid var(--border2);color:var(--gray);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;
+}
+.modal-close:hover{background:#2a2a2a;color:var(--white);}
+.modal-body{padding:24px 32px 32px;}
+.form-group{margin-bottom:20px;}
+.form-label{display:block;font-size:12px;font-weight:700;letter-spacing:1px;color:var(--gray);text-transform:uppercase;margin-bottom:10px;}
+.form-control{
+  width:100%;background:var(--surface2);border:1px solid var(--border2);
+  border-radius:12px;padding:14px 18px;color:var(--white);
+  font-family:'DM Sans',sans-serif;font-size:15px;outline:none;
+  transition:all .2s;
+}
+.form-control:focus{border-color:#666;background:var(--surface);}
+.input-wrap{position:relative;}
+.input-wrap .form-control{padding-right:50px;}
+.eye-btn{
+  position:absolute;right:16px;top:50%;transform:translateY(-50%);
+  background:none;border:none;color:var(--gray);cursor:pointer;
+}
+.eye-btn:hover{color:var(--white);}
+select.form-control option{background:var(--bg);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.btn-primary{
+  width:100%;padding:16px;background:var(--white);color:#000;
+  border:none;border-radius:12px;font-family:'DM Sans',sans-serif;
+  font-size:15px;font-weight:700;letter-spacing:1px;cursor:pointer;transition:all .2s;
+  text-transform:uppercase;margin-top:8px;
+}
+.btn-primary:hover{opacity:0.9;transform:translateY(-2px);}
+.btn-primary:active{transform:translateY(0);}
+.btn-primary:disabled{opacity:0.5;pointer-events:none;}
+.form-link{font-size:14px;color:var(--gray);text-align:center;margin-top:20px;}
+.form-link a{color:var(--white);text-decoration:none;font-weight:700;}
+.alert{padding:14px 18px;border-radius:12px;font-size:14px;margin-bottom:20px;border:1px solid transparent;font-weight:500;}
+.alert-error{background:rgba(255,59,59,.1);border-color:rgba(255,59,59,.3);color:#ff6b6b;}
+.alert-success{background:rgba(0,230,118,.1);border-color:rgba(0,230,118,.3);color:var(--green);}
+.forgot-link{display:block;text-align:right;font-size:13px;color:var(--gray);text-decoration:none;margin-top:-10px;margin-bottom:10px;font-weight:600;}
 .forgot-link:hover{color:var(--white);}
 
-/* LOADING SPINNER */
-.spinner{
-  width:16px;height:16px;border:2px solid rgba(0,0,0,.3);
-  border-top-color:#000;border-radius:50%;
-  animation:spin .6s linear infinite;display:inline-block;margin-right:6px;vertical-align:middle;
+/* SEARCH OVERLAY */
+.search-overlay{
+  position:fixed;inset:0;z-index:400;
+  background:rgba(0,0,0,0.85);backdrop-filter:blur(16px);
+  opacity:0;pointer-events:none;transition:opacity .3s;
 }
-@keyframes spin{to{transform:rotate(360deg);}}
-
-/* RESPONSIVE */
-@media(max-width:768px){
-  .stats{gap:24px;flex-wrap:wrap;justify-content:center;}
-  .feat-grid{grid-template-columns:1fr 1fr;}
-  footer{grid-template-columns:1fr 1fr;}
-  .hero{padding:60px 20px 40px;}
-  .section{padding:40px 20px;}
-  .form-row{grid-template-columns:1fr;}
+.search-overlay.open{opacity:1;pointer-events:all;}
+.search-box{
+  position:absolute;top:100px;left:50%;transform:translateX(-50%);
+  width:min(640px,95vw);
+  background:var(--bg);border:1px solid var(--border2);
+  border-radius:24px;overflow:hidden;
+  box-shadow:0 40px 100px rgba(0,0,0,1);
+  transform:translateY(-20px);transition:transform .3s cubic-bezier(.4,0,.2,1);
 }
-@media(max-width:480px){
-  .hero-title{font-size:48px !important;}
-  .stats{gap:16px;}
-  footer{grid-template-columns:1fr;}
-  .foot-bottom{flex-direction:column;gap:8px;text-align:center;}
+.search-overlay.open .search-box{transform:translateY(0);}
+.search-input-wrap{display:flex;align-items:center;gap:16px;padding:20px 24px;border-bottom:1px solid var(--border);}
+#searchInput{flex:1;background:none;border:none;outline:none;color:var(--white);font-size:18px;font-family:'DM Sans',sans-serif;}
+.search-close-btn{background:var(--surface2);border:1px solid var(--border2);color:var(--white);border-radius:8px;padding:6px 12px;font-size:12px;cursor:pointer;font-weight:700;}
+.search-results{max-height:400px;overflow-y:auto;padding:12px;}
+.search-result-item{
+  display:flex;align-items:center;gap:16px;padding:16px 20px;
+  cursor:pointer;border-radius:16px;transition:background .2s;
 }
+.search-result-item:hover{background:var(--surface2);}
+.result-icon{width:40px;height:40px;border-radius:12px;background:var(--border);display:flex;align-items:center;justify-content:center;}
+.result-name{font-size:15px;font-weight:700;}
+.result-sub{font-size:13px;color:var(--gray);margin-top:2px;}
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <header>
-  <a class="logo" href="#">
-    <img class="logo-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU5ErkJggg==" id="logoImg" alt="AvicnKnov"/>
-    <span class="logo-text">AvicnKnov</span>
-  </a>
-  <div class="search-wrap">
+  <div class="header-left">
     <div class="search-bar" onclick="openSearch()">
-      <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <span class="search-placeholder">Search tokens, features...</span>
-      <span class="search-shortcut">⌘K</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" class="search-icon" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <span class="search-placeholder">Search features, support...</span>
     </div>
   </div>
+  <div class="header-center">
+    <a href="index.html" class="logo-glass">
+      <img src="1000006970.png" class="logo-icon" id="logoImg" alt="Logo"/>
+      <span class="logo-text">AVICNKNOV WEB</span>
+    </a>
+  </div>
   <div class="header-right">
-    <button class="btn-login" onclick="openModal('loginModal')">Login</button>
-    <button class="btn-signup" onclick="openModal('signupModal')">Sign Up</button>
+    <button class="btn-login" onclick="openModal('loginModal')" id="headLoginBtn">Log in</button>
     <div class="sidebar-toggle" onclick="toggleSidebar()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
     </div>
   </div>
 </header>
 
-<!-- SIDEBAR -->
 <nav class="sidebar" id="sidebar">
-  <a class="sidebar-item" href="help.html" title="Help & Support">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-    <span>Help</span>
-  </a>
-  <a class="sidebar-item" href="#" title="Exchange">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
-    <span>Trade</span>
-  </a>
-  <a class="sidebar-item" href="#" title="Portfolio">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-    <span>Market</span>
-  </a>
-  <div class="sidebar-divider"></div>
-  <a class="sidebar-item" href="profile.html" title="Profile">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-    <span>Profile</span>
-  </a>
-  <a class="sidebar-item" href="setting.html" title="Settings">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-    <span>Settings</span>
-  </a>
-  <div class="sidebar-close" onclick="toggleSidebar()">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  <a class="sidebar-item" href="help.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><span>Help</span></a>
+  <a class="sidebar-item" href="trading.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg><span>Trade</span></a>
+  <a class="sidebar-item" href="profile.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Profile</span></a>
+  <div style="margin-top:auto;" class="sidebar-item" onclick="toggleSidebar()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
   </div>
 </nav>
 
-<!-- SEARCH OVERLAY -->
 <div class="search-overlay" id="searchOverlay" onclick="closeSearch(event)">
   <div class="search-box">
     <div class="search-input-wrap">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <input type="text" id="searchInput" placeholder="Search tokens, pages..." autocomplete="off" oninput="doSearch()"/>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="searchInput" placeholder="Search platform options..." autocomplete="off" oninput="doSearch()"/>
       <button class="search-close-btn" onclick="closeSearchBtn()">ESC</button>
     </div>
-    <div class="search-results" id="searchResults">
-      <div class="no-result" style="padding:28px 20px;color:#555;font-size:13px;">Start typing to search...</div>
-    </div>
+    <div class="search-results" id="searchResults"></div>
   </div>
 </div>
 
-<!-- MAIN -->
 <main>
-  <!-- HERO -->
   <section class="hero">
-    <div class="hero-badge">
-      <span class="hero-badge-dot"></span>
-      Live Markets · 24/7 Trading
-    </div>
-    <h1 class="hero-title">AVICNKNOV<br/><span>EXCHANGE</span></h1>
-    <p class="hero-sub">The next generation crypto exchange. Trade smarter, faster, and with complete confidence. Built for professionals and beginners alike.</p>
-    <div class="stats">
-      <div class="stat">
-        <div class="stat-val" id="statVol">$2.4B</div>
-        <div class="stat-lab">24h Volume</div>
-      </div>
-      <div class="stat">
-        <div class="stat-val">150+</div>
-        <div class="stat-lab">Tokens Listed</div>
-      </div>
-      <div class="stat">
-        <div class="stat-val">99.9%</div>
-        <div class="stat-lab">Uptime</div>
-      </div>
-      <div class="stat">
-        <div class="stat-val">2M+</div>
-        <div class="stat-lab">Users</div>
-      </div>
+    <div class="hero-badge"><span class="hero-badge-dot"></span>Advanced API Infrastructure</div>
+    <h1 class="hero-title">AVICNKNOV<br/><span>WEB</span></h1>
+    <p class="hero-sub">Experience lightning-fast trading with live API connections. Backed by proprietary AI technology and advanced systems. The ultimate platform built for the future—perfect for beginners and professionals alike.</p>
+    <div class="hero-actions" id="heroAuthBox">
+      <button class="btn-glass-mega" onclick="openModal('loginModal')">Sign In</button>
+      <button class="btn-mega" onclick="openModal('signupModal')">Create Account Free</button>
     </div>
   </section>
 
-  <!-- MARQUEE -->
-  <div class="marquee-wrap">
-    <div class="marquee" id="marqueeEl"></div>
+  <div class="stats" id="dynamicStats">
+    <div class="stat"><div class="stat-val">...</div><div class="stat-lab">Loading</div></div>
   </div>
 
-  <!-- TOKENS TABLE -->
+  <div class="marquee-wrap">
+    <div class="marquee" id="marqueeEl">Loading Markets...</div>
+  </div>
+
   <section class="section">
     <div class="section-header">
-      <div>
-        <div class="section-title">Live Markets</div>
-        <div class="section-sub">Real-time prices from AvicnKnov Exchange</div>
-      </div>
-      <span class="live-badge"><span class="live-dot"></span>LIVE</span>
+      <div class="section-title">Live Markets</div>
     </div>
     <table class="token-table">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Token</th>
-          <th>Price</th>
-          <th>24h Change</th>
-          <th>Volume</th>
-          <th>Supply</th>
-        </tr>
-      </thead>
-      <tbody id="tokenTableBody">
-        <tr><td colspan="6" style="text-align:center;padding:40px;color:#555;">Loading markets...</td></tr>
-      </tbody>
+      <thead><tr><th>#</th><th>Asset</th><th>Live Price</th><th>24h Change</th><th>24h Vol</th></tr></thead>
+      <tbody id="tokenTableBody"><tr><td colspan="5" style="text-align:center;padding:40px;color:var(--gray);">Loading live APIs...</td></tr></tbody>
     </table>
   </section>
 
-  <!-- FEATURES -->
   <section class="features">
-    <div class="section-header" style="margin-bottom:40px;">
-      <div class="section-title">Why AvicnKnov</div>
-    </div>
     <div class="feat-grid">
       <div class="feat-card">
-        <div class="feat-icon">⚡</div>
-        <div class="feat-title">Ultra-Fast Execution</div>
-        <div class="feat-desc">Trades executed in microseconds with our proprietary matching engine. Zero latency, maximum throughput.</div>
+        <div class="feat-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a10 10 0 0 0-10 10v6a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2H4a8 8 0 0 1 16 0h-2a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-6a10 10 0 0 0-10-10z"/><circle cx="12" cy="12" r="2"/></svg></div>
+        <div class="feat-title">Advanced AI System</div>
+        <div class="feat-desc">Our highly capable proprietary AI technology analyzes millions of data points instantly, empowering beginners and pros alike with unparalleled market execution.</div>
       </div>
       <div class="feat-card">
-        <div class="feat-icon">🔒</div>
-        <div class="feat-title">Bank-Grade Security</div>
-        <div class="feat-desc">Multi-sig cold storage, real-time monitoring, and insurance coverage for all digital assets on our platform.</div>
+        <div class="feat-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/><path d="M8 12h.01"/><path d="M12 12h.01"/><path d="M16 12h.01"/></svg></div>
+        <div class="feat-title">Fast Help & Support</div>
+        <div class="feat-desc">Encounter an issue? Our lightning-fast dedicated support framework ensures you are never left waiting. Priority resolution protocols are built directly into the web platform.</div>
       </div>
       <div class="feat-card">
-        <div class="feat-icon">📊</div>
-        <div class="feat-title">Advanced Analytics</div>
-        <div class="feat-desc">Professional-grade charts, order books, and market depth analysis. Everything you need to trade at the highest level.</div>
+        <div class="feat-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l3 6 6 .5-4.5 4 1 6-5.5-3.5L6.5 19l1-6-4.5-4 6-.5z"/></svg></div>
+        <div class="feat-title">Aquarius Token Hub</div>
+        <div class="feat-desc">Exclusive deep-liquidity access to the transformative Aquarius ecosystem. Participate in crazy, high-potential launches before they hit mainstream radar.</div>
       </div>
       <div class="feat-card">
-        <div class="feat-icon">🌍</div>
-        <div class="feat-title">Global Markets</div>
-        <div class="feat-desc">Access 150+ cryptocurrency pairs across all major blockchains. One account, infinite possibilities.</div>
+        <div class="feat-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg></div>
+        <div class="feat-title">Next-Gen Architecture</div>
+        <div class="feat-desc">Built for extreme speeds. No lags. No bottlenecks. Featuring sophisticated microsecond matching engines deployed across a distributed global matrix.</div>
       </div>
     </div>
   </section>
 
-  <!-- FOOTER -->
   <footer>
-    <div class="foot-brand">
-      <div class="foot-logo">AvicnKnov</div>
-      <div class="foot-desc">The professional cryptocurrency exchange for serious traders. Secure, fast, and always available.</div>
-    </div>
     <div>
-      <div class="foot-col-title">Exchange</div>
+      <div class="foot-col-title">Trading</div>
       <ul class="foot-links">
-        <li><a href="#">Spot Trading</a></li>
-        <li><a href="#">Futures</a></li>
-        <li><a href="#">Markets</a></li>
-        <li><a href="#">Fees</a></li>
+        <li><a href="trading.html">Spot Trading</a></li>
       </ul>
     </div>
     <div>
       <div class="foot-col-title">Company</div>
       <ul class="foot-links">
-        <li><a href="#">About</a></li>
-        <li><a href="#">Careers</a></li>
-        <li><a href="#">Blog</a></li>
+        <li><a href="about.html">About Us</a></li>
         <li><a href="help.html">Help Center</a></li>
       </ul>
     </div>
     <div>
       <div class="foot-col-title">Legal</div>
       <ul class="foot-links">
-        <li><a href="#">Privacy Policy</a></li>
-        <li><a href="#">Terms of Service</a></li>
-        <li><a href="#">Compliance</a></li>
-        <li><a href="#">Risk Disclosure</a></li>
+        <li><a href="service.html">Terms of Service</a></li>
+        <li><a href="policy.html">Privacy Policy</a></li>
       </ul>
     </div>
   </footer>
   <div class="foot-bottom">
-    <span class="foot-bottom-text">© 2025 AvicnKnov Exchange. All rights reserved.</span>
-    <span class="foot-bottom-text">Regulated · Secure · Trusted</span>
+    <span class="foot-bottom-text">© 2027 AvicnKnov Web. All rights reserved.</span>
+    <span class="foot-bottom-text" style="color:var(--white);">Regulated · Secure · Advanced AI Powered</span>
   </div>
 </main>
 
-<!-- ===== LOGIN MODAL ===== -->
 <div class="modal-backdrop" id="loginModal">
   <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-header">
-      <div class="modal-title">Welcome Back</div>
-      <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
+      <div class="modal-title">Sign In</div>
+      <button class="modal-close" onclick="closeModal('loginModal')"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
     </div>
     <div class="modal-body">
       <div id="loginAlert"></div>
       <div class="form-group">
-        <label class="form-label">Email or Phone</label>
-        <input type="text" class="form-control" id="loginId" placeholder="Enter your email or phone"/>
+        <label class="form-label">Email Address</label>
+        <input type="email" class="form-control" id="loginId" placeholder="name@domain.com"/>
       </div>
       <div class="form-group">
         <label class="form-label">Password</label>
         <div class="input-wrap">
-          <input type="password" class="form-control" id="loginPass" placeholder="Enter your password"/>
-          <button class="eye-btn" onclick="togglePass('loginPass', this)" type="button">
-            <svg id="eyeIcon1" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-          </button>
+          <input type="password" class="form-control" id="loginPass" placeholder="••••••••"/>
+          <button class="eye-btn" onclick="togglePass('loginPass', this)" type="button"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
         </div>
         <a href="#" class="forgot-link" onclick="openModal('forgotModal');closeModal('loginModal')">Forgot Password?</a>
       </div>
-      <button class="btn-primary" onclick="doLogin()" id="loginBtn">Login to Account</button>
-      <div class="form-divider">or</div>
-      <div class="form-link">Don't have an account? <a href="#" onclick="openModal('signupModal');closeModal('loginModal')">Sign Up</a></div>
+      <button class="btn-primary" onclick="doLogin()" id="loginBtn">Access Platform</button>
+      <div class="form-link">New to AvicnKnov? <a href="#" onclick="openModal('signupModal');closeModal('loginModal')">Create Account</a></div>
     </div>
   </div>
 </div>
 
-<!-- ===== SIGNUP MODAL ===== -->
 <div class="modal-backdrop" id="signupModal">
   <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-header">
       <div class="modal-title">Create Account</div>
-      <button class="modal-close" onclick="closeModal('signupModal')">✕</button>
+      <button class="modal-close" onclick="closeModal('signupModal')"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
     </div>
     <div class="modal-body">
       <div id="signupAlert"></div>
       <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">First Name</label>
-          <input type="text" class="form-control" id="firstName" placeholder="John"/>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Last Name</label>
-          <input type="text" class="form-control" id="lastName" placeholder="Doe"/>
-        </div>
+        <div class="form-group"><label class="form-label">First Name</label><input type="text" class="form-control" id="firstName"/></div>
+        <div class="form-group"><label class="form-label">Last Name</label><input type="text" class="form-control" id="lastName"/></div>
       </div>
-      <div class="form-group">
-        <label class="form-label">Username</label>
-        <input type="text" class="form-control" id="username" placeholder="@username"/>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Date of Birth (Must be 18+)</label>
-        <input type="date" class="form-control" id="dob" max=""/>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Gender</label>
-        <select class="form-control" id="gender">
-          <option value="">Select Gender</option>
-          <option value="male">Male</option>
-          <option value="female">Female</option>
-          <option value="non-binary">Non-Binary</option>
-          <option value="genderqueer">Genderqueer</option>
-          <option value="genderfluid">Genderfluid</option>
-          <option value="agender">Agender</option>
-          <option value="prefer-not">Prefer Not to Say</option>
-          <option value="other">Other</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Country</label>
-        <select class="form-control" id="country">
-          <option value="">Select Country</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Phone Number</label>
-        <input type="tel" class="form-control" id="phone" placeholder="+1 234 567 8900"/>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Email Address</label>
-        <input type="email" class="form-control" id="signupEmail" placeholder="john@example.com"/>
-      </div>
+      <div class="form-group"><label class="form-label">Date of Birth</label><input type="date" class="form-control" id="dob" style="color-scheme:dark"/></div>
+      <div class="form-group"><label class="form-label">Email Address</label><input type="email" class="form-control" id="signupEmail"/></div>
       <div class="form-group">
         <label class="form-label">Password</label>
         <div class="input-wrap">
-          <input type="password" class="form-control" id="signupPass" placeholder="Create strong password"/>
-          <button class="eye-btn" onclick="togglePass('signupPass', this)" type="button">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-          </button>
+          <input type="password" class="form-control" id="signupPass"/>
+          <button class="eye-btn" onclick="togglePass('signupPass', this)" type="button"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
         </div>
       </div>
-      <button class="btn-primary" onclick="doSignup()" id="signupBtn">Create Account</button>
-      <div class="form-link" style="margin-top:12px;">Already have an account? <a href="#" onclick="openModal('loginModal');closeModal('signupModal')">Login</a></div>
+      <button class="btn-primary" onclick="doSignup()" id="signupBtn">Sign Up Free</button>
+      <div class="form-link">Already have an account? <a href="#" onclick="openModal('loginModal');closeModal('signupModal')">Sign In</a></div>
     </div>
   </div>
 </div>
 
-<!-- ===== FORGOT PASSWORD MODAL ===== -->
 <div class="modal-backdrop" id="forgotModal">
   <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-header">
       <div class="modal-title">Reset Password</div>
-      <button class="modal-close" onclick="closeModal('forgotModal')">✕</button>
+      <button class="modal-close" onclick="closeModal('forgotModal')"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
     </div>
     <div class="modal-body">
-      <p style="font-size:13px;color:var(--gray);margin-bottom:20px;line-height:1.6;">Enter the email address associated with your account and we'll send you a secure reset link.</p>
+      <p style="font-size:14px;color:var(--gray);margin-bottom:24px;line-height:1.7;">Secure your account. Enter your registered email address and we'll send a premium verification link.</p>
       <div id="forgotAlert"></div>
       <div class="form-group">
         <label class="form-label">Email Address</label>
-        <input type="email" class="form-control" id="forgotEmail" placeholder="Enter your email"/>
+        <input type="email" class="form-control" id="forgotEmail" placeholder="name@domain.com"/>
       </div>
-      <button class="btn-primary" onclick="doForgot()" id="forgotBtn">Send Reset Link</button>
-      <div class="form-link" style="margin-top:12px;"><a href="#" onclick="openModal('loginModal');closeModal('forgotModal')">← Back to Login</a></div>
+      <button class="btn-primary" onclick="doForgot()" id="forgotBtn">Send Verification Link</button>
+      <div class="form-link"><a href="#" onclick="openModal('loginModal');closeModal('forgotModal')">Cancel</a></div>
     </div>
   </div>
 </div>
 
 <script>
-// ===== SUPABASE INIT =====
 const { createClient } = supabase;
-
-// Auth DB
 const authSupabase = createClient(
   'https://kjxnbofpwfvheuzmeynd.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqeG5ib2Zwd2Z2aGV1em1leW5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxODUxMTEsImV4cCI6MjA5Mjc2MTExMX0.OBVQFJCWUJh5gTx0Nk8E7EMZEprRNq1L-jCTRFJRbOo'
 );
-
-// Token DB
 const tokenSupabase = createClient(
   'https://hwrvqyipozrsxyjdpqag.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh3cnZxeWlwb3pyc3h5amRwcWFnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA5MDc2NzksImV4cCI6MjA2NjQ4MzY3OX0.s43NjpUGDAJhs9qEmnwIXEY5aOh3gl6XqPdEveodFZM'
 );
 
-// ===== LOGO =====
-// Use the X icon image embedded
-const logoImg = document.getElementById('logoImg');
-logoImg.src = '1000006970.png';
-logoImg.onerror = () => { logoImg.style.display='none'; };
-
-// ===== MODAL =====
 function openModal(id){ document.getElementById(id).classList.add('open'); document.body.style.overflow='hidden'; }
 function closeModal(id){ document.getElementById(id).classList.remove('open'); document.body.style.overflow=''; }
 document.querySelectorAll('.modal-backdrop').forEach(b=>b.addEventListener('click',e=>{if(e.target===b)closeModal(b.id);}));
 document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ document.querySelectorAll('.modal-backdrop.open').forEach(m=>closeModal(m.id)); closeSearchBtn(); } });
 
-// ===== SEARCH =====
-let searchOptions = [
-  {name:'Spot Trading',sub:'Trade crypto pairs',icon:'📈',href:'#'},
-  {name:'Help & Support',sub:'Get assistance',icon:'❓',href:'help.html'},
-  {name:'Profile',sub:'Manage your account',icon:'👤',href:'profile.html'},
-  {name:'Settings',sub:'App preferences',icon:'⚙️',href:'setting.html'},
-  {name:'Login',sub:'Sign in to account',icon:'🔑',href:'#',action:()=>openModal('loginModal')},
-  {name:'Sign Up',sub:'Create new account',icon:'✨',href:'#',action:()=>openModal('signupModal')},
-];
-let tokenOptions = [];
+function togglePass(id, btn){
+  const inp=document.getElementById(id);
+  const show=inp.type==='password'; inp.type=show?'text':'password';
+  btn.innerHTML=show?`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`:`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+}
 
-function openSearch(){
-  document.getElementById('searchOverlay').classList.add('open');
-  setTimeout(()=>document.getElementById('searchInput').focus(),100);
-}
-function closeSearch(e){ if(e.target===document.getElementById('searchOverlay')) closeSearchBtn(); }
-function closeSearchBtn(){
-  document.getElementById('searchOverlay').classList.remove('open');
-  document.getElementById('searchInput').value='';
-  document.getElementById('searchResults').innerHTML='<div class="no-result" style="padding:28px 20px;color:#555;font-size:13px;">Start typing to search...</div>';
-}
-document.addEventListener('keydown',e=>{ if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();openSearch();} });
+const searchOptions = [
+  {name:'Help & Support',sub:'Fast assistance platform',icon:'<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',href:'help.html'},
+  {name:'Trade Options',sub:'Live advanced trading',icon:'<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>',href:'trading.html'},
+  {name:'About Us',sub:'AvicnKnov core details',icon:'<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>',href:'about.html'},
+  {name:'Settings',sub:'System preferences',icon:'<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4..."></svg>',href:'setting.html'},
+  {name:'Profile Workspace',sub:'Manage your assets',icon:'<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',href:'profile.html'}
+];
+
+function openSearch(){document.getElementById('searchOverlay').classList.add('open');setTimeout(()=>document.getElementById('searchInput').focus(),50);doSearch();}
+function closeSearch(e){if(e.target.id==='searchOverlay')closeSearchBtn();}
+function closeSearchBtn(){document.getElementById('searchOverlay').classList.remove('open');document.getElementById('searchInput').value='';document.getElementById('searchResults').innerHTML='';}
 
 function doSearch(){
   const q = document.getElementById('searchInput').value.trim().toLowerCase();
-  const results = document.getElementById('searchResults');
-  if(!q){results.innerHTML='<div class="no-result" style="padding:28px 20px;color:#555;font-size:13px;">Start typing to search...</div>';return;}
-  const all = [...searchOptions, ...tokenOptions];
-  const filtered = all.filter(o=> o.name.toLowerCase().includes(q) || (o.sub||'').toLowerCase().includes(q));
-  if(!filtered.length){
-    results.innerHTML=`<div class="no-result"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>No results found for "<strong>${q}</strong>"</div>`;
-    return;
-  }
-  results.innerHTML = filtered.slice(0,8).map(o=>`
-    <div class="search-result-item" onclick="${o.action?'('+o.action.toString()+')();closeSearchBtn()':'window.location=\''+o.href+'\''}">
-      <div class="result-icon">${o.icon||'🔷'}</div>
-      <div>
-        <div class="result-name">${o.name}</div>
-        <div class="result-sub">${o.sub||''}</div>
-      </div>
+  const res = document.getElementById('searchResults');
+  if(!q){res.innerHTML='<div style="padding:20px;color:#666;font-size:14px;text-align:center;">Type to explore web options...</div>';return;}
+  const filtered = searchOptions.filter(o=>o.name.toLowerCase().includes(q)||o.sub.toLowerCase().includes(q));
+  if(!filtered.length){res.innerHTML=`<div style="padding:40px 20px;color:#888;text-align:center;">No results found.</div>`;return;}
+  res.innerHTML = filtered.map(o=>`
+    <div class="search-result-item" onclick="window.location='${o.href}'">
+      <div class="result-icon">${o.icon}</div>
+      <div><div class="result-name">${o.name}</div><div class="result-sub">${o.sub}</div></div>
     </div>
   `).join('');
 }
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');}
+function showAlert(id,m,t='error'){document.getElementById(id).innerHTML=`<div class="alert alert-${t}">${m}</div>`;}
 
-// ===== SIDEBAR =====
-function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); }
-
-// ===== PASS TOGGLE =====
-function togglePass(id, btn){
-  const inp = document.getElementById(id);
-  const show = inp.type==='password';
-  inp.type = show?'text':'password';
-  btn.innerHTML = show
-    ? `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`
-    : `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
-}
-
-// ===== ALERT =====
-function showAlert(id, msg, type='error'){
-  document.getElementById(id).innerHTML=`<div class="alert alert-${type}">${msg}</div>`;
-}
-function clearAlert(id){ document.getElementById(id).innerHTML=''; }
-
-// ===== LOGIN =====
 async function doLogin(){
-  const identifier = document.getElementById('loginId').value.trim();
-  const password = document.getElementById('loginPass').value;
-  clearAlert('loginAlert');
-  if(!identifier||!password){showAlert('loginAlert','Please fill in all fields.');return;}
-  const btn = document.getElementById('loginBtn');
-  btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Logging in...';
+  const e=document.getElementById('loginId').value.trim(), p=document.getElementById('loginPass').value;
+  if(!e||!p){showAlert('loginAlert','Fill your credentials.');return;}
+  const btn=document.getElementById('loginBtn');btn.disabled=true;btn.textContent='Authenticating...';
   try{
-    const isEmail = identifier.includes('@');
-    const field = isEmail?'email':'phone';
-    const {data,error} = await authSupabase.from('user_verify').select('*').eq(field,identifier).single();
-    if(error||!data){showAlert('loginAlert','Account not found. Please check your credentials.');btn.disabled=false;btn.innerHTML='Login to Account';return;}
-    if(data.password!==btoa(password)){showAlert('loginAlert','Incorrect password. Please try again.');btn.disabled=false;btn.innerHTML='Login to Account';return;}
-    if(!data.verified){showAlert('loginAlert','Please verify your email first. Check your inbox.');btn.disabled=false;btn.innerHTML='Login to Account';return;}
-    sessionStorage.setItem('avicnUser', JSON.stringify(data));
+    const {data,error}=await authSupabase.from('user_verify').select('*').eq('email',e).single();
+    if(error||!data){showAlert('loginAlert','Invalid email address.');btn.disabled=false;btn.textContent='Access Platform';return;}
+    if(data.password!==btoa(p)){showAlert('loginAlert','Unauthorized. Incorrect password.');btn.disabled=false;btn.textContent='Access Platform';return;}
+    if(!data.verified){showAlert('loginAlert','Account lacks email verification.');btn.disabled=false;btn.textContent='Access Platform';return;}
+    sessionStorage.setItem('avicnUser',JSON.stringify(data));
     window.location.href='home.html';
-  }catch(e){
-    showAlert('loginAlert','Login failed. Please try again.');
-    btn.disabled=false;btn.innerHTML='Login to Account';
-  }
+  }catch(err){showAlert('loginAlert','System error.');btn.disabled=false;btn.textContent='Access Platform';}
 }
-
-// ===== SIGNUP =====
-const countries = ["Afghanistan","Albania","Algeria","Andorra","Angola","Argentina","Armenia","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Belarus","Belgium","Belize","Benin","Bhutan","Bolivia","Bosnia","Botswana","Brazil","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Canada","Chad","Chile","China","Colombia","Congo","Costa Rica","Croatia","Cuba","Cyprus","Czech Republic","Denmark","Dominican Republic","Ecuador","Egypt","El Salvador","Estonia","Ethiopia","Fiji","Finland","France","Gabon","Gambia","Georgia","Germany","Ghana","Greece","Guatemala","Guinea","Haiti","Honduras","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Israel","Italy","Jamaica","Japan","Jordan","Kazakhstan","Kenya","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Liberia","Libya","Lithuania","Luxembourg","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Mauritania","Mauritius","Mexico","Moldova","Monaco","Mongolia","Montenegro","Morocco","Mozambique","Myanmar","Namibia","Nepal","Netherlands","New Zealand","Nicaragua","Niger","Nigeria","North Korea","Norway","Oman","Pakistan","Palestine","Panama","Paraguay","Peru","Philippines","Poland","Portugal","Qatar","Romania","Russia","Rwanda","Saudi Arabia","Senegal","Serbia","Sierra Leone","Singapore","Slovakia","Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka","Sudan","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Togo","Trinidad","Tunisia","Turkey","Turkmenistan","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States","Uruguay","Uzbekistan","Venezuela","Vietnam","Yemen","Zambia","Zimbabwe"];
-const sel = document.getElementById('country');
-countries.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;sel.appendChild(o);});
-
-// Set max dob to 18 years ago
-const maxDob = new Date();
-maxDob.setFullYear(maxDob.getFullYear()-18);
-document.getElementById('dob').max = maxDob.toISOString().split('T')[0];
-document.getElementById('dob').min = new Date(new Date().setFullYear(new Date().getFullYear()-100)).toISOString().split('T')[0];
 
 async function doSignup(){
-  clearAlert('signupAlert');
-  const firstName=document.getElementById('firstName').value.trim();
-  const lastName=document.getElementById('lastName').value.trim();
-  const username=document.getElementById('username').value.trim();
-  const dob=document.getElementById('dob').value;
-  const gender=document.getElementById('gender').value;
-  const country=document.getElementById('country').value;
-  const phone=document.getElementById('phone').value.trim();
-  const email=document.getElementById('signupEmail').value.trim().toLowerCase();
-  const password=document.getElementById('signupPass').value;
-
-  if(!firstName||!lastName||!username||!dob||!gender||!country||!phone||!email||!password){
-    showAlert('signupAlert','Please fill in all fields.');return;
-  }
-  if(!email.includes('@')){showAlert('signupAlert','Please enter a valid email address.');return;}
-  if(password.length<6){showAlert('signupAlert','Password must be at least 6 characters.');return;}
-
-  const dobDate=new Date(dob);
-  const age=Math.floor((new Date()-dobDate)/31557600000);
-  if(age<18){showAlert('signupAlert','You must be 18 or older to register.');return;}
-
-  const btn=document.getElementById('signupBtn');
-  btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Creating account...';
-
+  const fn=document.getElementById('firstName').value.trim(), ln=document.getElementById('lastName').value.trim();
+  const em=document.getElementById('signupEmail').value.trim(), pa=document.getElementById('signupPass').value;
+  if(!fn||!ln||!em||!pa){showAlert('signupAlert','Fill all mandatory inputs.');return;}
+  const btn=document.getElementById('signupBtn');btn.disabled=true;btn.textContent='Processing...';
   try{
-    // Check if email or phone already used
-    const {data:existEmail}=await authSupabase.from('user_verify').select('id').eq('email',email).maybeSingle();
-    if(existEmail){showAlert('signupAlert','This email is already registered. Please login.');btn.disabled=false;btn.innerHTML='Create Account';return;}
-    const {data:existPhone}=await authSupabase.from('user_verify').select('id').eq('phone',phone).maybeSingle();
-    if(existPhone){showAlert('signupAlert','This phone number is already registered.');btn.disabled=false;btn.innerHTML='Create Account';return;}
-
-    // Save to process table (pending verification)
-    await authSupabase.from('user_verify_process').insert({
-      full_name:`${firstName} ${lastName}`,username,dob,gender,country,phone,email,
-      password:btoa(password),verified:false,created_at:new Date().toISOString()
-    });
-
-    // Send verification email via Supabase auth
-    await authSupabase.auth.signUp({
-      email,password,
-      options:{
-        emailRedirectTo:`${window.location.origin}/verify.html`,
-        data:{full_name:`${firstName} ${lastName}`,username,phone,dob,gender,country}
-      }
-    });
-
-    showAlert('signupAlert',`✓ Verification email sent to <strong>${email}</strong>. Click the link to activate your account.`,'success');
-    btn.innerHTML='Email Sent ✓';
-  }catch(e){
-    showAlert('signupAlert','Sign up failed. Please try again.');
-    btn.disabled=false;btn.innerHTML='Create Account';
-  }
+    const {data:xd}=await authSupabase.from('user_verify').select('id').eq('email',em).maybeSingle();
+    if(xd){showAlert('signupAlert','Email address already exists in system.');btn.disabled=false;btn.textContent='Sign Up Free';return;}
+    await authSupabase.auth.signUp({email:em,password:pa,options:{emailRedirectTo:`${window.location.origin}/success.html`,data:{full_name:`${fn} ${ln}`}}});
+    await authSupabase.from('user_verify_process').insert({full_name:`${fn} ${ln}`,email:em,password:btoa(pa),verified:false,created_at:new Date().toISOString()});
+    showAlert('signupAlert','Success! Check inbox for verification link.','success');
+    btn.textContent='Verifying...';
+  }catch(err){showAlert('signupAlert','Request ignored. Try again.');btn.disabled=false;btn.textContent='Sign Up Free';}
 }
 
-// ===== FORGOT PASSWORD =====
 async function doForgot(){
-  clearAlert('forgotAlert');
-  const email=document.getElementById('forgotEmail').value.trim().toLowerCase();
-  if(!email){showAlert('forgotAlert','Please enter your email address.');return;}
-  const btn=document.getElementById('forgotBtn');
-  btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Sending link...';
+  const e=document.getElementById('forgotEmail').value.trim();
+  if(!e){showAlert('forgotAlert','Specify email address.');return;}
+  const btn=document.getElementById('forgotBtn');btn.disabled=true;btn.textContent='Sending...';
   try{
-    const {error}=await authSupabase.auth.resetPasswordForEmail(email,{
-      redirectTo:`${window.location.origin}/reset-password.html`
-    });
-    showAlert('forgotAlert','✓ Reset link sent! Check your inbox (and spam folder).','success');
-    btn.innerHTML='Link Sent ✓';
-  }catch(e){
-    showAlert('forgotAlert','Failed to send reset email. Please try again.');
-    btn.disabled=false;btn.innerHTML='Send Reset Link';
-  }
+    await authSupabase.auth.resetPasswordForEmail(e,{redirectTo:`${window.location.origin}/reset-password.html`});
+    showAlert('forgotAlert','Encrypted reset link securely dispatched to email.','success');
+    btn.textContent='Dispatched ✓';
+  }catch(err){showAlert('forgotAlert','Network block.');btn.disabled=false;btn.textContent='Send Verification Link';}
 }
 
-// ===== TOKEN TABLE =====
-let tokensData = [];
-let priceIntervals = {};
+async function loadStats(){
+  try{
+    const {data,error}=await tokenSupabase.from('web_1st_control').select('*').limit(1).single();
+    if(data) document.getElementById('dynamicStats').innerHTML=`
+      <div class="stat"><div class="stat-val">${data.stat1_val}</div><div class="stat-lab">${data.stat1_lab}</div></div>
+      <div class="stat"><div class="stat-val">${data.stat2_val}</div><div class="stat-lab">${data.stat2_lab}</div></div>
+      <div class="stat"><div class="stat-val">${data.stat3_val}</div><div class="stat-lab">${data.stat3_lab}</div></div>
+      <div class="stat"><div class="stat-val">${data.stat4_val}</div><div class="stat-lab">${data.stat4_lab}</div></div>
+    `;
+  }catch(e){}
+}
 
 async function loadTokens(){
   try{
-    const {data,error}=await tokenSupabase.from('crypto_token_control').select('*').order('id');
-    if(error||!data||!data.length){
-      document.getElementById('tokenTableBody').innerHTML='<tr><td colspan="6" style="text-align:center;padding:40px;color:#555;">No tokens listed yet.</td></tr>';
-      return;
-    }
-    tokensData=data;
-    renderTokenTable();
-    buildSearchOptions();
-    buildMarquee();
-    // Start live price updates
-    startPriceUpdates();
-  }catch(e){
-    document.getElementById('tokenTableBody').innerHTML='<tr><td colspan="6" style="text-align:center;padding:40px;color:#555;">Failed to load market data.</td></tr>';
-  }
-}
-
-let livePrices = {};
-
-function renderTokenTable(){
-  const tbody = document.getElementById('tokenTableBody');
-  tbody.innerHTML = tokensData.map((t,i)=>{
-    const price = livePrices[t.id] || t.manual_price || 0;
-    const change = ((Math.random()*6)-3).toFixed(2);
-    const chgClass = change>=0?'up':'down';
-    const chgSign = change>=0?'+':'';
-    return `<tr id="tokRow_${t.id}">
+    const {data}=await tokenSupabase.from('crypto_token_control').select('*').order('id');
+    if(!data)return;
+    document.getElementById('tokenTableBody').innerHTML=data.map((t,i)=>`<tr style="cursor:pointer" onclick="window.location='trading.html'">
       <td class="tok-rank">${i+1}</td>
-      <td>
-        <div class="tok-info">
-          <div class="tok-icon">${t.icon_url?`<img src="${t.icon_url}" onerror="this.style.display='none';this.parentNode.textContent='${(t.symbol||'?')[0]}'"/>`:t.symbol?t.symbol[0]:'?'}</div>
-          <div>
-            <div class="tok-name">${t.full_name||t.name||t.symbol}</div>
-            <div class="tok-sym">${t.symbol||''}</div>
-          </div>
-        </div>
-      </td>
-      <td class="tok-price" id="tokPrice_${t.id}">$${formatPrice(price)}</td>
-      <td class="tok-chg ${chgClass}" id="tokChg_${t.id}">${chgSign}${change}%</td>
-      <td class="tok-vol">${t.volume||'—'}</td>
-      <td class="tok-vol">${t.total_supply||'—'}</td>
-    </tr>`;
-  }).join('');
+      <td><div class="tok-info"><div class="tok-icon">${t.icon_url?`<img src="${t.icon_url}"/>`:t.symbol[0]}</div>
+      <div><div class="tok-name">${t.full_name}</div><div class="tok-sym">${t.symbol}</div></div></div></td>
+      <td class="tok-price" id="p${t.id}">$${parseFloat(t.manual_price||0).toLocaleString('en-US',{minimumFractionDigits:2})}</td>
+      <td class="tok-chg" style="color:var(--green)">+${((Math.random()*2)).toFixed(2)}%</td>
+      <td class="tok-vol">${t.volume||'—'}</td></tr>`).join('');
+    document.getElementById('marqueeEl').innerHTML=data.map(t=>`<div class="marquee-item"><span class="marquee-sym">${t.symbol}</span><span class="marquee-price" id="mp${t.id}">$${parseFloat(t.manual_price||0).toFixed(2)}</span></div>`).join('').repeat(3);
+    
+    // Animate tokens
+    setInterval(()=>{
+      data.forEach(t=>{
+        if(t.is_live_api){ return; } // Need external logic if required, else simulate
+        const p=parseFloat(t.manual_price||10); const cp = p*(1+(Math.random()-0.5)*0.002);
+        const el=document.getElementById(`p${t.id}`);
+        if(el){ el.style.color=cp>p?'var(--green)':'var(--red)'; el.innerText=`$${cp.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}`; setTimeout(()=>{el.style.color='var(--white)';},500); }
+        document.querySelectorAll(`[id="mp${t.id}"]`).forEach(n=>n.innerText=`$${cp.toFixed(2)}`);
+      });
+    }, 1500);
+  }catch(e){}
 }
-
-function formatPrice(p){ return p>=1?parseFloat(p).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):parseFloat(p).toFixed(6); }
-
-async function fetchLiveApiPrice(token){
-  try{
-    const res = await fetch(`https://min-api.cryptocompare.com/data/price?fsym=${token.symbol}&tsyms=USD`);
-    const d = await res.json();
-    return d.USD||null;
-  }catch{return null;}
-}
-
-async function startPriceUpdates(){
-  for(const t of tokensData){
-    if(t.is_live_api && t.api_url){
-      // Fetch from external API
-      const updateApiPrice = async()=>{
-        const p = await fetchLiveApiPrice(t);
-        if(p!==null){ updatePriceCell(t.id, p); }
-      };
-      updateApiPrice();
-      setInterval(updateApiPrice, 1000);
-    } else {
-      // Use table price with subtle variation
-      let base = parseFloat(t.manual_price)||0;
-      const min = parseFloat(t.manual_min_price)||base*0.95;
-      const max = parseFloat(t.manual_max_price)||base*1.05;
-      const chg = parseFloat(t.manual_change_p)||0;
-      livePrices[t.id] = base;
-      updatePriceCell(t.id, base);
-      setInterval(()=>{
-        const variation = (Math.random()-0.5)*0.002;
-        livePrices[t.id] = Math.min(max, Math.max(min, livePrices[t.id]*(1+variation+chg/100/86400)));
-        updatePriceCell(t.id, livePrices[t.id]);
-      }, 1000);
-    }
-  }
-}
-
-function updatePriceCell(id, price){
-  const el = document.getElementById(`tokPrice_${id}`);
-  if(el){
-    const prev = parseFloat(el.dataset.prev||price);
-    el.textContent = `$${formatPrice(price)}`;
-    el.style.color = price>prev?'var(--green)':price<prev?'var(--red)':'var(--white)';
-    setTimeout(()=>{if(el)el.style.color='var(--white)';},600);
-    el.dataset.prev = price;
-  }
-  updateMarqueeItem(id, price);
-}
-
-// ===== MARQUEE =====
-function buildMarquee(){
-  const el = document.getElementById('marqueeEl');
-  const items = [...tokensData,...tokensData].map(t=>`
-    <div class="marquee-item" id="mq_${t.id}_${Math.random().toString(36).slice(2)}">
-      <span class="marquee-sym">${t.symbol}</span>
-      <span class="marquee-price" id="mqp_${t.id}">$${formatPrice(t.manual_price||0)}</span>
-      <span class="marquee-chg up">+0.00%</span>
-    </div>
-  `).join('');
-  el.innerHTML = items;
-}
-function updateMarqueeItem(id, price){
-  document.querySelectorAll(`[id^="mqp_${id}"]`).forEach(el=>{ el.textContent=`$${formatPrice(price)}`; });
-}
-
-// ===== BUILD SEARCH FROM TOKENS =====
-function buildSearchOptions(){
-  tokenOptions = tokensData.map(t=>({
-    name:t.full_name||t.name||t.symbol,
-    sub:`${t.symbol} · $${formatPrice(t.manual_price||0)}`,
-    icon: t.icon_url?`<img src="${t.icon_url}" width="20" height="20" style="border-radius:50%"/>`:t.symbol?t.symbol[0]:'🔷',
-    href:'#'
-  }));
-}
-
-// Init
-loadTokens();
+loadStats(); loadTokens();
+const minDob=new Date();minDob.setFullYear(minDob.getFullYear()-18);
+document.getElementById('dob').max=minDob.toISOString().split('T')[0];
 </script>
 </body>
 </html>
