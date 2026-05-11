@@ -22,20 +22,16 @@
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 html,body{height:100%;background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;overflow-x:hidden;}
-
-/* SCROLLBAR */
 ::-webkit-scrollbar{width:4px;}
 ::-webkit-scrollbar-track{background:#0a0a0a;}
 ::-webkit-scrollbar-thumb{background:#333;border-radius:2px;}
-
-/* NOISE OVERLAY */
 body::before{
   content:'';position:fixed;inset:0;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
   pointer-events:none;z-index:9999;opacity:0.4;
 }
 
-/* ===== HEADER ===== */
+/* HEADER */
 header{
   position:fixed;top:0;left:0;right:0;z-index:100;
   display:flex;align-items:center;justify-content:space-between;
@@ -45,7 +41,18 @@ header{
   border-bottom:1px solid var(--border);
 }
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
-.logo-icon{width:36px;height:36px;object-fit:contain;filter:brightness(0) invert(1);}
+.logo-icon-wrap{
+  width:38px;height:38px;border-radius:10px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.12);
+  backdrop-filter:blur(12px);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 16px rgba(255,255,255,0.06),inset 0 1px 0 rgba(255,255,255,0.1);
+  overflow:hidden;
+  transition:box-shadow .3s;
+}
+.logo-icon-wrap:hover{box-shadow:0 4px 24px rgba(255,255,255,0.12),inset 0 1px 0 rgba(255,255,255,0.15);}
+.logo-icon{width:26px;height:26px;object-fit:contain;display:block;filter:brightness(0) invert(1);}
 .logo-text{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:var(--white);}
 
 /* SEARCH */
@@ -110,8 +117,6 @@ header{
   font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;
 }
 .btn-signup:hover{background:#e0e0e0;}
-
-/* SIDEBAR TOGGLE */
 .sidebar-toggle{
   width:36px;height:36px;border-radius:8px;
   background:var(--surface2);border:1px solid var(--border2);
@@ -120,7 +125,7 @@ header{
 }
 .sidebar-toggle:hover{background:#2a2a2a;}
 
-/* ===== SIDEBAR ===== */
+/* SIDEBAR */
 .sidebar{
   position:fixed;right:0;top:64px;bottom:0;width:64px;
   background:var(--surface);border-left:1px solid var(--border);
@@ -146,7 +151,7 @@ header{
 }
 .sidebar-close:hover{background:var(--surface2);color:var(--white);}
 
-/* ===== MAIN ===== */
+/* MAIN */
 main{padding-top:64px;min-height:100vh;}
 
 /* HERO */
@@ -242,19 +247,68 @@ h1.hero-title span{color:var(--gray2);}
 }
 .live-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite;}
 
-/* FEATURES */
-.features{padding:60px 40px;background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
-.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);}
+/* ===== FEATURES - PREMIUM REDESIGN ===== */
+.features{padding:80px 40px;background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);}
 .feat-card{
-  background:var(--surface);padding:32px 28px;
-  transition:background .2s;
+  background:var(--surface);padding:36px 30px;
+  transition:background .3s,transform .3s;
+  cursor:default;position:relative;overflow:hidden;
+}
+.feat-card::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 20% 20%,rgba(255,255,255,0.03) 0%,transparent 60%);
+  opacity:0;transition:opacity .3s;
 }
 .feat-card:hover{background:var(--surface2);}
-.feat-icon{font-size:28px;margin-bottom:16px;}
-.feat-title{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;margin-bottom:8px;}
-.feat-desc{font-size:13px;color:var(--gray);line-height:1.6;}
+.feat-card:hover::before{opacity:1;}
+.feat-icon-box{
+  width:48px;height:48px;border-radius:12px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:20px;
+  transition:border-color .3s,background .3s,transform .3s;
+}
+.feat-card:hover .feat-icon-box{
+  border-color:rgba(255,255,255,0.16);
+  background:rgba(255,255,255,0.07);
+  transform:scale(1.08);
+}
+.feat-icon-box svg{width:22px;height:22px;stroke:var(--white);stroke-width:1.5;fill:none;}
+.feat-title{font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:2px;margin-bottom:10px;}
+.feat-desc{font-size:13px;color:var(--gray);line-height:1.7;}
 
-/* ===== MODALS ===== */
+/* CLICK ANIMATION */
+@keyframes featPop{0%{transform:scale(1);}40%{transform:scale(.97);}100%{transform:scale(1);}}
+.feat-card.clicked{animation:featPop .3s ease;}
+
+/* BRAND SECTION */
+.brand-section{
+  padding:80px 40px;
+  display:flex;flex-direction:column;align-items:center;
+  text-align:center;border-top:1px solid var(--border);
+}
+.brand-logo-big{
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,5vw,48px);
+  letter-spacing:5px;margin-bottom:16px;
+}
+.brand-tagline{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:18px;
+  margin-bottom:20px;
+}
+.brand-tag{
+  display:flex;align-items:center;gap:8px;
+  font-size:13px;color:var(--gray);
+  padding:6px 14px;border:1px solid var(--border2);border-radius:100px;
+  background:var(--surface2);
+}
+.brand-tag svg{width:14px;height:14px;stroke:var(--white);stroke-width:1.5;fill:none;flex-shrink:0;}
+.brand-desc{
+  font-size:14px;color:var(--gray);line-height:1.8;max-width:600px;
+}
+
+/* MODALS */
 .modal-backdrop{
   position:fixed;inset:0;z-index:300;
   background:rgba(0,0,0,0.75);backdrop-filter:blur(10px);
@@ -316,22 +370,30 @@ select.form-control option{background:#1a1a1a;}
 .form-link a:hover{text-decoration:underline;}
 .form-divider{display:flex;align-items:center;gap:12px;margin:16px 0;color:var(--gray2);font-size:12px;}
 .form-divider::before,.form-divider::after{content:'';flex:1;height:1px;background:var(--border);}
-.alert{
-  padding:12px 16px;border-radius:8px;font-size:13px;margin-bottom:14px;
-  border:1px solid transparent;
-}
+.alert{padding:12px 16px;border-radius:8px;font-size:13px;margin-bottom:14px;border:1px solid transparent;}
 .alert-error{background:rgba(255,59,59,.08);border-color:rgba(255,59,59,.2);color:#ff6b6b;}
 .alert-success{background:rgba(0,230,118,.08);border-color:rgba(0,230,118,.2);color:var(--green);}
+.forgot-link{
+  display:block;text-align:right;font-size:12px;color:var(--gray);
+  text-decoration:none;margin-top:-8px;margin-bottom:8px;transition:color .2s;
+}
+.forgot-link:hover{color:var(--white);}
+.spinner{
+  width:16px;height:16px;border:2px solid rgba(0,0,0,.3);
+  border-top-color:#000;border-radius:50%;
+  animation:spin .6s linear infinite;display:inline-block;margin-right:6px;vertical-align:middle;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
 
 /* FOOTER */
 footer{
   background:var(--surface);border-top:1px solid var(--border);
   padding:48px 40px;display:grid;
-  grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;
+  grid-template-columns:2fr 1fr 1fr;gap:40px;
 }
 .foot-brand{}
 .foot-logo{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:3px;margin-bottom:12px;}
-.foot-desc{font-size:13px;color:var(--gray);line-height:1.6;max-width:240px;}
+.foot-desc{font-size:13px;color:var(--gray);line-height:1.6;max-width:280px;}
 .foot-col-title{font-family:'Space Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--gray2);margin-bottom:16px;}
 .foot-links{list-style:none;display:flex;flex-direction:column;gap:10px;}
 .foot-links a{text-decoration:none;color:var(--gray);font-size:13px;transition:color .2s;}
@@ -342,21 +404,24 @@ footer{
 }
 .foot-bottom-text{font-size:12px;color:var(--gray2);}
 
-/* FORGOT PASSWORD */
-.forgot-link{
-  display:block;text-align:right;font-size:12px;color:var(--gray);
-  text-decoration:none;margin-top:-8px;margin-bottom:8px;
-  transition:color .2s;
+/* HERO LOGIN CTA (for logged out users) */
+.hero-cta-block{
+  display:flex;gap:16px;margin-bottom:48px;
+  animation:fadeUp .6s .25s ease both;
 }
-.forgot-link:hover{color:var(--white);}
-
-/* LOADING SPINNER */
-.spinner{
-  width:16px;height:16px;border:2px solid rgba(0,0,0,.3);
-  border-top-color:#000;border-radius:50%;
-  animation:spin .6s linear infinite;display:inline-block;margin-right:6px;vertical-align:middle;
+.btn-hero-primary{
+  padding:14px 32px;background:var(--white);color:#000;
+  border:none;border-radius:10px;font-family:'DM Sans',sans-serif;
+  font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;
+  letter-spacing:.5px;
 }
-@keyframes spin{to{transform:rotate(360deg);}}
+.btn-hero-primary:hover{background:#e0e0e0;transform:translateY(-2px);}
+.btn-hero-secondary{
+  padding:14px 32px;background:none;color:var(--white);
+  border:1px solid var(--border2);border-radius:10px;font-family:'DM Sans',sans-serif;
+  font-size:14px;font-weight:500;cursor:pointer;transition:all .2s;
+}
+.btn-hero-secondary:hover{border-color:#555;background:#111;transform:translateY(-2px);}
 
 /* RESPONSIVE */
 @media(max-width:768px){
@@ -366,6 +431,7 @@ footer{
   .hero{padding:60px 20px 40px;}
   .section{padding:40px 20px;}
   .form-row{grid-template-columns:1fr;}
+  .hero-cta-block{flex-direction:column;align-items:center;}
 }
 @media(max-width:480px){
   .hero-title{font-size:48px !important;}
@@ -380,13 +446,15 @@ footer{
 <!-- HEADER -->
 <header>
   <a class="logo" href="#">
-    <img class="logo-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU5ErkJggg==" id="logoImg" alt="AvicnKnov"/>
+    <div class="logo-icon-wrap">
+      <img class="logo-icon" src="1000006970.png" id="logoImg" alt="AvicnKnov"/>
+    </div>
     <span class="logo-text">AvicnKnov</span>
   </a>
   <div class="search-wrap">
     <div class="search-bar" onclick="openSearch()">
       <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <span class="search-placeholder">Search tokens, features...</span>
+      <span class="search-placeholder">Search pages, features...</span>
       <span class="search-shortcut">⌘K</span>
     </div>
   </div>
@@ -405,7 +473,7 @@ footer{
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
     <span>Help</span>
   </a>
-  <a class="sidebar-item" href="#" title="Exchange">
+  <a class="sidebar-item" href="trading.html" title="Exchange">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
     <span>Trade</span>
   </a>
@@ -432,7 +500,7 @@ footer{
   <div class="search-box">
     <div class="search-input-wrap">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <input type="text" id="searchInput" placeholder="Search tokens, pages..." autocomplete="off" oninput="doSearch()"/>
+      <input type="text" id="searchInput" placeholder="Search pages, features..." autocomplete="off" oninput="doSearch()"/>
       <button class="search-close-btn" onclick="closeSearchBtn()">ESC</button>
     </div>
     <div class="search-results" id="searchResults">
@@ -451,21 +519,25 @@ footer{
     </div>
     <h1 class="hero-title">AVICNKNOV<br/><span>EXCHANGE</span></h1>
     <p class="hero-sub">The next generation crypto exchange. Trade smarter, faster, and with complete confidence. Built for professionals and beginners alike.</p>
+    <div class="hero-cta-block" id="heroCTA">
+      <button class="btn-hero-primary" onclick="openModal('signupModal')">Start Trading Free</button>
+      <button class="btn-hero-secondary" onclick="openModal('loginModal')">Login to Account</button>
+    </div>
     <div class="stats">
       <div class="stat">
         <div class="stat-val" id="statVol">$2.4B</div>
         <div class="stat-lab">24h Volume</div>
       </div>
       <div class="stat">
-        <div class="stat-val">150+</div>
+        <div class="stat-val" id="statTokens">150+</div>
         <div class="stat-lab">Tokens Listed</div>
       </div>
       <div class="stat">
-        <div class="stat-val">99.9%</div>
+        <div class="stat-val" id="statUptime">99.9%</div>
         <div class="stat-lab">Uptime</div>
       </div>
       <div class="stat">
-        <div class="stat-val">2M+</div>
+        <div class="stat-val" id="statUsers">2M+</div>
         <div class="stat-lab">Users</div>
       </div>
     </div>
@@ -502,76 +574,136 @@ footer{
     </table>
   </section>
 
-  <!-- FEATURES -->
+  <!-- FEATURES - PREMIUM REDESIGN -->
   <section class="features">
-    <div class="section-header" style="margin-bottom:40px;">
+    <div class="section-header" style="margin-bottom:48px;">
       <div class="section-title">Why AvicnKnov</div>
     </div>
     <div class="feat-grid">
-      <div class="feat-card">
-        <div class="feat-icon">⚡</div>
-        <div class="feat-title">Ultra-Fast Execution</div>
-        <div class="feat-desc">Trades executed in microseconds with our proprietary matching engine. Zero latency, maximum throughput.</div>
+
+      <div class="feat-card" onclick="triggerFeatAnim(this)">
+        <div class="feat-icon-box">
+          <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        </div>
+        <div class="feat-title">Sub-Millisecond Execution</div>
+        <div class="feat-desc">Our proprietary matching engine processes over 1.4 million orders per second with confirmed sub-0.3ms trade latency — the fastest execution infrastructure in the industry. Built on bare-metal servers across 9 global data centers.</div>
       </div>
-      <div class="feat-card">
-        <div class="feat-icon">🔒</div>
-        <div class="feat-title">Bank-Grade Security</div>
-        <div class="feat-desc">Multi-sig cold storage, real-time monitoring, and insurance coverage for all digital assets on our platform.</div>
+
+      <div class="feat-card" onclick="triggerFeatAnim(this)">
+        <div class="feat-icon-box">
+          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div class="feat-title">Military-Grade Security Architecture</div>
+        <div class="feat-desc">98% of assets held in geographically distributed cold storage vaults. Real-time AI threat detection, multi-layer 2FA, biometric verification, and a $500M institutional insurance fund covering all user assets on the platform.</div>
       </div>
-      <div class="feat-card">
-        <div class="feat-icon">📊</div>
-        <div class="feat-title">Advanced Analytics</div>
-        <div class="feat-desc">Professional-grade charts, order books, and market depth analysis. Everything you need to trade at the highest level.</div>
+
+      <div class="feat-card" onclick="triggerFeatAnim(this)">
+        <div class="feat-icon-box">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        </div>
+        <div class="feat-title">Institutional-Grade Analytics Suite</div>
+        <div class="feat-desc">Deep order-book visualization, live market microstructure data, multi-timeframe heatmaps, and on-chain flow analysis — all in one unified terminal. The same tools used by the world's largest crypto trading desks, now available to everyone.</div>
       </div>
-      <div class="feat-card">
-        <div class="feat-icon">🌍</div>
-        <div class="feat-title">Global Markets</div>
-        <div class="feat-desc">Access 150+ cryptocurrency pairs across all major blockchains. One account, infinite possibilities.</div>
+
+      <div class="feat-card" onclick="triggerFeatAnim(this)">
+        <div class="feat-icon-box">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        </div>
+        <div class="feat-title">Borderless Global Market Access</div>
+        <div class="feat-desc">Trade 150+ cryptocurrency pairs across every major blockchain — Ethereum, Solana, BTC Layer-2, Cosmos, and beyond — from a single unified account. Zero geographic restrictions. One API. Infinite opportunity.</div>
       </div>
+
+      <div class="feat-card" onclick="triggerFeatAnim(this)">
+        <div class="feat-icon-box">
+          <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+        </div>
+        <div class="feat-title">Aquarius Token Launchpad</div>
+        <div class="feat-desc">AvicnKnov's revolutionary Aquarius system is redefining token launches. Hyper-curated projects, AI-vetted smart contracts, real-time liquidity bootstrapping, and launch mechanics no other exchange on earth currently offers. The future of token discovery is here.</div>
+      </div>
+
+      <div class="feat-card" onclick="triggerFeatAnim(this)">
+        <div class="feat-icon-box">
+          <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 6v6l4 2"/><circle cx="19" cy="5" r="3"/></svg>
+        </div>
+        <div class="feat-title">AvicnKnov AI — Neural Trade Intelligence</div>
+        <div class="feat-desc">Our proprietary AI engine monitors 240+ market signals simultaneously, delivers predictive sentiment scoring, detects whale movement patterns, and surfaces high-probability trade setups in real time — exclusively for AvicnKnov users.</div>
+      </div>
+
+      <div class="feat-card" onclick="triggerFeatAnim(this)">
+        <div class="feat-icon-box">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="feat-title">Zero-Friction Onboarding for Beginners</div>
+        <div class="feat-desc">From account creation to first trade in under 90 seconds. Guided learning paths, a paper trading simulator with real market data, and a live 24/7 support team with sub-2-minute response times ensure no beginner ever trades alone.</div>
+      </div>
+
+      <div class="feat-card" onclick="triggerFeatAnim(this)">
+        <div class="feat-icon-box">
+          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="feat-title">99.997% Uptime Infrastructure</div>
+        <div class="feat-desc">Redundant multi-region cloud architecture with automatic failover means AvicnKnov has never experienced an unplanned outage exceeding 8 seconds in its operational history. When markets move, we are always on.</div>
+      </div>
+
     </div>
+  </section>
+
+  <!-- BRAND SECTION -->
+  <section class="brand-section" id="brandSection">
+    <div class="brand-logo-big">AvicnKnov Exchange</div>
+    <div class="brand-tagline">
+      <span class="brand-tag">
+        <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        Sub-0.3ms Trade Execution
+      </span>
+      <span class="brand-tag">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/><circle cx="19" cy="5" r="3"/></svg>
+        Proprietary AI Neural Engine
+      </span>
+      <span class="brand-tag">
+        <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        $500M Asset Insurance Fund
+      </span>
+      <span class="brand-tag">
+        <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        99.997% Uptime — Always Live
+      </span>
+    </div>
+    <p class="brand-desc" id="brandDesc">
+      AvicnKnov is not just an exchange — it is a sovereign trading ecosystem engineered from the ground up for the next era of finance. Powered by a self-evolving AI infrastructure, the Aquarius Token Launchpad, and institutional execution rails that most platforms cannot replicate, AvicnKnov is where serious capital moves. Whether you are deploying your first $10 or managing a $10M book, this is the last exchange you will ever need.
+    </p>
   </section>
 
   <!-- FOOTER -->
   <footer>
     <div class="foot-brand">
       <div class="foot-logo">AvicnKnov</div>
-      <div class="foot-desc">The professional cryptocurrency exchange for serious traders. Secure, fast, and always available.</div>
+      <div class="foot-desc" id="footDesc">Engineered for the next era of global finance. AI-native, institution-grade, and built for every trader — from day one to decade one.</div>
     </div>
     <div>
       <div class="foot-col-title">Exchange</div>
       <ul class="foot-links">
-        <li><a href="#">Spot Trading</a></li>
-        <li><a href="#">Futures</a></li>
-        <li><a href="#">Markets</a></li>
-        <li><a href="#">Fees</a></li>
+        <li><a href="trading.html">Spot Trading</a></li>
+        <li><a href="futures.html">Futures</a></li>
       </ul>
     </div>
     <div>
       <div class="foot-col-title">Company</div>
       <ul class="foot-links">
-        <li><a href="#">About</a></li>
-        <li><a href="#">Careers</a></li>
-        <li><a href="#">Blog</a></li>
+        <li><a href="about.html">About</a></li>
         <li><a href="help.html">Help Center</a></li>
-      </ul>
-    </div>
-    <div>
-      <div class="foot-col-title">Legal</div>
-      <ul class="foot-links">
-        <li><a href="#">Privacy Policy</a></li>
-        <li><a href="#">Terms of Service</a></li>
-        <li><a href="#">Compliance</a></li>
-        <li><a href="#">Risk Disclosure</a></li>
+        <li><a href="service.html">Terms of Service</a></li>
+        <li><a href="policy.html">Privacy Policy</a></li>
       </ul>
     </div>
   </footer>
   <div class="foot-bottom">
-    <span class="foot-bottom-text">© 2025 AvicnKnov Exchange. All rights reserved.</span>
-    <span class="foot-bottom-text">Regulated · Secure · Trusted</span>
+    <span class="foot-bottom-text" id="footCopy">© 2027 AvicnKnov Exchange — The World's Most Advanced Crypto Trading Ecosystem.</span>
+    <span class="foot-bottom-text">Regulated &nbsp;·&nbsp; Secured &nbsp;·&nbsp; AI-Native &nbsp;·&nbsp; Always Live</span>
   </div>
 </main>
 
-<!-- ===== LOGIN MODAL ===== -->
+<!-- LOGIN MODAL -->
 <div class="modal-backdrop" id="loginModal">
   <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-header">
@@ -601,7 +733,7 @@ footer{
   </div>
 </div>
 
-<!-- ===== SIGNUP MODAL ===== -->
+<!-- SIGNUP MODAL -->
 <div class="modal-backdrop" id="signupModal">
   <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-header">
@@ -671,7 +803,7 @@ footer{
   </div>
 </div>
 
-<!-- ===== FORGOT PASSWORD MODAL ===== -->
+<!-- FORGOT PASSWORD MODAL -->
 <div class="modal-backdrop" id="forgotModal">
   <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-header">
@@ -686,7 +818,7 @@ footer{
         <input type="email" class="form-control" id="forgotEmail" placeholder="Enter your email"/>
       </div>
       <button class="btn-primary" onclick="doForgot()" id="forgotBtn">Send Reset Link</button>
-      <div class="form-link" style="margin-top:12px;"><a href="#" onclick="openModal('loginModal');closeModal('forgotModal')">← Back to Login</a></div>
+      <div class="form-link" style="margin-top:12px;"><a href="#" onclick="openModal('loginModal');closeModal('forgotModal')">Back to Login</a></div>
     </div>
   </div>
 </div>
@@ -694,41 +826,60 @@ footer{
 <script>
 // ===== SUPABASE INIT =====
 const { createClient } = supabase;
-
-// Auth DB
 const authSupabase = createClient(
   'https://kjxnbofpwfvheuzmeynd.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqeG5ib2Zwd2Z2aGV1em1leW5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxODUxMTEsImV4cCI6MjA5Mjc2MTExMX0.OBVQFJCWUJh5gTx0Nk8E7EMZEprRNq1L-jCTRFJRbOo'
 );
-
-// Token DB
 const tokenSupabase = createClient(
   'https://hwrvqyipozrsxyjdpqag.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh3cnZxeWlwb3pyc3h5amRwcWFnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA5MDc2NzksImV4cCI6MjA2NjQ4MzY3OX0.s43NjpUGDAJhs9qEmnwIXEY5aOh3gl6XqPdEveodFZM'
 );
 
 // ===== LOGO =====
-// Use the X icon image embedded
 const logoImg = document.getElementById('logoImg');
-logoImg.src = '1000006970.png';
 logoImg.onerror = () => { logoImg.style.display='none'; };
+
+// ===== LOAD WEB_1ST_CONTROL TABLE (stats & texts) =====
+async function loadWebControl(){
+  try{
+    const {data,error} = await authSupabase.from('web_1st_control').select('*').limit(1).single();
+    if(error||!data) return;
+    if(data.stat_volume) document.getElementById('statVol').textContent = data.stat_volume;
+    if(data.stat_tokens) document.getElementById('statTokens').textContent = data.stat_tokens;
+    if(data.stat_uptime) document.getElementById('statUptime').textContent = data.stat_uptime;
+    if(data.stat_users) document.getElementById('statUsers').textContent = data.stat_users;
+    if(data.brand_desc) document.getElementById('brandDesc').textContent = data.brand_desc;
+    if(data.foot_desc) document.getElementById('footDesc').textContent = data.foot_desc;
+    if(data.foot_copy) document.getElementById('footCopy').textContent = data.foot_copy;
+  }catch(e){}
+}
+loadWebControl();
 
 // ===== MODAL =====
 function openModal(id){ document.getElementById(id).classList.add('open'); document.body.style.overflow='hidden'; }
 function closeModal(id){ document.getElementById(id).classList.remove('open'); document.body.style.overflow=''; }
 document.querySelectorAll('.modal-backdrop').forEach(b=>b.addEventListener('click',e=>{if(e.target===b)closeModal(b.id);}));
-document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ document.querySelectorAll('.modal-backdrop.open').forEach(m=>closeModal(m.id)); closeSearchBtn(); } });
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    document.querySelectorAll('.modal-backdrop.open').forEach(m=>closeModal(m.id));
+    closeSearchBtn();
+  }
+});
 
-// ===== SEARCH =====
-let searchOptions = [
-  {name:'Spot Trading',sub:'Trade crypto pairs',icon:'📈',href:'#'},
-  {name:'Help & Support',sub:'Get assistance',icon:'❓',href:'help.html'},
-  {name:'Profile',sub:'Manage your account',icon:'👤',href:'profile.html'},
-  {name:'Settings',sub:'App preferences',icon:'⚙️',href:'setting.html'},
-  {name:'Login',sub:'Sign in to account',icon:'🔑',href:'#',action:()=>openModal('loginModal')},
-  {name:'Sign Up',sub:'Create new account',icon:'✨',href:'#',action:()=>openModal('signupModal')},
+// ===== SEARCH (pages/features only, no tokens) =====
+const searchOptions = [
+  {name:'Spot Trading',sub:'Buy and sell crypto pairs',href:'trading.html'},
+  {name:'Futures',sub:'Trade crypto futures',href:'futures.html'},
+  {name:'About AvicnKnov',sub:'Our story and mission',href:'about.html'},
+  {name:'Help Center',sub:'Get support and answers',href:'help.html'},
+  {name:'Terms of Service',sub:'Read our terms',href:'service.html'},
+  {name:'Privacy Policy',sub:'How we handle your data',href:'policy.html'},
+  {name:'Profile',sub:'Manage your account',href:'profile.html'},
+  {name:'Settings',sub:'App preferences',href:'setting.html'},
+  {name:'Login',sub:'Sign in to your account',href:'#',isAction:true,action:'login'},
+  {name:'Sign Up',sub:'Create a new account',href:'#',isAction:true,action:'signup'},
+  {name:'Forgot Password',sub:'Reset your password',href:'#',isAction:true,action:'forgot'},
 ];
-let tokenOptions = [];
 
 function openSearch(){
   document.getElementById('searchOverlay').classList.add('open');
@@ -745,22 +896,38 @@ document.addEventListener('keydown',e=>{ if((e.metaKey||e.ctrlKey)&&e.key==='k')
 function doSearch(){
   const q = document.getElementById('searchInput').value.trim().toLowerCase();
   const results = document.getElementById('searchResults');
-  if(!q){results.innerHTML='<div class="no-result" style="padding:28px 20px;color:#555;font-size:13px;">Start typing to search...</div>';return;}
-  const all = [...searchOptions, ...tokenOptions];
-  const filtered = all.filter(o=> o.name.toLowerCase().includes(q) || (o.sub||'').toLowerCase().includes(q));
+  if(!q){
+    results.innerHTML='<div class="no-result" style="padding:28px 20px;color:#555;font-size:13px;">Start typing to search...</div>';
+    return;
+  }
+  const filtered = searchOptions.filter(o=>
+    o.name.toLowerCase().includes(q)||(o.sub||'').toLowerCase().includes(q)
+  );
   if(!filtered.length){
     results.innerHTML=`<div class="no-result"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>No results found for "<strong>${q}</strong>"</div>`;
     return;
   }
-  results.innerHTML = filtered.slice(0,8).map(o=>`
-    <div class="search-result-item" onclick="${o.action?'('+o.action.toString()+')();closeSearchBtn()':'window.location=\''+o.href+'\''}">
-      <div class="result-icon">${o.icon||'🔷'}</div>
+  results.innerHTML = filtered.slice(0,8).map(o=>{
+    const icons = {
+      'Spot Trading':'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>',
+      'Futures':'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>',
+      'Login':'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>',
+      'Sign Up':'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+    };
+    const icon = icons[o.name]||'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>';
+    const onclick = o.isAction
+      ? o.action==='login'?'openModal(\'loginModal\');closeSearchBtn()'
+        :o.action==='signup'?'openModal(\'signupModal\');closeSearchBtn()'
+        :'openModal(\'forgotModal\');closeSearchBtn()'
+      : `window.location='${o.href}';closeSearchBtn()`;
+    return `<div class="search-result-item" onclick="${onclick}">
+      <div class="result-icon">${icon}</div>
       <div>
         <div class="result-name">${o.name}</div>
         <div class="result-sub">${o.sub||''}</div>
       </div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 }
 
 // ===== SIDEBAR =====
@@ -776,10 +943,8 @@ function togglePass(id, btn){
     : `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
 }
 
-// ===== ALERT =====
-function showAlert(id, msg, type='error'){
-  document.getElementById(id).innerHTML=`<div class="alert alert-${type}">${msg}</div>`;
-}
+// ===== ALERTS =====
+function showAlert(id, msg, type='error'){ document.getElementById(id).innerHTML=`<div class="alert alert-${type}">${msg}</div>`; }
 function clearAlert(id){ document.getElementById(id).innerHTML=''; }
 
 // ===== LOGIN =====
@@ -809,8 +974,6 @@ async function doLogin(){
 const countries = ["Afghanistan","Albania","Algeria","Andorra","Angola","Argentina","Armenia","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Belarus","Belgium","Belize","Benin","Bhutan","Bolivia","Bosnia","Botswana","Brazil","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Canada","Chad","Chile","China","Colombia","Congo","Costa Rica","Croatia","Cuba","Cyprus","Czech Republic","Denmark","Dominican Republic","Ecuador","Egypt","El Salvador","Estonia","Ethiopia","Fiji","Finland","France","Gabon","Gambia","Georgia","Germany","Ghana","Greece","Guatemala","Guinea","Haiti","Honduras","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Israel","Italy","Jamaica","Japan","Jordan","Kazakhstan","Kenya","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Liberia","Libya","Lithuania","Luxembourg","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Mauritania","Mauritius","Mexico","Moldova","Monaco","Mongolia","Montenegro","Morocco","Mozambique","Myanmar","Namibia","Nepal","Netherlands","New Zealand","Nicaragua","Niger","Nigeria","North Korea","Norway","Oman","Pakistan","Palestine","Panama","Paraguay","Peru","Philippines","Poland","Portugal","Qatar","Romania","Russia","Rwanda","Saudi Arabia","Senegal","Serbia","Sierra Leone","Singapore","Slovakia","Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka","Sudan","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Togo","Trinidad","Tunisia","Turkey","Turkmenistan","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States","Uruguay","Uzbekistan","Venezuela","Vietnam","Yemen","Zambia","Zimbabwe"];
 const sel = document.getElementById('country');
 countries.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;sel.appendChild(o);});
-
-// Set max dob to 18 years ago
 const maxDob = new Date();
 maxDob.setFullYear(maxDob.getFullYear()-18);
 document.getElementById('dob').max = maxDob.toISOString().split('T')[0];
@@ -827,44 +990,34 @@ async function doSignup(){
   const phone=document.getElementById('phone').value.trim();
   const email=document.getElementById('signupEmail').value.trim().toLowerCase();
   const password=document.getElementById('signupPass').value;
-
   if(!firstName||!lastName||!username||!dob||!gender||!country||!phone||!email||!password){
     showAlert('signupAlert','Please fill in all fields.');return;
   }
   if(!email.includes('@')){showAlert('signupAlert','Please enter a valid email address.');return;}
   if(password.length<6){showAlert('signupAlert','Password must be at least 6 characters.');return;}
-
   const dobDate=new Date(dob);
   const age=Math.floor((new Date()-dobDate)/31557600000);
   if(age<18){showAlert('signupAlert','You must be 18 or older to register.');return;}
-
   const btn=document.getElementById('signupBtn');
   btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Creating account...';
-
   try{
-    // Check if email or phone already used
     const {data:existEmail}=await authSupabase.from('user_verify').select('id').eq('email',email).maybeSingle();
     if(existEmail){showAlert('signupAlert','This email is already registered. Please login.');btn.disabled=false;btn.innerHTML='Create Account';return;}
     const {data:existPhone}=await authSupabase.from('user_verify').select('id').eq('phone',phone).maybeSingle();
     if(existPhone){showAlert('signupAlert','This phone number is already registered.');btn.disabled=false;btn.innerHTML='Create Account';return;}
-
-    // Save to process table (pending verification)
     await authSupabase.from('user_verify_process').insert({
       full_name:`${firstName} ${lastName}`,username,dob,gender,country,phone,email,
       password:btoa(password),verified:false,created_at:new Date().toISOString()
     });
-
-    // Send verification email via Supabase auth
     await authSupabase.auth.signUp({
       email,password,
       options:{
-        emailRedirectTo:`${window.location.origin}/verify.html`,
+        emailRedirectTo:`${window.location.origin}/success.html`,
         data:{full_name:`${firstName} ${lastName}`,username,phone,dob,gender,country}
       }
     });
-
-    showAlert('signupAlert',`✓ Verification email sent to <strong>${email}</strong>. Click the link to activate your account.`,'success');
-    btn.innerHTML='Email Sent ✓';
+    showAlert('signupAlert',`Verification email sent to <strong>${email}</strong>. Click the link to activate your account.`,'success');
+    btn.innerHTML='Email Sent';
   }catch(e){
     showAlert('signupAlert','Sign up failed. Please try again.');
     btn.disabled=false;btn.innerHTML='Create Account';
@@ -879,11 +1032,11 @@ async function doForgot(){
   const btn=document.getElementById('forgotBtn');
   btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Sending link...';
   try{
-    const {error}=await authSupabase.auth.resetPasswordForEmail(email,{
+    await authSupabase.auth.resetPasswordForEmail(email,{
       redirectTo:`${window.location.origin}/reset-password.html`
     });
-    showAlert('forgotAlert','✓ Reset link sent! Check your inbox (and spam folder).','success');
-    btn.innerHTML='Link Sent ✓';
+    showAlert('forgotAlert','Reset link sent. Check your inbox and spam folder.','success');
+    btn.innerHTML='Link Sent';
   }catch(e){
     showAlert('forgotAlert','Failed to send reset email. Please try again.');
     btn.disabled=false;btn.innerHTML='Send Reset Link';
@@ -892,7 +1045,7 @@ async function doForgot(){
 
 // ===== TOKEN TABLE =====
 let tokensData = [];
-let priceIntervals = {};
+let livePrices = {};
 
 async function loadTokens(){
   try{
@@ -903,16 +1056,12 @@ async function loadTokens(){
     }
     tokensData=data;
     renderTokenTable();
-    buildSearchOptions();
     buildMarquee();
-    // Start live price updates
     startPriceUpdates();
   }catch(e){
     document.getElementById('tokenTableBody').innerHTML='<tr><td colspan="6" style="text-align:center;padding:40px;color:#555;">Failed to load market data.</td></tr>';
   }
 }
-
-let livePrices = {};
 
 function renderTokenTable(){
   const tbody = document.getElementById('tokenTableBody');
@@ -953,15 +1102,13 @@ async function fetchLiveApiPrice(token){
 async function startPriceUpdates(){
   for(const t of tokensData){
     if(t.is_live_api && t.api_url){
-      // Fetch from external API
       const updateApiPrice = async()=>{
         const p = await fetchLiveApiPrice(t);
-        if(p!==null){ updatePriceCell(t.id, p); }
+        if(p!==null) updatePriceCell(t.id, p);
       };
       updateApiPrice();
       setInterval(updateApiPrice, 1000);
     } else {
-      // Use table price with subtle variation
       let base = parseFloat(t.manual_price)||0;
       const min = parseFloat(t.manual_min_price)||base*0.95;
       const max = parseFloat(t.manual_max_price)||base*1.05;
@@ -993,29 +1140,27 @@ function updatePriceCell(id, price){
 function buildMarquee(){
   const el = document.getElementById('marqueeEl');
   const items = [...tokensData,...tokensData].map(t=>`
-    <div class="marquee-item" id="mq_${t.id}_${Math.random().toString(36).slice(2)}">
+    <div class="marquee-item">
       <span class="marquee-sym">${t.symbol}</span>
-      <span class="marquee-price" id="mqp_${t.id}">$${formatPrice(t.manual_price||0)}</span>
+      <span class="marquee-price" id="mqp_${t.id}_${Math.random().toString(36).slice(2)}">$${formatPrice(t.manual_price||0)}</span>
       <span class="marquee-chg up">+0.00%</span>
     </div>
   `).join('');
   el.innerHTML = items;
 }
 function updateMarqueeItem(id, price){
-  document.querySelectorAll(`[id^="mqp_${id}"]`).forEach(el=>{ el.textContent=`$${formatPrice(price)}`; });
+  document.querySelectorAll(`[id^="mqp_${id}_"]`).forEach(el=>{ el.textContent=`$${formatPrice(price)}`; });
 }
 
-// ===== BUILD SEARCH FROM TOKENS =====
-function buildSearchOptions(){
-  tokenOptions = tokensData.map(t=>({
-    name:t.full_name||t.name||t.symbol,
-    sub:`${t.symbol} · $${formatPrice(t.manual_price||0)}`,
-    icon: t.icon_url?`<img src="${t.icon_url}" width="20" height="20" style="border-radius:50%"/>`:t.symbol?t.symbol[0]:'🔷',
-    href:'#'
-  }));
+// ===== FEAT CARD CLICK ANIM =====
+function triggerFeatAnim(el){
+  el.classList.remove('clicked');
+  void el.offsetWidth;
+  el.classList.add('clicked');
+  el.addEventListener('animationend',()=>el.classList.remove('clicked'),{once:true});
 }
 
-// Init
+// ===== INIT =====
 loadTokens();
 </script>
 </body>
