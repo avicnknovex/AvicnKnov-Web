@@ -113,7 +113,7 @@ font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;
 .btn-signup{
 background:var(--white);border:1px solid var(--white);color:#000;
 padding:8px 18px;border-radius:8px;font-family:'DM Sans',sans-serif;
-font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;
+font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;
 }
 .btn-signup:hover{background:#e0e0e0;}
 .sidebar-toggle{
@@ -240,6 +240,23 @@ position:relative;
 }
 .news-banner-section.visible{display:block;animation:fadeIn .5s ease;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(-12px);}to{opacity:1;transform:translateY(0);}}
+
+/* News loading placeholder */
+.news-loading-placeholder{
+width:100%;
+aspect-ratio:16/9;
+max-height:220px;
+background:var(--surface);
+display:flex;flex-direction:column;align-items:center;justify-content:center;
+gap:12px;color:var(--gray2);border-bottom:1px solid var(--border);
+}
+.news-loading-placeholder .news-load-spinner{
+width:24px;height:24px;border:2px solid var(--border2);
+border-top-color:var(--gray);border-radius:50%;
+animation:spin .8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+
 .news-slider-wrap{
 position:relative;width:100%;
 height:220px;overflow:hidden;
@@ -344,7 +361,6 @@ width:32px;height:32px;border:2px solid var(--border2);
 border-top-color:var(--white);border-radius:50%;
 animation:spin .7s linear infinite;
 }
-@keyframes spin{to{transform:rotate(360deg);}}
 
 /* ===== HERO ===== */
 .hero{
@@ -624,7 +640,6 @@ width:16px;height:16px;border:2px solid rgba(0,0,0,.3);
 border-top-color:#000;border-radius:50%;
 animation:spin .6s linear infinite;display:inline-block;margin-right:6px;vertical-align:middle;
 }
-@keyframes spin{to{transform:rotate(360deg);}}
 
 /* FOOTER */
 footer{
@@ -795,30 +810,6 @@ footer{grid-template-columns:1fr;}
   </div>
 </div>
 
-<!-- ===== NEWS BANNER (above all main content) ===== -->
-<div class="news-banner-section" id="newsBannerSection">
-  <div class="news-slider-wrap" id="newsSliderWrap"
-    onmouseenter="pauseNews()" onmouseleave="resumeNews()"
-    ontouchstart="newsTouchStart(event)" ontouchend="newsTouchEnd(event)">
-
-    <div class="news-slider-track" id="newsSliderTrack"></div>
-
-    <!-- Arrows -->
-    <div class="news-arrow news-arrow-left" onclick="newsManualPrev()">
-      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-    </div>
-    <div class="news-arrow news-arrow-right" onclick="newsManualNext()">
-      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-    </div>
-
-    <!-- Dots -->
-    <div class="news-dots" id="newsDots"></div>
-
-    <!-- Progress bar -->
-    <div class="news-progress-bar" id="newsProgressBar"></div>
-  </div>
-</div>
-
 <!-- ===== MAIN ===== -->
 <main id="mainContent">
 
@@ -833,6 +824,7 @@ footer{grid-template-columns:1fr;}
       </div>
       <h1 class="hero-title">AVICNKNOV<br/><span>EXCHANGE</span></h1>
       <p class="hero-sub">The next generation crypto exchange. Trade smarter, faster, and with complete confidence. Built for professionals and beginners alike.</p>
+      <!-- ===== HERO CTA: hide on login, show on logout ===== -->
       <div class="hero-cta-block" id="heroCTA">
         <button class="btn-hero-primary" onclick="openModal('signupModal')">Start Trading Free</button>
         <button class="btn-hero-secondary" onclick="openModal('loginModal')">Login to Account</button>
@@ -856,6 +848,37 @@ footer{grid-template-columns:1fr;}
         </div>
       </div>
     </section>
+
+    <!-- ===== NEWS BANNER — below hero, above marquee ===== -->
+    <!-- Loading placeholder: shows while news is being fetched -->
+    <div id="newsLoadingPlaceholder" class="news-loading-placeholder">
+      <div class="news-load-spinner"></div>
+      <span style="font-size:12px;letter-spacing:1px;font-family:'Space Mono',monospace;">Loading News...</span>
+    </div>
+
+    <!-- Actual news slider: hidden until data loads -->
+    <div class="news-banner-section" id="newsBannerSection">
+      <div class="news-slider-wrap" id="newsSliderWrap"
+        onmouseenter="pauseNews()" onmouseleave="resumeNews()"
+        ontouchstart="newsTouchStart(event)" ontouchend="newsTouchEnd(event)">
+
+        <div class="news-slider-track" id="newsSliderTrack"></div>
+
+        <!-- Arrows -->
+        <div class="news-arrow news-arrow-left" onclick="newsManualPrev()">
+          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        </div>
+        <div class="news-arrow news-arrow-right" onclick="newsManualNext()">
+          <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+
+        <!-- Dots -->
+        <div class="news-dots" id="newsDots"></div>
+
+        <!-- Progress bar -->
+        <div class="news-progress-bar" id="newsProgressBar"></div>
+      </div>
+    </div>
 
     <!-- MARQUEE -->
     <div class="marquee-wrap">
@@ -1257,10 +1280,15 @@ function clearAlert(id){ document.getElementById(id).innerHTML=''; }
 
 // ===== LOGIN STATE MANAGEMENT =====
 function handleLoginState(userData){
-  // Show user info, hide login/signup buttons
+  // Hide header login/signup buttons
   document.getElementById('btnLogin').style.display='none';
   document.getElementById('btnSignup').style.display='none';
+  // Show user info in header
   document.getElementById('userHeaderInfo').classList.add('visible');
+
+  // ===== FIX: Hide hero CTA buttons when user is logged in =====
+  const heroCTA = document.getElementById('heroCTA');
+  if(heroCTA) heroCTA.style.display='none';
 
   // Set avatar initials
   const name = userData.full_name || userData.username || 'User';
@@ -1278,11 +1306,17 @@ function handleLoginState(userData){
 
 function doLogout(){
   sessionStorage.removeItem('avicnUser');
+  // Restore header login/signup buttons
   document.getElementById('btnLogin').style.display='';
   document.getElementById('btnSignup').style.display='';
   document.getElementById('userHeaderInfo').classList.remove('visible');
   document.getElementById('userTopNav').classList.remove('visible');
   document.body.classList.remove('logged-in');
+
+  // ===== FIX: Restore hero CTA buttons on logout =====
+  const heroCTA = document.getElementById('heroCTA');
+  if(heroCTA) heroCTA.style.display='';
+
   authSupabase.auth.signOut().catch(()=>{});
 }
 
@@ -1435,9 +1469,10 @@ async function loadTokens(){
       document.getElementById('tokenTableBody').innerHTML='<tr><td colspan="6" style="text-align:center;padding:40px;color:#555;">No tokens listed yet.</td></tr>';
       return;
     }
-    // Filter out tokens where nosupported contains 'website'
+    // ===== FIX: Use correct column name nosupported_js (not nosupported) =====
+    // Pattern from favourites-all.js: check if 'website' is in nosupported_js column
     tokensData = data.filter(t => {
-      const ns = (t.nosupported || '').toLowerCase();
+      const ns = (t.nosupported_js || '').toLowerCase();
       return !ns.includes('website');
     });
     renderTokenTable();
@@ -1562,12 +1597,28 @@ async function loadNews(){
       .from('news_control')
       .select('*')
       .order('sort_order', {ascending: true});
-    if(error || !data || !data.length) return;
+
+    // Hide loading placeholder after fetch attempt completes
+    const placeholder = document.getElementById('newsLoadingPlaceholder');
+
+    if(error || !data || !data.length){
+      // No news — hide placeholder silently (no visible gap)
+      if(placeholder) placeholder.style.display='none';
+      return;
+    }
     // Filter active items (support both is_active and no field)
     newsItems = data.filter(n => n.is_active !== false);
-    if(!newsItems.length) return;
+    if(!newsItems.length){
+      if(placeholder) placeholder.style.display='none';
+      return;
+    }
+    // Hide placeholder, show slider
+    if(placeholder) placeholder.style.display='none';
     initNewsCarousel();
-  }catch(e){}
+  }catch(e){
+    const placeholder = document.getElementById('newsLoadingPlaceholder');
+    if(placeholder) placeholder.style.display='none';
+  }
 }
 
 function initNewsCarousel(){
@@ -1591,13 +1642,17 @@ function buildNewsSlides(){
       // Text-only background
       mediaHTML = `<div style="position:absolute;inset:0;background:linear-gradient(135deg,#0d0d0d 0%,#181818 50%,#111 100%);"></div>`;
     }
+    // Platform button (only if platform_name exists)
+    const platformBtn = item.platform_name
+      ? `<a href="${item.platform_url||'#'}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.13);border:1px solid rgba(255,255,255,0.22);backdrop-filter:blur(8px);color:#fff;text-decoration:none;border-radius:6px;padding:5px 13px;font-size:11px;font-weight:600;letter-spacing:.5px;transition:all .2s;" onmouseover="this.style.background='rgba(255,255,255,0.22)'" onmouseout="this.style.background='rgba(255,255,255,0.13)'">${item.platform_name}<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>`
+      : '';
     return `<div class="news-slide" style="position:relative;min-width:100%;width:100%;height:100%;flex-shrink:0;overflow:hidden;">
       ${mediaHTML}
       <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.85) 0%,rgba(0,0,0,0.25) 55%,rgba(0,0,0,0.08) 100%);display:flex;align-items:flex-end;padding:20px 28px;">
         <div style="max-width:640px;">
           ${item.title?`<div style="font-family:'Bebas Neue',sans-serif;font-size:clamp(17px,2.8vw,26px);letter-spacing:2px;line-height:1.15;margin-bottom:5px;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,0.8);">${item.title}</div>`:''}
           ${item.description?`<div style="font-size:clamp(11px,1.4vw,13px);color:rgba(255,255,255,0.72);line-height:1.5;margin-bottom:${item.platform_name?'10px':'0'};display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${item.description}</div>`:''}
-          ${item.platform_name?`<a href="${item.platform_url||'#'}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.13);border:1px solid rgba(255,255,255,0.22);backdrop-filter:blur(8px);color:#fff;text-decoration:none;border-radius:6px;padding:5px 13px;font-size:11px;font-weight:600;letter-spacing:.5px;transition:all .2s;" onmouseover="this.style.background='rgba(255,255,255,0.22)'" onmouseout="this.style.background='rgba(255,255,255,0.13)'">${item.platform_name}<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>`:''}
+          ${platformBtn}
         </div>
       </div>
     </div>`;
@@ -1625,9 +1680,9 @@ function showNewsSlide(index, animate=true){
   const progressBar = document.getElementById('newsProgressBar');
   if(progressBar){ progressBar.style.width='0'; progressBar.style.transition='none'; }
 
-  // Pause any playing video
-  document.querySelectorAll('.news-media[id^="newsVid_"]').forEach(v => {
-    if(v.tagName==='VIDEO'){ v.pause(); v.currentTime=0; }
+  // Pause any playing video from previous slide
+  document.querySelectorAll('video[id^="newsVid_"]').forEach(v => {
+    v.pause(); v.currentTime=0;
   });
 
   // Start auto-advance for this slide
@@ -1644,10 +1699,12 @@ function startNewsSlideTimer(){
   const progressBar = document.getElementById('newsProgressBar');
 
   if(mt==='video' && vid){
+    // Play video; advance only when video ends
+    vid.currentTime = 0;
     vid.play().catch(()=>{});
     const onEnd = () => { vid.removeEventListener('ended', onEnd); if(!newsPaused) advanceNews(); };
     vid.addEventListener('ended', onEnd);
-    // Duration-based progress
+    // Video duration-based progress bar
     const updateProg = () => {
       if(vid.duration&&vid.duration>0){
         const pct = (vid.currentTime/vid.duration)*100;
@@ -1657,7 +1714,7 @@ function startNewsSlideTimer(){
     };
     newsProgressAnimFrame = requestAnimationFrame(updateProg);
   } else {
-    // 5 second timer for image/gif/text
+    // 5 second auto-advance for image/gif/text
     const duration = 5000;
     newsSlideStartTime = performance.now();
     const animateProgress = (ts) => {
@@ -1685,7 +1742,7 @@ function resumeNews(){
   const item = newsItems[currentNewsIndex];
   const mt = (item&&item.media_type||'').toLowerCase();
   if(mt!=='video'){
-    // Adjust start time to account for paused duration
+    // Adjust start time to account for time spent paused
     newsSlideStartTime = performance.now();
   }
   startNewsSlideTimer();
