@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AvicnKnov — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--bg:#0a0a0a;--surface:#111111;--surface2:#1a1a1a;--border:#222;--border2:#333;--white:#ffffff;--gray:#888;--gray2:#555;--green:#00e676;--red:#ff3b3b;}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;overflow-x:hidden;}
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:#0a0a0a;}::-webkit-scrollbar-thumb{background:#333;border-radius:2px;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.4;}
+header{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:64px;background:rgba(10,10,10,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.logo-icon{width:36px;height:36px;object-fit:contain;filter:brightness(0) invert(1);}
+.logo-text{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:var(--white);}
+.search-wrap{position:relative;flex:1;max-width:420px;margin:0 32px;}
+.search-bar{display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:0 14px;height:40px;cursor:pointer;transition:border-color .2s;}
+.search-bar:hover{border-color:#444;}
+.search-placeholder{color:var(--gray);font-size:13px;}
+.search-shortcut{margin-left:auto;background:#222;border:1px solid #333;border-radius:4px;padding:2px 6px;font-size:10px;color:var(--gray2);font-family:'Space Mono',monospace;}
+.search-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .25s;}
+.search-overlay.open{opacity:1;pointer-events:all;}
+.search-box{position:absolute;top:80px;left:50%;transform:translateX(-50%);width:min(600px,90vw);background:var(--surface);border:1px solid var(--border2);border-radius:16px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,0.8);animation:slideDown .25s ease;}
+@keyframes slideDown{from{transform:translateX(-50%) translateY(-20px);opacity:0;}to{transform:translateX(-50%) translateY(0);opacity:1;}}
+.search-input-wrap{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--border);}
+#searchInput{flex:1;background:none;border:none;outline:none;color:var(--white);font-family:'DM Sans',sans-serif;font-size:16px;}
+#searchInput::placeholder{color:var(--gray);}
+.search-close-btn{background:var(--surface2);border:1px solid var(--border2);color:var(--white);border-radius:6px;padding:4px 10px;font-size:12px;cursor:pointer;}
+.search-results{max-height:340px;overflow-y:auto;}
+.search-result-item{display:flex;align-items:center;gap:12px;padding:14px 20px;cursor:pointer;transition:background .15s;border-bottom:1px solid var(--border);}
+.search-result-item:hover{background:var(--surface2);}
+.result-icon{width:32px;height:32px;border-radius:50%;background:#222;display:flex;align-items:center;justify-content:center;font-size:14px;}
+.result-name{font-size:14px;font-weight:500;}
+.result-sub{font-size:12px;color:var(--gray);}
+.no-result{text-align:center;padding:40px 20px;color:var(--gray);font-size:14px;}
+.header-right{display:flex;align-items:center;gap:12px;}
+.user-chip{display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border2);border-radius:100px;padding:6px 14px 6px 6px;cursor:pointer;transition:background .2s;}
+.user-chip:hover{background:#2a2a2a;}
+.user-avatar{width:28px;height:28px;border-radius:50%;background:#333;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;}
+.user-name{font-size:13px;font-weight:500;}
+.btn-logout{background:none;border:1px solid var(--border2);color:var(--gray);padding:7px 14px;border-radius:8px;font-size:12px;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;}
+.btn-logout:hover{border-color:#555;color:var(--white);}
+.sidebar-toggle{width:36px;height:36px;border-radius:8px;background:var(--surface2);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s;color:var(--white);}
+.sidebar-toggle:hover{background:#2a2a2a;}
+.sidebar{position:fixed;right:0;top:64px;bottom:0;width:64px;background:var(--surface);border-left:1px solid var(--border);display:flex;flex-direction:column;align-items:center;padding:16px 0;gap:8px;z-index:90;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);}
+.sidebar.open{transform:translateX(0);}
+.sidebar-item{width:44px;height:44px;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;transition:background .2s;color:var(--gray);position:relative;text-decoration:none;}
+.sidebar-item:hover{background:var(--surface2);color:var(--white);}
+.sidebar-item svg{width:18px;height:18px;}
+.sidebar-item span{font-size:8px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;}
+.sidebar-divider{width:30px;height:1px;background:var(--border);margin:4px 0;}
+.sidebar-close{margin-top:auto;width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s;color:var(--gray);}
+.sidebar-close:hover{background:var(--surface2);color:var(--white);}
+main{padding-top:64px;min-height:100vh;}
+.dash-wrap{padding:40px;}
+.welcome-banner{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px;margin-bottom:32px;display:flex;align-items:center;justify-content:space-between;}
+.welcome-title{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:3px;}
+.welcome-sub{font-size:14px;color:var(--gray);margin-top:6px;}
+.welcome-badge{display:flex;align-items:center;gap:6px;background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.2);color:var(--green);border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;}
+.stat-card-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--gray2);margin-bottom:10px;font-family:'Space Mono',monospace;}
+.stat-card-val{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:2px;}
+.stat-card-sub{font-size:12px;color:var(--gray);margin-top:4px;}
+.section-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;margin-bottom:20px;}
+.token-table{width:100%;border-collapse:collapse;}
+.token-table th{font-family:'Space Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--gray2);padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);}
+.token-table td{padding:14px 16px;border-bottom:1px solid var(--border);}
+.token-table tr{transition:background .15s;}
+.token-table tbody tr:hover{background:var(--surface2);}
+.tok-rank{font-family:'Space Mono',monospace;font-size:12px;color:var(--gray2);}
+.tok-info{display:flex;align-items:center;gap:12px;}
+.tok-icon{width:36px;height:36px;border-radius:50%;background:#222;display:flex;align-items:center;justify-content:center;font-size:16px;overflow:hidden;}
+.tok-icon img{width:100%;height:100%;object-fit:cover;}
+.tok-name{font-weight:600;font-size:14px;}
+.tok-sym{font-size:12px;color:var(--gray);font-family:'Space Mono',monospace;}
+.tok-price{font-family:'Space Mono',monospace;font-size:14px;}
+.tok-chg{font-size:13px;font-weight:600;}
+.tok-vol{font-size:13px;color:var(--gray);}
+.up{color:var(--green);}
+.down{color:var(--red);}
+.live-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.2);color:var(--green);border-radius:4px;padding:2px 7px;font-size:10px;font-weight:700;font-family:'Space Mono',monospace;}
+.marquee-wrap{width:100%;overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--surface);padding:12px 0;margin-bottom:32px;}
+.marquee{display:flex;gap:0;animation:marquee 30s linear infinite;width:max-content;}
+.marquee-item{display:flex;align-items:center;gap:8px;padding:0 32px;border-right:1px solid var(--border);white-space:nowrap;}
+.marquee-sym{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;}
+.marquee-price{font-size:13px;color:var(--gray);}
+@keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+@media(max-width:768px){.grid-3{grid-template-columns:1fr;}.dash-wrap{padding:20px;}.welcome-banner{flex-direction:column;gap:16px;align-items:flex-start;}}
+</style>
+</head>
+<body>
+<header>
+  <a class="logo" href="home.html">
+    <img class="logo-icon" src="1000006970.png" onerror="this.style.display='none'" alt=""/>
+    <span class="logo-text">AvicnKnov</span>
+  </a>
+  <div class="search-wrap">
+    <div class="search-bar" onclick="openSearch()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <span class="search-placeholder">Search tokens, features...</span>
+      <span class="search-shortcut">⌘K</span>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="user-chip" onclick="window.location='profile.html'">
+      <div class="user-avatar" id="userAvatar">?</div>
+      <span class="user-name" id="userNameChip">User</span>
+    </div>
+    <button class="btn-logout" onclick="doLogout()">Logout</button>
+    <div class="sidebar-toggle" onclick="toggleSidebar()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </div>
+  </div>
+</header>
+
+<nav class="sidebar" id="sidebar">
+  <a class="sidebar-item" href="help.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <span>Help</span>
+  </a>
+  <a class="sidebar-item" href="#">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+    <span>Trade</span>
+  </a>
+  <div class="sidebar-divider"></div>
+  <a class="sidebar-item" href="profile.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <span>Profile</span>
+  </a>
+  <a class="sidebar-item" href="setting.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    <span>Settings</span>
+  </a>
+  <div class="sidebar-close" onclick="toggleSidebar()">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </div>
+</nav>
+
+<div class="search-overlay" id="searchOverlay" onclick="closeSearch(event)">
+  <div class="search-box">
+    <div class="search-input-wrap">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="searchInput" placeholder="Search tokens, pages..." autocomplete="off" oninput="doSearch()"/>
+      <button class="search-close-btn" onclick="closeSearchBtn()">ESC</button>
+    </div>
+    <div class="search-results" id="searchResults">
+      <div class="no-result" style="padding:28px 20px;color:#555;font-size:13px;">Start typing to search...</div>
+    </div>
+  </div>
+</div>
+
+<main>
+  <div class="marquee-wrap"><div class="marquee" id="marqueeEl"></div></div>
+  <div class="dash-wrap">
+    <div class="welcome-banner">
+      <div>
+        <div class="welcome-title">GOOD DAY, <span id="welcomeName">TRADER</span></div>
+        <div class="welcome-sub">Your portfolio is live. Markets are open 24/7.</div>
+      </div>
+      <div class="welcome-badge"><span class="live-dot"></span>Markets Open</div>
+    </div>
+    <div class="grid-3">
+      <div class="stat-card">
+        <div class="stat-card-label">Portfolio Value</div>
+        <div class="stat-card-val">$0.00</div>
+        <div class="stat-card-sub">No active positions</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-label">24h P&L</div>
+        <div class="stat-card-val" style="color:var(--green)">+$0.00</div>
+        <div class="stat-card-sub">Updated every second</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-label">Total Trades</div>
+        <div class="stat-card-val">0</div>
+        <div class="stat-card-sub">Lifetime trades</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+      <div class="section-title">Live Markets</div>
+      <span class="live-badge"><span class="live-dot"></span>LIVE</span>
+    </div>
+    <table class="token-table">
+      <thead><tr><th>#</th><th>Token</th><th>Price</th><th>24h Change</th><th>Volume</th><th>Supply</th></tr></thead>
+      <tbody id="tokenTableBody"><tr><td colspan="6" style="text-align:center;padding:40px;color:#555;">Loading markets...</td></tr></tbody>
+    </table>
+  </div>
+</main>
+
+<script>
+const {createClient}=supabase;
+const tokenSupabase=createClient('https://hwrvqyipozrsxyjdpqag.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh3cnZxeWlwb3pyc3h5amRwcWFnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA5MDc2NzksImV4cCI6MjA2NjQ4MzY3OX0.s43NjpUGDAJhs9qEmnwIXEY5aOh3gl6XqPdEveodFZM');
+
+// Auth check
+const user = JSON.parse(sessionStorage.getItem('avicnUser')||'null');
+if(!user){ window.location.href='index.html'; }
+else{
+  const name = (user.full_name||user.username||'Trader').split(' ')[0].toUpperCase();
+  document.getElementById('welcomeName').textContent = name;
+  document.getElementById('userNameChip').textContent = user.full_name||user.username||'User';
+  document.getElementById('userAvatar').textContent = (user.full_name||user.username||'U')[0].toUpperCase();
+}
+
+function doLogout(){ sessionStorage.removeItem('avicnUser'); window.location.href='index.html'; }
+function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); }
+function openSearch(){ document.getElementById('searchOverlay').classList.add('open'); setTimeout(()=>document.getElementById('searchInput').focus(),100); }
+function closeSearch(e){ if(e.target===document.getElementById('searchOverlay')) closeSearchBtn(); }
+function closeSearchBtn(){ document.getElementById('searchOverlay').classList.remove('open'); document.getElementById('searchInput').value=''; document.getElementById('searchResults').innerHTML='<div class="no-result" style="padding:28px 20px;color:#555;font-size:13px;">Start typing to search...</div>'; }
+document.addEventListener('keydown',e=>{ if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();openSearch();} if(e.key==='Escape') closeSearchBtn(); });
+
+const searchOpts=[{name:'Trade',sub:'Exchange tokens',icon:'📈',href:'#'},{name:'Help',sub:'Support center',icon:'❓',href:'help.html'},{name:'Profile',sub:'Your account',icon:'👤',href:'profile.html'},{name:'Settings',sub:'Preferences',icon:'⚙️',href:'setting.html'}];
+let tokenOpts=[];
+function doSearch(){
+  const q=document.getElementById('searchInput').value.trim().toLowerCase();
+  const results=document.getElementById('searchResults');
+  if(!q){results.innerHTML='<div class="no-result" style="padding:28px 20px;color:#555;font-size:13px;">Start typing to search...</div>';return;}
+  const all=[...searchOpts,...tokenOpts];
+  const filtered=all.filter(o=>o.name.toLowerCase().includes(q)||(o.sub||'').toLowerCase().includes(q));
+  if(!filtered.length){results.innerHTML=`<div class="no-result">No results for "<strong>${q}</strong>"</div>`;return;}
+  results.innerHTML=filtered.slice(0,8).map(o=>`<div class="search-result-item" onclick="window.location='${o.href}'"><div class="result-icon">${o.icon}</div><div><div class="result-name">${o.name}</div><div class="result-sub">${o.sub}</div></div></div>`).join('');
+}
+
+let tokensData=[];let livePrices={};
+function formatPrice(p){return p>=1?parseFloat(p).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):parseFloat(p).toFixed(6);}
+async function loadTokens(){
+  try{
+    const {data}=await tokenSupabase.from('crypto_token_control').select('*').order('id');
+    if(!data||!data.length){document.getElementById('tokenTableBody').innerHTML='<tr><td colspan="6" style="text-align:center;padding:40px;color:#555;">No tokens listed yet.</td></tr>';return;}
+    tokensData=data;
+    renderTable();buildMarquee();startUpdates();
+    tokenOpts=data.map(t=>({name:t.full_name||t.symbol,sub:`${t.symbol} · $${formatPrice(t.manual_price||0)}`,icon:'🔷',href:'#'}));
+  }catch(e){document.getElementById('tokenTableBody').innerHTML='<tr><td colspan="6" style="text-align:center;padding:40px;color:#555;">Failed to load.</td></tr>';}
+}
+function renderTable(){
+  document.getElementById('tokenTableBody').innerHTML=tokensData.map((t,i)=>{
+    const price=t.manual_price||0;
+    return `<tr><td class="tok-rank">${i+1}</td><td><div class="tok-info"><div class="tok-icon">${t.icon_url?`<img src="${t.icon_url}" onerror="this.style.display='none'"/>`:(t.symbol||'?')[0]}</div><div><div class="tok-name">${t.full_name||t.symbol}</div><div class="tok-sym">${t.symbol}</div></div></div></td><td class="tok-price" id="tp_${t.id}">$${formatPrice(price)}</td><td class="tok-chg up" id="tc_${t.id}">+0.00%</td><td class="tok-vol">${t.volume||'—'}</td><td class="tok-vol">${t.total_supply||'—'}</td></tr>`;
+  }).join('');
+}
+function buildMarquee(){
+  document.getElementById('marqueeEl').innerHTML=[...tokensData,...tokensData].map(t=>`<div class="marquee-item"><span class="marquee-sym">${t.symbol}</span><span class="marquee-price" id="mp_${t.id}_${Math.random().toString(36).slice(2,6)}">$${formatPrice(t.manual_price||0)}</span></div>`).join('');
+}
+async function fetchApiPrice(t){try{const r=await fetch(`https://min-api.cryptocompare.com/data/price?fsym=${t.symbol}&tsyms=USD`);const d=await r.json();return d.USD||null;}catch{return null;}}
+async function startUpdates(){
+  for(const t of tokensData){
+    if(t.is_live_api){
+      const upd=async()=>{const p=await fetchApiPrice(t);if(p!==null)updateCell(t.id,p);};upd();setInterval(upd,1000);
+    }else{
+      let base=parseFloat(t.manual_price)||0;const min=parseFloat(t.manual_min_price)||base*.95;const max=parseFloat(t.manual_max_price)||base*1.05;
+      livePrices[t.id]=base;updateCell(t.id,base);
+      setInterval(()=>{livePrices[t.id]=Math.min(max,Math.max(min,livePrices[t.id]*(1+(Math.random()-.5)*.002)));updateCell(t.id,livePrices[t.id]);},1000);
+    }
+  }
+}
+function updateCell(id,price){
+  const el=document.getElementById(`tp_${id}`);
+  if(el){const prev=parseFloat(el.dataset.prev||price);el.textContent=`$${formatPrice(price)}`;el.style.color=price>prev?'var(--green)':price<prev?'var(--red)':'var(--white)';setTimeout(()=>{if(el)el.style.color='var(--white)';},600);el.dataset.prev=price;}
+  document.querySelectorAll(`[id^="mp_${id}_"]`).forEach(e=>{e.textContent=`$${formatPrice(price)}`;});
+}
+loadTokens();
+</script>
+</body>
+</html>
