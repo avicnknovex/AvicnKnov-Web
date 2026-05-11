@@ -1012,7 +1012,7 @@ async function doSignup(){
     await authSupabase.auth.signUp({
       email,password,
       options:{
-        emailRedirectTo:`${window.location.origin}/success.html`,
+        emailRedirectTo:'https://avicnknovex.github.io/AvicnKnov-Web/success.html',
         data:{full_name:`${firstName} ${lastName}`,username,phone,dob,gender,country}
       }
     });
@@ -1033,7 +1033,7 @@ async function doForgot(){
   btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Sending link...';
   try{
     await authSupabase.auth.resetPasswordForEmail(email,{
-      redirectTo:`${window.location.origin}/reset-password.html`
+      redirectTo:'https://avicnknovex.github.io/AvicnKnov-Web/reset-password.html'
     });
     showAlert('forgotAlert','Reset link sent. Check your inbox and spam folder.','success');
     btn.innerHTML='Link Sent';
