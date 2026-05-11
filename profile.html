@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AvicnKnov — Profile</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--bg:#0a0a0a;--surface:#111;--surface2:#1a1a1a;--border:#222;--border2:#333;--white:#fff;--gray:#888;--gray2:#555;--green:#00e676;--red:#ff3b3b;}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;min-height:100%;}
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-thumb{background:#333;border-radius:2px;}
+header{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:64px;background:rgba(10,10,10,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.logo-icon{width:36px;height:36px;object-fit:contain;filter:brightness(0) invert(1);}
+.logo-text{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:var(--white);}
+.btn-back{background:none;border:1px solid var(--border2);color:var(--white);padding:8px 18px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;transition:all .2s;text-decoration:none;display:flex;align-items:center;gap:6px;}
+.btn-back:hover{background:#1a1a1a;}
+main{padding-top:64px;padding:80px 40px 60px;max-width:700px;margin:0 auto;}
+.profile-header{display:flex;align-items:center;gap:24px;margin-bottom:40px;padding:32px;background:var(--surface);border:1px solid var(--border);border-radius:16px;}
+.avatar-big{width:72px;height:72px;border-radius:50%;background:#2a2a2a;border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:2px;flex-shrink:0;}
+.profile-name{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;}
+.profile-username{font-family:'Space Mono',monospace;font-size:13px;color:var(--gray);margin-top:4px;}
+.profile-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.2);color:var(--green);border-radius:6px;padding:3px 10px;font-size:11px;font-weight:700;margin-top:8px;font-family:'Space Mono',monospace;}
+.form-group{margin-bottom:16px;}
+.form-label{display:block;font-size:11px;font-weight:700;letter-spacing:.5px;color:var(--gray2);text-transform:uppercase;margin-bottom:8px;}
+.form-control{width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:12px 16px;color:var(--white);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color .2s;}
+.form-control:focus{border-color:#555;}
+.form-control::placeholder{color:var(--gray2);}
+.form-control:disabled{opacity:.5;cursor:not-allowed;}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:28px;margin-bottom:20px;}
+.section-card-title{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--border);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.btn-save{background:var(--white);color:#000;border:none;border-radius:10px;padding:12px 28px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;}
+.btn-save:hover{background:#e0e0e0;}
+.alert{padding:12px 16px;border-radius:8px;font-size:13px;margin-bottom:14px;border:1px solid transparent;}
+.alert-success{background:rgba(0,230,118,.08);border-color:rgba(0,230,118,.2);color:var(--green);}
+@media(max-width:768px){main{padding:80px 20px 40px;}.form-row{grid-template-columns:1fr;}.profile-header{flex-direction:column;text-align:center;}}
+</style>
+</head>
+<body>
+<header>
+  <a class="logo" href="index.html">
+    <img class="logo-icon" src="1000006970.png" onerror="this.style.display='none'" alt=""/>
+    <span class="logo-text">AvicnKnov</span>
+  </a>
+  <a class="btn-back" href="javascript:history.back()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+    Back
+  </a>
+</header>
+<main>
+  <div class="profile-header">
+    <div class="avatar-big" id="avatarBig">?</div>
+    <div>
+      <div class="profile-name" id="profileName">Loading...</div>
+      <div class="profile-username" id="profileUsername">@username</div>
+      <div class="profile-badge">✓ Verified Member</div>
+    </div>
+  </div>
+
+  <div id="profileAlert"></div>
+
+  <div class="section-card">
+    <div class="section-card-title">Personal Information</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input type="text" class="form-control" id="pFullName" placeholder="Your full name"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Username</label>
+        <input type="text" class="form-control" id="pUsername" placeholder="@username"/>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-control" id="pEmail" placeholder="Email" disabled/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Phone</label>
+        <input type="tel" class="form-control" id="pPhone" placeholder="Phone number" disabled/>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Country</label>
+        <input type="text" class="form-control" id="pCountry" placeholder="Country" disabled/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Gender</label>
+        <input type="text" class="form-control" id="pGender" placeholder="Gender" disabled/>
+      </div>
+    </div>
+    <button class="btn-save" onclick="saveProfile()">Save Changes</button>
+  </div>
+
+  <div class="section-card">
+    <div class="section-card-title">Change Password</div>
+    <div class="form-group">
+      <label class="form-label">Current Password</label>
+      <input type="password" class="form-control" id="currPass" placeholder="Enter current password"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">New Password</label>
+      <input type="password" class="form-control" id="newPass" placeholder="Enter new password (min. 6 chars)"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Confirm New Password</label>
+      <input type="password" class="form-control" id="confirmPass" placeholder="Repeat new password"/>
+    </div>
+    <button class="btn-save" onclick="changePassword()">Update Password</button>
+  </div>
+</main>
+
+<script>
+const {createClient}=supabase;
+const authSupabase=createClient('https://kjxnbofpwfvheuzmeynd.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqeG5ib2Zwd2Z2aGV1em1leW5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxODUxMTEsImV4cCI6MjA5Mjc2MTExMX0.OBVQFJCWUJh5gTx0Nk8E7EMZEprRNq1L-jCTRFJRbOo');
+
+const user=JSON.parse(sessionStorage.getItem('avicnUser')||'null');
+if(!user){window.location.href='index.html';}
+else{
+  document.getElementById('avatarBig').textContent=(user.full_name||user.username||'U')[0].toUpperCase();
+  document.getElementById('profileName').textContent=user.full_name||user.username||'User';
+  document.getElementById('profileUsername').textContent='@'+(user.username||'user');
+  document.getElementById('pFullName').value=user.full_name||'';
+  document.getElementById('pUsername').value=user.username||'';
+  document.getElementById('pEmail').value=user.email||'';
+  document.getElementById('pPhone').value=user.phone||'';
+  document.getElementById('pCountry').value=user.country||'';
+  document.getElementById('pGender').value=user.gender||'';
+}
+
+function showAlert(msg,type='success'){
+  document.getElementById('profileAlert').innerHTML=`<div class="alert alert-${type}" style="margin-bottom:16px;">${msg}</div>`;
+  setTimeout(()=>{document.getElementById('profileAlert').innerHTML='';},4000);
+}
+
+async function saveProfile(){
+  if(!user)return;
+  const full_name=document.getElementById('pFullName').value.trim();
+  const username=document.getElementById('pUsername').value.trim();
+  if(!full_name||!username){showAlert('Please fill in all editable fields.','error');return;}
+  try{
+    await authSupabase.from('user_verify').update({full_name,username}).eq('id',user.id);
+    user.full_name=full_name;user.username=username;
+    sessionStorage.setItem('avicnUser',JSON.stringify(user));
+    document.getElementById('profileName').textContent=full_name;
+    showAlert('✓ Profile updated successfully!');
+  }catch(e){showAlert('Failed to update profile.','error');}
+}
+
+async function changePassword(){
+  if(!user)return;
+  const curr=document.getElementById('currPass').value;
+  const newP=document.getElementById('newPass').value;
+  const conf=document.getElementById('confirmPass').value;
+  if(!curr||!newP||!conf){showAlert('Please fill all password fields.','error');return;}
+  if(newP!==conf){showAlert('New passwords do not match.','error');return;}
+  if(newP.length<6){showAlert('Password must be at least 6 characters.','error');return;}
+  if(btoa(curr)!==user.password){showAlert('Current password is incorrect.','error');return;}
+  try{
+    await authSupabase.from('user_verify').update({password:btoa(newP)}).eq('id',user.id);
+    user.password=btoa(newP);
+    sessionStorage.setItem('avicnUser',JSON.stringify(user));
+    document.getElementById('currPass').value='';document.getElementById('newPass').value='';document.getElementById('confirmPass').value='';
+    showAlert('✓ Password changed successfully!');
+  }catch(e){showAlert('Failed to update password.','error');}
+}
+</script>
+</body>
+</html>
