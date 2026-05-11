@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AvicnKnov — Settings</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#0a0a0a;--surface:#111;--surface2:#1a1a1a;--border:#222;--border2:#333;--white:#fff;--gray:#888;--gray2:#555;--green:#00e676;--red:#ff3b3b;}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;min-height:100%;}
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-thumb{background:#333;border-radius:2px;}
+header{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:64px;background:rgba(10,10,10,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.logo-icon{width:36px;height:36px;object-fit:contain;filter:brightness(0) invert(1);}
+.logo-text{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:var(--white);}
+.btn-back{background:none;border:1px solid var(--border2);color:var(--white);padding:8px 18px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;transition:all .2s;text-decoration:none;display:flex;align-items:center;gap:6px;}
+.btn-back:hover{background:#1a1a1a;}
+main{padding-top:64px;display:flex;min-height:100vh;}
+.settings-nav{width:240px;border-right:1px solid var(--border);padding:32px 0;flex-shrink:0;position:sticky;top:64px;height:calc(100vh - 64px);overflow-y:auto;}
+.nav-section{margin-bottom:8px;}
+.nav-label{font-family:'Space Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--gray2);padding:0 20px;margin-bottom:8px;display:block;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 20px;cursor:pointer;transition:background .15s;color:var(--gray);font-size:14px;border-left:2px solid transparent;}
+.nav-item:hover{background:var(--surface2);color:var(--white);}
+.nav-item.active{background:var(--surface2);color:var(--white);border-left-color:var(--white);}
+.nav-item svg{width:16px;height:16px;}
+.settings-content{flex:1;padding:40px;max-width:700px;}
+.settings-section{display:none;}
+.settings-section.active{display:block;}
+.page-title{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:3px;margin-bottom:8px;}
+.page-sub{font-size:14px;color:var(--gray);margin-bottom:36px;}
+.setting-group{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:20px;overflow:hidden;}
+.setting-row{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid var(--border);}
+.setting-row:last-child{border-bottom:none;}
+.setting-info{flex:1;}
+.setting-label{font-size:14px;font-weight:500;margin-bottom:3px;}
+.setting-desc{font-size:12px;color:var(--gray);}
+/* TOGGLE */
+.toggle{width:44px;height:24px;background:#333;border-radius:12px;position:relative;cursor:pointer;transition:background .25s;flex-shrink:0;}
+.toggle.on{background:var(--white);}
+.toggle::after{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:#666;top:3px;left:3px;transition:transform .25s,background .25s;}
+.toggle.on::after{transform:translateX(20px);background:#000;}
+/* SELECT */
+.setting-select{background:var(--surface2);border:1px solid var(--border2);color:var(--white);padding:8px 12px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;cursor:pointer;}
+.setting-select option{background:#1a1a1a;}
+/* DANGER ZONE */
+.danger-zone{background:rgba(255,59,59,.06);border:1px solid rgba(255,59,59,.2);border-radius:12px;padding:22px;}
+.danger-title{font-size:13px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;}
+.danger-desc{font-size:13px;color:var(--gray);margin-bottom:16px;line-height:1.6;}
+.btn-danger{background:var(--red);color:#fff;border:none;padding:10px 20px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:opacity .2s;}
+.btn-danger:hover{opacity:.85;}
+@media(max-width:768px){main{flex-direction:column;}.settings-nav{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--border);display:flex;flex-wrap:wrap;padding:12px;gap:4px;}.nav-label{display:none;}.settings-content{padding:20px;}}
+</style>
+</head>
+<body>
+<header>
+  <a class="logo" href="index.html">
+    <img class="logo-icon" src="1000006970.png" onerror="this.style.display='none'" alt=""/>
+    <span class="logo-text">AvicnKnov</span>
+  </a>
+  <a class="btn-back" href="javascript:history.back()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+    Back
+  </a>
+</header>
+<main>
+  <nav class="settings-nav">
+    <div class="nav-section">
+      <span class="nav-label">Account</span>
+      <div class="nav-item active" onclick="showSection('general')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        General
+      </div>
+      <div class="nav-item" onclick="showSection('security')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Security
+      </div>
+      <div class="nav-item" onclick="showSection('notifications')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        Notifications
+      </div>
+    </div>
+    <div class="nav-section">
+      <span class="nav-label">Preferences</span>
+      <div class="nav-item" onclick="showSection('display')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        Display
+      </div>
+      <div class="nav-item" onclick="showSection('danger')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#ff3b3b" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+        <span style="color:var(--red)">Danger Zone</span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="settings-content">
+    <!-- GENERAL -->
+    <div class="settings-section active" id="section-general">
+      <div class="page-title">General</div>
+      <p class="page-sub">Manage your basic account preferences.</p>
+      <div class="setting-group">
+        <div class="setting-row">
+          <div class="setting-info"><div class="setting-label">Language</div><div class="setting-desc">Choose your preferred display language</div></div>
+          <select class="setting-select"><option>English</option><option>Hindi</option><option>Arabic</option><option>Chinese</option></select>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info"><div class="setting-label">Currency Display</div><div class="setting-desc">Default fiat currency for price display</div></div>
+          <select class="setting-select"><option>USD</option><option>EUR</option><option>GBP</option><option>INR</option></select>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info"><div class="setting-label">Time Zone</div><div class="setting-desc">Timestamps displayed in your local time</div></div>
+          <select class="setting-select"><option>Auto (System)</option><option>UTC+0</option><option>UTC+5:30</option></select>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECURITY -->
+    <div class="settings-section" id="section-security">
+      <div class="page-title">Security</div>
+      <p class="page-sub">Keep your account safe and secure.</p>
+      <div class="setting-group">
+        <div class="setting-row">
+          <div class="setting-info"><div class="setting-label">Two-Factor Authentication</div><div class="setting-desc">Add an extra layer of security to your account</div></div>
+          <div class="toggle" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info"><div class="setting-label">Login Notifications</div><div class="setting-desc">Get notified when your account is accessed from a new device</div></div>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info"><div class="setting-label">Withdrawal Confirmation</div><div class="setting-desc">Require email confirmation for all withdrawals</div></div>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOTIFICATIONS -->
+    <div class="settings-section" id="section-notifications">
+      <div class="page-title">Notifications</div>
+      <p class="page-sub">Control what alerts you receive.</p>
+      <div class="setting-group">
+        <div class="setting-row">
+          <div class="setting-info"><div class="setting-label">Price Alerts</div><div class="setting-desc">Notify when tokens hit your target price</div></div>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info"><div class="setting-label">Trade Confirmations</div><div class="setting-desc">Email confirmation after every trade</div></div>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info"><div class="setting-label">Promotional Emails</div><div class="setting-desc">News, updates, and special offers from AvicnKnov</div></div>
+          <div class="toggle" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info"><div class="setting-label">Market Digest</div><div class="setting-desc">Daily summary of market movements</div></div>
+          <div class="toggle" onclick="this.classList.toggle('on')"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DISPLAY -->
+    <div class="settings-section" id="section-display">
+      <div class="page-title">Display</div>
+      <p class="page-sub">Customize your visual experience.</p>
+      <div class="setting-group">
+        <div class="setting-row">
+          <div class="setting-info"><div class="setting-label">Price Animation</div><div class="setting-desc">Animate price changes with color highlights</div></div>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info"><div class="setting-label">Show Volume</div><div class="setting-desc">Display 24h volume in market list</div></div>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info"><div class="setting-label">Compact Mode</div><div class="setting-desc">Denser layout for token tables</div></div>
+          <div class="toggle" onclick="this.classList.toggle('on')"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DANGER -->
+    <div class="settings-section" id="section-danger">
+      <div class="page-title">Danger Zone</div>
+      <p class="page-sub">Irreversible account actions. Proceed with caution.</p>
+      <div class="danger-zone">
+        <div class="danger-title">Delete Account</div>
+        <p class="danger-desc">Permanently delete your AvicnKnov account and all associated data. This action cannot be undone. Ensure you have withdrawn all funds before proceeding.</p>
+        <button class="btn-danger">Delete My Account</button>
+      </div>
+    </div>
+  </div>
+</main>
+<script>
+function showSection(id){
+  document.querySelectorAll('.settings-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('section-'+id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+</script>
+</body>
+</html>
