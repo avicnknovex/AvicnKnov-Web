@@ -109,13 +109,6 @@ padding:8px 18px;border-radius:8px;font-family:'DM Sans',sans-serif;
 font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;
 }
 .btn-signup:hover{background:#e0e0e0;}
-.sidebar-toggle{
-width:36px;height:36px;border-radius:8px;
-background:var(--surface2);border:1px solid var(--border2);
-display:flex;align-items:center;justify-content:center;
-cursor:pointer;transition:background .2s;color:var(--white);
-}
-.sidebar-toggle:hover{background:#2a2a2a;}
 
 /* USER NAV TABS - shown after login */
 .user-nav-tabs{
@@ -132,7 +125,50 @@ border:none;background:none;font-family:'DM Sans',sans-serif;
 .nav-tab.active{background:var(--surface);color:var(--white);box-shadow:0 1px 4px rgba(0,0,0,0.4);}
 .nav-tab:hover:not(.active){color:var(--white);background:rgba(255,255,255,0.05);}
 
-/* SIDEBAR */
+/* PROFILE BUTTON & DROPDOWN */
+.profile-btn-wrap{position:relative;display:none;}
+.profile-btn-wrap.visible{display:block;}
+.profile-btn{
+width:38px;height:38px;border-radius:50%;
+background:rgba(255,255,255,0.08);
+border:1.5px solid rgba(255,255,255,0.18);
+display:flex;align-items:center;justify-content:center;
+cursor:pointer;transition:all .2s;overflow:hidden;
+color:var(--white);
+}
+.profile-btn:hover{background:rgba(255,255,255,0.14);border-color:rgba(255,255,255,0.3);}
+.profile-btn svg{width:18px;height:18px;stroke:var(--white);stroke-width:2;fill:none;}
+.profile-dropdown{
+position:absolute;top:calc(100% + 10px);right:0;
+background:var(--surface);border:1px solid var(--border2);
+border-radius:14px;min-width:200px;
+box-shadow:0 20px 60px rgba(0,0,0,0.8);
+opacity:0;pointer-events:none;transform:translateY(-8px) scale(0.97);
+transition:all .22s cubic-bezier(.4,0,.2,1);
+z-index:300;overflow:hidden;
+}
+.profile-dropdown.open{opacity:1;pointer-events:all;transform:translateY(0) scale(1);}
+.profile-dropdown-header{
+padding:16px 18px 12px;border-bottom:1px solid var(--border);
+}
+.profile-dropdown-name{font-size:14px;font-weight:600;color:var(--white);}
+.profile-dropdown-email{font-size:11px;color:var(--gray);margin-top:2px;font-family:'Space Mono',monospace;}
+.profile-dropdown-items{padding:8px 0;}
+.profile-dropdown-item{
+display:flex;align-items:center;gap:12px;
+padding:10px 18px;cursor:pointer;
+transition:background .15s;color:var(--white);
+text-decoration:none;font-size:13px;font-weight:500;
+}
+.profile-dropdown-item:hover{background:var(--surface2);}
+.profile-dropdown-item svg{width:15px;height:15px;stroke:var(--gray);stroke-width:2;fill:none;flex-shrink:0;}
+.profile-dropdown-item:hover svg{stroke:var(--white);}
+.profile-dropdown-divider{height:1px;background:var(--border);margin:4px 0;}
+.profile-dropdown-item.logout{color:var(--red);}
+.profile-dropdown-item.logout svg{stroke:var(--red);}
+.profile-dropdown-item.logout:hover{background:rgba(255,59,59,0.08);}
+
+/* SIDEBAR (kept for non-logged-in or minimal use) */
 .sidebar{
 position:fixed;right:0;top:64px;bottom:0;width:64px;
 background:var(--surface);border-left:1px solid var(--border);
@@ -592,7 +628,7 @@ footer{grid-template-columns:1fr;}
 
   <div class="header-right">
     <!-- Shown before login -->
-    <div id="guestButtons">
+    <div id="guestButtons" style="display:flex;align-items:center;gap:12px;">
       <button class="btn-login" onclick="openModal('loginModal')">Login</button>
       <button class="btn-signup" onclick="openModal('signupModal')">Sign Up</button>
     </div>
@@ -602,13 +638,42 @@ footer{grid-template-columns:1fr;}
       <button class="nav-tab" id="tabAvicnQing" onclick="switchTab('avicnQing')">Avicn&amp;Qing</button>
       <button class="nav-tab" id="tabMore" onclick="switchTab('more')">More</button>
     </div>
-    <div class="sidebar-toggle" onclick="toggleSidebar()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    <!-- Profile button (shown after login, replaces sidebar toggle) -->
+    <div class="profile-btn-wrap" id="profileBtnWrap">
+      <div class="profile-btn" id="profileBtn" onclick="toggleProfileDropdown()">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div class="profile-dropdown" id="profileDropdown">
+        <div class="profile-dropdown-header">
+          <div class="profile-dropdown-name" id="ddName">User</div>
+          <div class="profile-dropdown-email" id="ddEmail">—</div>
+        </div>
+        <div class="profile-dropdown-items">
+          <a class="profile-dropdown-item" href="profile.html">
+            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Profile
+          </a>
+          <a class="profile-dropdown-item" href="setting.html">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            Settings
+          </a>
+          <div class="profile-dropdown-divider"></div>
+          <a class="profile-dropdown-item" href="help.html">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            Help &amp; Support
+          </a>
+          <div class="profile-dropdown-divider"></div>
+          <div class="profile-dropdown-item logout" onclick="doLogout()">
+            <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Log Out
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </header>
 
-<!-- SIDEBAR -->
+<!-- SIDEBAR (kept for non-logged-in state) -->
 <nav class="sidebar" id="sidebar">
   <a class="sidebar-item" href="help.html" title="Help &amp; Support">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
@@ -641,7 +706,7 @@ footer{grid-template-columns:1fr;}
 <!-- MAIN -->
 <main>
 
-  <!-- NEWS CAROUSEL -->
+  <!-- NEWS CAROUSEL — only shown on Web Home tab -->
   <div class="news-section" id="newsSection">
     <div class="news-carousel-wrap" id="newsCarouselWrap">
       <div class="news-carousel-track" id="newsTrack"></div>
@@ -655,7 +720,7 @@ footer{grid-template-columns:1fr;}
     </div>
   </div>
 
-  <!-- WEB HOME TAB CONTENT (default, always visible before login and after login on webHome tab) -->
+  <!-- WEB HOME TAB CONTENT (default) -->
   <div id="mainContent">
 
     <!-- HERO -->
@@ -664,7 +729,7 @@ footer{grid-template-columns:1fr;}
         <span class="hero-badge-dot"></span>
         Live Markets · 24/7 Trading
       </div>
-      <h1 class="hero-title">AVICNKNOV<br/><span>EXCHANGE</span></h1>
+      <h1 class="hero-title">AVICNKNOV<br/><span>WEB</span></h1>
       <p class="hero-sub">The next generation crypto exchange. Trade smarter, faster, and with complete confidence. Built for professionals and beginners alike.</p>
       <div class="hero-cta-block" id="heroCTA">
         <button class="btn-hero-primary" onclick="openModal('signupModal')">Start Trading Free</button>
@@ -820,7 +885,7 @@ footer{grid-template-columns:1fr;}
 
   </div><!-- end #mainContent -->
 
-  <!-- TAB CONTENT AREAS (loaded from JS files dynamically) -->
+  <!-- TAB CONTENT AREAS -->
   <div class="tab-content-area" id="tabContentAvicnQing"></div>
   <div class="tab-content-area" id="tabContentMore"></div>
 
@@ -1006,15 +1071,79 @@ async function loadWebControl(){
 }
 loadWebControl();
 
-// ===== SESSION CHECK =====
+// ===== SESSION CHECK & UI STATE =====
+function applyLoggedInUI(userData){
+  // Hide guest buttons
+  document.getElementById('guestButtons').style.display = 'none';
+  // Show nav tabs
+  document.getElementById('userNavTabs').classList.add('visible');
+  // Show profile button
+  document.getElementById('profileBtnWrap').classList.add('visible');
+  // Populate dropdown
+  const name = userData.full_name || userData.username || 'User';
+  const email = userData.email || '—';
+  document.getElementById('ddName').textContent = name;
+  document.getElementById('ddEmail').textContent = email;
+  // Hide hero CTA login/signup buttons
+  const cta = document.getElementById('heroCTA');
+  if(cta) cta.style.display = 'none';
+}
+
+function applyGuestUI(){
+  document.getElementById('guestButtons').style.display = 'flex';
+  document.getElementById('userNavTabs').classList.remove('visible');
+  document.getElementById('profileBtnWrap').classList.remove('visible');
+  const cta = document.getElementById('heroCTA');
+  if(cta) cta.style.display = 'flex';
+}
+
 function checkSession(){
-  const user = sessionStorage.getItem('avicnUser');
-  if(user){
-    document.getElementById('guestButtons').style.display='none';
-    document.getElementById('userNavTabs').classList.add('visible');
+  const raw = sessionStorage.getItem('avicnUser');
+  if(raw){
+    try{
+      const userData = JSON.parse(raw);
+      applyLoggedInUI(userData);
+    }catch(e){
+      sessionStorage.removeItem('avicnUser');
+      applyGuestUI();
+    }
+  } else {
+    applyGuestUI();
   }
 }
 checkSession();
+
+// ===== PROFILE DROPDOWN =====
+function toggleProfileDropdown(){
+  const dd = document.getElementById('profileDropdown');
+  dd.classList.toggle('open');
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(e){
+  const wrap = document.getElementById('profileBtnWrap');
+  if(wrap && !wrap.contains(e.target)){
+    document.getElementById('profileDropdown').classList.remove('open');
+  }
+});
+
+// ===== LOGOUT =====
+function doLogout(){
+  sessionStorage.removeItem('avicnUser');
+  document.getElementById('profileDropdown').classList.remove('open');
+  // Switch back to webHome content
+  document.getElementById('mainContent').style.display = 'block';
+  document.getElementById('tabContentAvicnQing').classList.remove('active');
+  document.getElementById('tabContentMore').classList.remove('active');
+  // Show news section again
+  document.getElementById('newsSection').style.display = 'block';
+  // Reset tabs
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  const wh = document.getElementById('tabWebHome');
+  if(wh) wh.classList.add('active');
+  // Apply guest UI
+  applyGuestUI();
+}
 
 // ===== TAB SWITCHING =====
 let loadedTabs = {};
@@ -1027,21 +1156,30 @@ function switchTab(tab){
   if(tab==='webHome'){
     document.getElementById('tabWebHome').classList.add('active');
     document.getElementById('mainContent').style.display = 'block';
+    // Show news carousel on Web Home
+    document.getElementById('newsSection').style.display = 'block';
   } else if(tab==='avicnQing'){
     document.getElementById('tabAvicnQing').classList.add('active');
     document.getElementById('tabContentAvicnQing').classList.add('active');
+    // Hide news carousel on other tabs
+    document.getElementById('newsSection').style.display = 'none';
     if(!loadedTabs['avicnQing']){
-      loadedTabs['avicnQing']=true;
-      loadTabScript('avicn.js','tabContentAvicnQing');
+      loadedTabs['avicnQing'] = true;
+      loadTabScript('avicn.js', 'tabContentAvicnQing');
     }
   } else if(tab==='more'){
     document.getElementById('tabMore').classList.add('active');
     document.getElementById('tabContentMore').classList.add('active');
+    // Hide news carousel on other tabs
+    document.getElementById('newsSection').style.display = 'none';
     if(!loadedTabs['more']){
-      loadedTabs['more']=true;
-      loadTabScript('more.js','tabContentMore');
+      loadedTabs['more'] = true;
+      loadTabScript('more.js', 'tabContentMore');
     }
   }
+
+  // Close profile dropdown on tab switch
+  document.getElementById('profileDropdown').classList.remove('open');
 }
 
 function loadTabScript(src, containerId){
@@ -1049,25 +1187,34 @@ function loadTabScript(src, containerId){
   container.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;padding:80px;color:#555;font-size:14px;gap:10px;"><div style="width:18px;height:18px;border:2px solid #333;border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;"></div> Loading...</div>';
   const s = document.createElement('script');
   s.src = src;
-  s.onload = ()=>{ if(typeof window['init_'+containerId]==='function') window['init_'+containerId](); };
-  s.onerror = ()=>{ container.innerHTML='<div style="padding:60px;text-align:center;color:#555;font-size:13px;">Module not available.</div>'; };
+  s.onload = () => {
+    // Try to call init function if defined
+    const fnName = 'init_' + containerId;
+    if(typeof window[fnName] === 'function'){
+      window[fnName]();
+    }
+  };
+  s.onerror = () => {
+    container.innerHTML = '<div style="padding:60px;text-align:center;color:#555;font-size:13px;">Module not available.</div>';
+  };
   document.head.appendChild(s);
 }
 
 // ===== MODAL =====
 function openModal(id){
   document.getElementById(id).classList.add('open');
-  document.body.style.overflow='hidden';
+  document.body.style.overflow = 'hidden';
 }
 function closeModal(id){
   document.getElementById(id).classList.remove('open');
-  document.body.style.overflow='';
+  document.body.style.overflow = '';
 }
 document.querySelectorAll('.modal-backdrop').forEach(b=>b.addEventListener('click',e=>{if(e.target===b)closeModal(b.id);}));
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){
     document.querySelectorAll('.modal-backdrop.open').forEach(m=>closeModal(m.id));
     closeSearchBtn();
+    document.getElementById('profileDropdown').classList.remove('open');
   }
 });
 
@@ -1095,8 +1242,8 @@ function closeSearch(e){
 }
 function closeSearchBtn(){
   document.getElementById('searchOverlay').classList.remove('open');
-  document.getElementById('searchInput').value='';
-  document.getElementById('searchResults').innerHTML='<div class="no-result" style="padding:28px 20px;color:#555;font-size:13px;">Start typing to search...</div>';
+  document.getElementById('searchInput').value = '';
+  document.getElementById('searchResults').innerHTML = '<div class="no-result" style="padding:28px 20px;color:#555;font-size:13px;">Start typing to search...</div>';
 }
 document.addEventListener('keydown',e=>{
   if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();openSearch();}
@@ -1106,14 +1253,14 @@ function doSearch(){
   const q = document.getElementById('searchInput').value.trim().toLowerCase();
   const results = document.getElementById('searchResults');
   if(!q){
-    results.innerHTML='<div class="no-result" style="padding:28px 20px;color:#555;font-size:13px;">Start typing to search...</div>';
+    results.innerHTML = '<div class="no-result" style="padding:28px 20px;color:#555;font-size:13px;">Start typing to search...</div>';
     return;
   }
   const filtered = searchOptions.filter(o=>
     o.name.toLowerCase().includes(q)||(o.sub||'').toLowerCase().includes(q)
   );
   if(!filtered.length){
-    results.innerHTML=`<div class="no-result"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>No results found for "<strong>${q}</strong>"</div>`;
+    results.innerHTML = `<div class="no-result"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>No results found for "<strong>${q}</strong>"</div>`;
     return;
   }
   results.innerHTML = filtered.slice(0,8).map(o=>{
@@ -1139,7 +1286,7 @@ function doSearch(){
   }).join('');
 }
 
-// ===== SIDEBAR =====
+// ===== SIDEBAR (guest only) =====
 function toggleSidebar(){
   document.getElementById('sidebar').classList.toggle('open');
 }
@@ -1156,31 +1303,38 @@ function togglePass(id, btn){
 
 // ===== ALERTS =====
 function showAlert(id, msg, type='error'){
-  document.getElementById(id).innerHTML=`<div class="alert alert-${type}">${msg}</div>`;
+  document.getElementById(id).innerHTML = `<div class="alert alert-${type}">${msg}</div>`;
 }
 function clearAlert(id){ document.getElementById(id).innerHTML=''; }
 
-// ===== LOGIN (stays on index.html) =====
+// ===== LOGIN =====
 async function doLogin(){
   const identifier = document.getElementById('loginId').value.trim();
   const password = document.getElementById('loginPass').value;
   clearAlert('loginAlert');
   if(!identifier||!password){showAlert('loginAlert','Please fill in all fields.');return;}
   const btn = document.getElementById('loginBtn');
-  btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Logging in...';
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Logging in...';
   try{
     const isEmail = identifier.includes('@');
     const field = isEmail?'email':'phone';
     const {data,error} = await authSupabase.from('user_verify').select('*').eq(field,identifier).single();
-    if(error||!data){showAlert('loginAlert','Account not found. Please check your credentials.');btn.disabled=false;btn.innerHTML='Login to Account';return;}
-    if(data.password!==btoa(password)){showAlert('loginAlert','Incorrect password. Please try again.');btn.disabled=false;btn.innerHTML='Login to Account';return;}
-    if(!data.verified){showAlert('loginAlert','Please verify your email first. Check your inbox.');btn.disabled=false;btn.innerHTML='Login to Account';return;}
+    if(error||!data){
+      showAlert('loginAlert','Account not found. Please check your credentials.');
+      btn.disabled=false;btn.innerHTML='Login to Account';return;
+    }
+    if(data.password !== btoa(password)){
+      showAlert('loginAlert','Incorrect password. Please try again.');
+      btn.disabled=false;btn.innerHTML='Login to Account';return;
+    }
+    if(!data.verified){
+      showAlert('loginAlert','Please verify your email first. Check your inbox.');
+      btn.disabled=false;btn.innerHTML='Login to Account';return;
+    }
     sessionStorage.setItem('avicnUser', JSON.stringify(data));
     closeModal('loginModal');
-    // Show user tabs, hide guest buttons
-    document.getElementById('guestButtons').style.display='none';
-    document.getElementById('userNavTabs').classList.add('visible');
-    // Stay on index, default to Web Home tab
+    applyLoggedInUI(data);
     switchTab('webHome');
   }catch(e){
     showAlert('loginAlert','Login failed. Please try again.');
@@ -1264,7 +1418,6 @@ async function doForgot(){
 // ===== TOKEN TABLE =====
 let tokensData = [];
 let livePrices = {};
-// Tokens to hide (from nosupported_js field containing 'website')
 let hiddenOnWebsite = new Set();
 
 async function loadTokens(){
@@ -1274,7 +1427,6 @@ async function loadTokens(){
       document.getElementById('tokenTableBody').innerHTML='<tr><td colspan="6" style="text-align:center;padding:40px;color:#555;">No tokens listed yet.</td></tr>';
       return;
     }
-    // Filter out tokens where nosupported_js contains 'website'
     tokensData = data.filter(t=>{
       const ns = (t.nosupported_js||'').toLowerCase();
       if(ns.includes('website')){hiddenOnWebsite.add(t.id);return false;}
@@ -1377,7 +1529,7 @@ function buildMarquee(){
 }
 function updateMarqueeItem(id, price){
   document.querySelectorAll(`[id^="mqp_${id}_"]`).forEach(el=>{
-    el.textContent=`$${formatPrice(price)}`;
+    el.textContent = `$${formatPrice(price)}`;
   });
 }
 
@@ -1436,7 +1588,7 @@ function renderNews(){
          </a>`
       : '';
 
-    return `<div class="news-slide" data-idx="${i}" data-has-video="${!!item.video_url}" data-duration="${item.video_url?0:5000}">
+    return `<div class="news-slide" data-idx="${i}">
       ${hasMedia?`<div class="news-slide-media">${mediaHtml}<div class="news-slide-media-overlay"></div></div>`:''}
       <div class="news-slide-content">
         <div class="news-slide-badge"><span class="news-slide-badge-dot"></span>NEWS</div>
@@ -1451,7 +1603,6 @@ function renderNews(){
     `<div class="news-dot${i===0?' active':''}" onclick="goToNews(${i})"></div>`
   ).join('');
 
-  // Hide prev/next if only one
   if(newsItems.length<=1){
     document.getElementById('newsPrev').style.display='none';
     document.getElementById('newsNext').style.display='none';
@@ -1485,7 +1636,6 @@ function startNewsAuto(){
   if(newsItems.length<=1) return;
   const item = newsItems[newsCurrentIdx];
   if(item && item.video_url){
-    // For video, advance after video ends or 30s max
     const vid = document.querySelectorAll('.news-slide')[newsCurrentIdx]?.querySelector('video');
     if(vid){
       const onEnd = ()=>{ newsSlide(1); vid.removeEventListener('ended',onEnd); };
