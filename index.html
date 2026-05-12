@@ -36,8 +36,8 @@ header{
 position:fixed;top:0;left:0;right:0;z-index:100;
 display:flex;align-items:center;justify-content:space-between;
 padding:0 24px;height:64px;
-background:rgba(10,10,10,0.95);
-backdrop-filter:blur(24px);
+background:rgba(10,10,10,0.92);
+backdrop-filter:blur(20px);
 border-bottom:1px solid var(--border);
 }
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
@@ -50,8 +50,9 @@ display:flex;align-items:center;justify-content:center;
 box-shadow:0 2px 16px rgba(255,255,255,0.06),inset 0 1px 0 rgba(255,255,255,0.1);
 overflow:hidden;transition:box-shadow .3s;
 }
-.logo-icon-wrap:hover{box-shadow:0 4px 24px rgba(255,255,255,0.14),inset 0 1px 0 rgba(255,255,255,0.15);}
+.logo-icon-wrap:hover{box-shadow:0 4px 24px rgba(255,255,255,0.12),inset 0 1px 0 rgba(255,255,255,0.15);}
 .logo-icon{width:30px;height:30px;object-fit:contain;display:block;}
+
 .logo-text{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:var(--white);}
 
 /* SEARCH */
@@ -113,7 +114,7 @@ font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;
 .btn-signup{
 background:var(--white);border:1px solid var(--white);color:#000;
 padding:8px 18px;border-radius:8px;font-family:'DM Sans',sans-serif;
-font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;
+font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;
 }
 .btn-signup:hover{background:#e0e0e0;}
 .sidebar-toggle{
@@ -124,86 +125,26 @@ cursor:pointer;transition:background .2s;color:var(--white);
 }
 .sidebar-toggle:hover{background:#2a2a2a;}
 
-/* ===== USER HEADER INFO ===== */
-.user-header-info{
-display:none;align-items:center;gap:10px;
-}
-.user-header-info.visible{display:flex;}
-.user-avatar-btn{
-display:flex;align-items:center;gap:8px;
+/* ===== LOGGED IN NAV TABS ===== */
+.logged-nav{
+display:none;align-items:center;gap:2px;
 background:var(--surface2);border:1px solid var(--border2);
-border-radius:10px;padding:6px 12px;cursor:pointer;
-transition:all .2s;position:relative;
+border-radius:10px;padding:3px;
 }
-.user-avatar-btn:hover{border-color:#444;background:#222;}
-.user-avatar-circle{
-width:26px;height:26px;border-radius:50%;
-background:linear-gradient(135deg,#333,#555);
-border:1px solid #444;
-display:flex;align-items:center;justify-content:center;
-font-size:11px;font-weight:700;color:var(--white);
-font-family:'Space Mono',monospace;
+.logged-nav.show{display:flex;}
+.nav-tab{
+padding:7px 16px;border-radius:7px;font-size:13px;font-weight:500;
+cursor:pointer;color:var(--gray);transition:all .2s;border:none;background:none;
+font-family:'DM Sans',sans-serif;white-space:nowrap;
 }
-.user-display-name{font-size:12px;font-weight:600;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.user-dropdown{
-position:absolute;top:calc(100% + 8px);right:0;
-background:var(--surface);border:1px solid var(--border2);
-border-radius:12px;overflow:hidden;min-width:160px;
-box-shadow:0 16px 40px rgba(0,0,0,0.7);
-opacity:0;pointer-events:none;transform:translateY(-8px);
-transition:all .2s;z-index:200;
+.nav-tab:hover{color:var(--white);}
+.nav-tab.active{background:var(--white);color:#000;font-weight:700;}
+.nav-tab-loading{
+display:none;position:fixed;top:64px;left:0;right:0;height:2px;
+background:linear-gradient(90deg,transparent,var(--white),transparent);
+background-size:200% 100%;animation:tabLoad .6s ease;z-index:99;
 }
-.user-avatar-btn:hover .user-dropdown{opacity:1;pointer-events:all;transform:translateY(0);}
-.user-dropdown-item{
-display:flex;align-items:center;gap:10px;padding:11px 16px;
-font-size:13px;color:var(--gray);cursor:pointer;transition:all .15s;
-text-decoration:none;
-}
-.user-dropdown-item:hover{background:var(--surface2);color:var(--white);}
-.user-dropdown-item svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;}
-.user-dropdown-divider{height:1px;background:var(--border);margin:4px 0;}
-.logout-item{color:#ff6b6b !important;}
-.logout-item:hover{background:rgba(255,59,59,0.08) !important;}
-
-/* ===== USER TOP NAV (3 tabs after login) ===== */
-.user-top-nav{
-position:fixed;top:64px;left:0;right:0;z-index:99;
-height:48px;
-background:rgba(8,8,8,0.98);
-border-bottom:1px solid var(--border);
-backdrop-filter:blur(24px);
-display:flex;align-items:center;
-padding:0 24px;gap:2px;
-opacity:0;pointer-events:none;
-transform:translateY(-4px);
-transition:all .35s cubic-bezier(.4,0,.2,1);
-}
-.user-top-nav.visible{opacity:1;pointer-events:all;transform:translateY(0);}
-.top-nav-tabs{display:flex;align-items:center;gap:2px;position:relative;}
-.top-nav-btn{
-display:flex;align-items:center;gap:7px;
-padding:6px 18px;border-radius:8px;
-background:none;border:none;
-color:var(--gray);font-family:'DM Sans',sans-serif;
-font-size:13px;font-weight:500;cursor:pointer;
-transition:all .2s;position:relative;letter-spacing:.3px;
-}
-.top-nav-btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;flex-shrink:0;}
-.top-nav-btn:hover{color:var(--white);background:rgba(255,255,255,0.05);}
-.top-nav-btn.active{color:var(--white);background:rgba(255,255,255,0.08);}
-.top-nav-btn.active::after{
-content:'';position:absolute;bottom:-13px;left:50%;
-transform:translateX(-50%);
-width:24px;height:2px;background:var(--white);
-border-radius:2px 2px 0 0;
-animation:tabUnderlineIn .25s ease;
-}
-@keyframes tabUnderlineIn{from{width:0;opacity:0;}to{width:24px;opacity:1;}}
-.top-nav-divider{width:1px;height:20px;background:var(--border);margin:0 8px;}
-
-/* MAIN PADDING ADJUSTMENT */
-main{padding-top:64px;min-height:100vh;transition:padding-top .35s cubic-bezier(.4,0,.2,1);}
-body.logged-in main{padding-top:112px;}
+@keyframes tabLoad{0%{background-position:100% 0;opacity:1;}100%{background-position:-100% 0;opacity:0;}}
 
 /* ===== SIDEBAR ===== */
 .sidebar{
@@ -231,135 +172,99 @@ cursor:pointer;transition:background .2s;color:var(--gray);
 }
 .sidebar-close:hover{background:var(--surface2);color:var(--white);}
 
-/* ===== NEWS BANNER SECTION ===== */
-.news-banner-section{
-display:none;
-width:100%;overflow:hidden;
+/* ===== MAIN ===== */
+main{padding-top:64px;min-height:100vh;}
+
+/* ===== NEWS CAROUSEL ===== */
+.news-section{
+width:100%;background:var(--surface);
 border-bottom:1px solid var(--border);
-position:relative;
+overflow:hidden;position:relative;
 }
-.news-banner-section.visible{display:block;animation:fadeIn .5s ease;}
-@keyframes fadeIn{from{opacity:0;transform:translateY(-12px);}to{opacity:1;transform:translateY(0);}}
-
-/* News loading placeholder */
-.news-loading-placeholder{
-width:100%;
-aspect-ratio:16/9;
-max-height:220px;
-background:var(--surface);
-display:flex;flex-direction:column;align-items:center;justify-content:center;
-gap:12px;color:var(--gray2);border-bottom:1px solid var(--border);
+.news-carousel-wrap{
+position:relative;overflow:hidden;
 }
-.news-loading-placeholder .news-load-spinner{
-width:24px;height:24px;border:2px solid var(--border2);
-border-top-color:var(--gray);border-radius:50%;
-animation:spin .8s linear infinite;
-}
-@keyframes spin{to{transform:rotate(360deg);}}
-
-.news-slider-wrap{
-position:relative;width:100%;
-height:220px;overflow:hidden;
-}
-@media(max-width:768px){.news-slider-wrap{height:180px;}}
-@media(max-width:480px){.news-slider-wrap{height:160px;}}
-.news-slider-track{
-display:flex;width:100%;height:100%;
-transition:transform .6s cubic-bezier(.4,0,.2,1);
+.news-carousel{
+display:flex;transition:transform .6s cubic-bezier(.4,0,.2,1);
 }
 .news-slide{
-min-width:100%;width:100%;height:100%;
-position:relative;overflow:hidden;flex-shrink:0;
+min-width:100%;position:relative;
+display:flex;flex-direction:column;
+cursor:pointer;
 }
-.news-media{
-position:absolute;inset:0;width:100%;height:100%;
-object-fit:cover;
+/* VIDEO slide */
+.news-slide.type-video .news-media{
+width:100%;max-height:400px;overflow:hidden;
+background:#000;display:flex;align-items:center;justify-content:center;
 }
-.news-text-bg{
-position:absolute;inset:0;
-background:linear-gradient(135deg,#0f0f0f 0%,#1a1a1a 40%,#111 100%);
+.news-slide.type-video video{
+width:100%;max-height:400px;object-fit:cover;display:block;
 }
-.news-text-bg::before{
-content:'';position:absolute;inset:0;
-background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.07'/%3E%3C/svg%3E");
-opacity:0.6;
+/* IMAGE / GIF slide */
+.news-slide.type-image .news-media,
+.news-slide.type-gif .news-media{
+width:100%;max-height:400px;overflow:hidden;
+background:#000;display:flex;align-items:center;justify-content:center;
 }
-.news-slide-overlay{
-position:absolute;inset:0;
-background:linear-gradient(to top,rgba(0,0,0,0.88) 0%,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.1) 100%);
-display:flex;align-items:flex-end;padding:20px 28px;
+.news-slide.type-image .news-media img,
+.news-slide.type-gif .news-media img{
+width:100%;max-height:400px;object-fit:cover;display:block;
 }
-.news-slide-content{max-width:600px;}
-.news-slide-title{
-font-family:'Bebas Neue',sans-serif;
-font-size:clamp(18px,3vw,28px);
-letter-spacing:2px;line-height:1.1;
-margin-bottom:6px;color:var(--white);
-text-shadow:0 2px 12px rgba(0,0,0,0.8);
+/* TEXT slide */
+.news-slide.type-text .news-media{
+width:100%;min-height:120px;
+background:linear-gradient(135deg,#111 0%,#1a1a1a 100%);
+display:flex;align-items:center;justify-content:center;padding:32px 40px;
 }
-.news-slide-desc{
-font-size:clamp(11px,1.5vw,13px);color:rgba(255,255,255,0.75);
-line-height:1.5;margin-bottom:10px;
-display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+.news-text-content{
+font-family:'Bebas Neue',sans-serif;font-size:clamp(20px,3vw,36px);
+letter-spacing:2px;color:var(--white);text-align:center;line-height:1.2;
 }
+/* SLIDE INFO BAR */
+.news-info{
+background:rgba(10,10,10,0.95);
+padding:14px 40px 16px;
+display:flex;align-items:center;justify-content:space-between;gap:16px;
+border-top:1px solid var(--border);
+}
+.news-info-left{display:flex;flex-direction:column;gap:4px;flex:1;}
+.news-title-text{font-size:14px;font-weight:600;color:var(--white);line-height:1.4;}
+.news-desc-text{font-size:12px;color:var(--gray);line-height:1.5;}
 .news-platform-btn{
 display:inline-flex;align-items:center;gap:6px;
-background:rgba(255,255,255,0.12);
-border:1px solid rgba(255,255,255,0.2);
-backdrop-filter:blur(8px);
-color:var(--white);text-decoration:none;
-border-radius:6px;padding:5px 12px;font-size:11px;font-weight:600;
-letter-spacing:.5px;transition:all .2s;
+padding:6px 14px;border-radius:6px;
+background:rgba(255,255,255,0.08);border:1px solid var(--border2);
+color:var(--white);font-size:12px;font-weight:600;
+text-decoration:none;transition:all .2s;white-space:nowrap;cursor:pointer;
+font-family:'DM Sans',sans-serif;
 }
-.news-platform-btn:hover{background:rgba(255,255,255,0.2);border-color:rgba(255,255,255,0.35);}
-.news-platform-btn svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2.5;}
-
-/* News navigation arrows */
-.news-arrow{
-position:absolute;top:50%;transform:translateY(-50%);
-width:36px;height:36px;border-radius:50%;
-background:rgba(0,0,0,0.55);border:1px solid rgba(255,255,255,0.12);
-backdrop-filter:blur(8px);
-display:flex;align-items:center;justify-content:center;
-cursor:pointer;z-index:10;transition:all .2s;color:var(--white);
-}
-.news-arrow:hover{background:rgba(0,0,0,0.8);border-color:rgba(255,255,255,0.25);transform:translateY(-50%) scale(1.08);}
-.news-arrow svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.5;}
-.news-arrow-left{left:14px;}
-.news-arrow-right{right:14px;}
-
-/* News dots */
+.news-platform-btn:hover{background:rgba(255,255,255,0.16);border-color:#555;}
+.news-platform-icon{width:16px;height:16px;border-radius:3px;object-fit:cover;}
+/* Carousel dots */
 .news-dots{
-position:absolute;bottom:12px;right:20px;
-display:flex;align-items:center;gap:5px;z-index:10;
+position:absolute;bottom:60px;left:50%;transform:translateX(-50%);
+display:flex;gap:6px;z-index:10;
 }
 .news-dot{
-width:6px;height:6px;border-radius:50%;
-background:rgba(255,255,255,0.3);cursor:pointer;
-transition:all .3s;
+width:6px;height:6px;border-radius:3px;
+background:rgba(255,255,255,0.25);
+transition:all .3s;cursor:pointer;
 }
-.news-dot.active{width:18px;border-radius:3px;background:var(--white);}
-
-/* News progress bar */
-.news-progress-bar{
-position:absolute;bottom:0;left:0;height:2px;
-background:rgba(255,255,255,0.7);
-transition:none;z-index:10;
+.news-dot.active{width:18px;background:var(--white);}
+/* Carousel arrows */
+.news-arrow{
+position:absolute;top:50%;transform:translateY(-60%);
+width:36px;height:36px;border-radius:50%;
+background:rgba(0,0,0,0.6);border:1px solid var(--border2);
+color:var(--white);display:flex;align-items:center;justify-content:center;
+cursor:pointer;z-index:10;transition:all .2s;backdrop-filter:blur(8px);
 }
-
-/* ===== TAB CONTENT ===== */
-.tab-content{display:none;}
-.tab-content.active{display:block;animation:tabFadeIn .4s ease;}
-@keyframes tabFadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
-.tab-loading-state{
-min-height:50vh;display:flex;flex-direction:column;
-align-items:center;justify-content:center;gap:16px;
-color:var(--gray);
-}
-.tab-loading-spinner{
-width:32px;height:32px;border:2px solid var(--border2);
-border-top-color:var(--white);border-radius:50%;
-animation:spin .7s linear infinite;
+.news-arrow:hover{background:rgba(0,0,0,0.85);border-color:#555;}
+.news-arrow.prev{left:16px;}
+.news-arrow.next{right:16px;}
+.news-empty{
+padding:32px 40px;text-align:center;color:var(--gray);font-size:14px;
+display:none;
 }
 
 /* ===== HERO ===== */
@@ -489,6 +394,45 @@ transform:scale(1.08);
 @keyframes featPop{0%{transform:scale(1);}40%{transform:scale(.97);}100%{transform:scale(1);}}
 .feat-card.clicked{animation:featPop .3s ease;}
 
+/* ===== PLATFORM LINKS ===== */
+.platforms-section{
+padding:60px 40px;
+border-top:1px solid var(--border);
+}
+.platforms-grid{
+display:flex;flex-wrap:wrap;gap:12px;
+}
+.platform-card{
+display:flex;align-items:center;gap:12px;
+background:var(--surface2);border:1px solid var(--border2);
+border-radius:12px;padding:14px 20px;cursor:pointer;
+transition:all .25s cubic-bezier(.4,0,.2,1);
+text-decoration:none;color:var(--white);
+position:relative;overflow:hidden;
+}
+.platform-card::before{
+content:'';position:absolute;inset:0;
+background:radial-gradient(circle at 0% 50%,rgba(255,255,255,0.04) 0%,transparent 70%);
+opacity:0;transition:opacity .3s;
+}
+.platform-card:hover{
+border-color:#555;
+transform:translateY(-2px);
+box-shadow:0 8px 24px rgba(0,0,0,0.4);
+}
+.platform-card:hover::before{opacity:1;}
+.platform-card:active{transform:translateY(0);}
+.platform-icon{
+width:36px;height:36px;border-radius:8px;
+object-fit:cover;background:#222;
+display:flex;align-items:center;justify-content:center;
+flex-shrink:0;font-size:18px;overflow:hidden;
+}
+.platform-icon img{width:100%;height:100%;object-fit:cover;border-radius:8px;}
+.platform-name{font-size:14px;font-weight:600;}
+.platform-arrow{color:var(--gray);margin-left:4px;transition:transform .2s;}
+.platform-card:hover .platform-arrow{transform:translateX(3px);color:var(--white);}
+
 /* ===== BRAND SECTION ===== */
 .brand-section{
 padding:80px 40px;
@@ -514,58 +458,7 @@ background:var(--surface2);
 font-size:14px;color:var(--gray);line-height:1.8;max-width:600px;
 }
 
-/* ===== PLATFORMS SECTION ===== */
-.platforms-section{
-padding:60px 40px;
-border-top:1px solid var(--border);
-display:none;
-}
-.platforms-section.visible{display:block;animation:fadeUp .5s ease both;}
-.platforms-section .section-header{margin-bottom:32px;}
-.platforms-grid{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
-gap:12px;
-}
-.platform-card{
-display:flex;flex-direction:column;align-items:center;
-gap:10px;padding:20px 16px;
-background:var(--surface);border:1px solid var(--border);
-border-radius:14px;text-decoration:none;color:var(--white);
-transition:all .25s cubic-bezier(.4,0,.2,1);
-cursor:pointer;position:relative;overflow:hidden;
-}
-.platform-card::before{
-content:'';position:absolute;inset:0;
-background:radial-gradient(circle at 50% 0%,rgba(255,255,255,0.05),transparent 70%);
-opacity:0;transition:opacity .25s;
-}
-.platform-card:hover{
-border-color:#444;
-background:var(--surface2);
-transform:translateY(-3px);
-box-shadow:0 8px 32px rgba(0,0,0,0.5);
-}
-.platform-card:hover::before{opacity:1;}
-.platform-icon-wrap{
-width:44px;height:44px;border-radius:12px;
-background:rgba(255,255,255,0.06);
-border:1px solid rgba(255,255,255,0.1);
-display:flex;align-items:center;justify-content:center;
-overflow:hidden;transition:transform .25s;
-}
-.platform-card:hover .platform-icon-wrap{transform:scale(1.08);}
-.platform-icon-wrap img{width:30px;height:30px;object-fit:contain;}
-.platform-icon-placeholder{font-size:18px;color:var(--gray);}
-.platform-name{font-size:12px;font-weight:600;letter-spacing:.4px;text-align:center;color:rgba(255,255,255,0.85);}
-.platform-arrow{
-position:absolute;top:10px;right:10px;
-color:var(--gray2);opacity:0;transition:opacity .2s;
-}
-.platform-card:hover .platform-arrow{opacity:1;}
-.platform-arrow svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2.5;}
-
-/* MODALS */
+/* ===== MODALS ===== */
 .modal-backdrop{
 position:fixed;inset:0;z-index:300;
 background:rgba(0,0,0,0.75);backdrop-filter:blur(10px);
@@ -640,8 +533,9 @@ width:16px;height:16px;border:2px solid rgba(0,0,0,.3);
 border-top-color:#000;border-radius:50%;
 animation:spin .6s linear infinite;display:inline-block;margin-right:6px;vertical-align:middle;
 }
+@keyframes spin{to{transform:rotate(360deg);}}
 
-/* FOOTER */
+/* ===== FOOTER ===== */
 footer{
 background:var(--surface);border-top:1px solid var(--border);
 padding:48px 40px;display:grid;
@@ -679,7 +573,25 @@ font-size:14px;font-weight:500;cursor:pointer;transition:all .2s;
 }
 .btn-hero-secondary:hover{border-color:#555;background:#111;transform:translateY(-2px);}
 
-/* RESPONSIVE */
+/* Tab content sections */
+.tab-content{display:none;}
+.tab-content.active{display:block;animation:fadeUp .4s ease both;}
+
+/* Loading bar */
+#navLoadBar{
+position:fixed;top:64px;left:0;right:0;height:2px;z-index:200;
+background:linear-gradient(90deg,transparent 0%,#fff 50%,transparent 100%);
+background-size:200% 100%;
+animation:loadBar .5s ease forwards;
+display:none;
+}
+@keyframes loadBar{
+0%{background-position:100% 0;opacity:1;width:0%;}
+80%{background-position:-50% 0;opacity:1;width:100%;}
+100%{opacity:0;width:100%;}
+}
+
+/* ===== RESPONSIVE ===== */
 @media(max-width:768px){
 .stats{gap:24px;flex-wrap:wrap;justify-content:center;}
 .feat-grid{grid-template-columns:1fr 1fr;}
@@ -688,105 +600,70 @@ footer{grid-template-columns:1fr 1fr;}
 .section{padding:40px 20px;}
 .form-row{grid-template-columns:1fr;}
 .hero-cta-block{flex-direction:column;align-items:center;}
-.platforms-grid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr));}
-.search-wrap{max-width:200px;margin:0 16px;}
+.news-info{padding:12px 20px;}
+.platforms-section{padding:40px 20px;}
+.logged-nav{gap:0;}
+.nav-tab{padding:7px 10px;font-size:12px;}
 }
 @media(max-width:480px){
 .hero-title{font-size:48px !important;}
 .stats{gap:16px;}
 footer{grid-template-columns:1fr;}
 .foot-bottom{flex-direction:column;gap:8px;text-align:center;}
-.top-nav-btn span{display:none;}
-.top-nav-btn{padding:6px 12px;}
 }
 </style>
 </head>
 <body>
 
-<!-- ===== HEADER ===== -->
+<!-- NAV LOAD BAR -->
+<div id="navLoadBar"></div>
+
+<!-- HEADER -->
 <header>
-<a class="logo" href="#">
-  <div class="logo-icon-wrap">
-    <img class="logo-icon" src="https://kjxnbofpwfvheuzmeynd.supabase.co/storage/v1/object/public/avicnknov/1774528165689.png" id="logoImg" alt="AvicnKnov"/>
-  </div>
-  <span class="logo-text">AvicnKnov</span>
-</a>
+  <a class="logo" href="#">
+    <div class="logo-icon-wrap">
+      <img class="logo-icon" src="https://kjxnbofpwfvheuzmeynd.supabase.co/storage/v1/object/public/avicnknov/1774528165689.png" id="logoImg" alt="AvicnKnov" onerror="this.style.display='none'"/>
+    </div>
+    <span class="logo-text">AvicnKnov</span>
+  </a>
 
-<div class="search-wrap">
-  <div class="search-bar" onclick="openSearch()">
-    <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-    <span class="search-placeholder">Search pages, features...</span>
-    <span class="search-shortcut">⌘K</span>
-  </div>
-</div>
-
-<div class="header-right">
-  <!-- Shown when logged OUT -->
-  <button class="btn-login" id="btnLogin" onclick="openModal('loginModal')">Login</button>
-  <button class="btn-signup" id="btnSignup" onclick="openModal('signupModal')">Sign Up</button>
-
-  <!-- Shown when logged IN -->
-  <div class="user-header-info" id="userHeaderInfo">
-    <div class="user-avatar-btn">
-      <div class="user-avatar-circle" id="userAvatarCircle">U</div>
-      <span class="user-display-name" id="userDisplayName">User</span>
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-      <div class="user-dropdown">
-        <a class="user-dropdown-item" href="profile.html">
-          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          Profile
-        </a>
-        <a class="user-dropdown-item" href="setting.html">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-          Settings
-        </a>
-        <div class="user-dropdown-divider"></div>
-        <div class="user-dropdown-item logout-item" onclick="doLogout()">
-          <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-          Logout
-        </div>
-      </div>
+  <!-- Logged-out: search -->
+  <div class="search-wrap" id="searchWrap">
+    <div class="search-bar" onclick="openSearch()">
+      <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <span class="search-placeholder">Search pages, features...</span>
+      <span class="search-shortcut">⌘K</span>
     </div>
   </div>
 
-  <div class="sidebar-toggle" onclick="toggleSidebar()">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  <!-- Logged-in: nav tabs -->
+  <div class="logged-nav" id="loggedNav">
+    <button class="nav-tab active" onclick="switchTab('webhome')" id="tab-webhome">Web Home</button>
+    <button class="nav-tab" onclick="switchTab('avicnqing')" id="tab-avicnqing">Avicn&amp;Qing</button>
+    <button class="nav-tab" onclick="switchTab('more')" id="tab-more">More</button>
   </div>
-</div>
+
+  <div class="header-right">
+    <!-- Logged out buttons -->
+    <button class="btn-login" id="btnLogin" onclick="openModal('loginModal')">Login</button>
+    <button class="btn-signup" id="btnSignup" onclick="openModal('signupModal')">Sign Up</button>
+    <!-- Sidebar toggle -->
+    <div class="sidebar-toggle" onclick="toggleSidebar()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </div>
+  </div>
 </header>
 
-<!-- ===== USER TOP NAV (3 tabs - shown after login) ===== -->
-<div class="user-top-nav" id="userTopNav">
-  <div class="top-nav-tabs">
-    <button class="top-nav-btn active" data-tab="webhome" onclick="switchTab('webhome')">
-      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      <span>Web Home</span>
-    </button>
-    <div class="top-nav-divider"></div>
-    <button class="top-nav-btn" data-tab="avicnqing" onclick="switchTab('avicnqing')">
-      <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-      <span>Avicn&amp;Qing</span>
-    </button>
-    <div class="top-nav-divider"></div>
-    <button class="top-nav-btn" data-tab="more" onclick="switchTab('more')">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
-      <span>More</span>
-    </button>
-  </div>
-</div>
-
-<!-- ===== SIDEBAR (simplified: Profile, Help, Settings only) ===== -->
+<!-- SIDEBAR -->
 <nav class="sidebar" id="sidebar">
   <a class="sidebar-item" href="profile.html" title="Profile">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
     <span>Profile</span>
   </a>
-  <div class="sidebar-divider"></div>
   <a class="sidebar-item" href="help.html" title="Help & Support">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
     <span>Help</span>
   </a>
-  <div class="sidebar-divider"></div>
   <a class="sidebar-item" href="setting.html" title="Settings">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
     <span>Settings</span>
@@ -796,7 +673,7 @@ footer{grid-template-columns:1fr;}
   </div>
 </nav>
 
-<!-- ===== SEARCH OVERLAY ===== -->
+<!-- SEARCH OVERLAY -->
 <div class="search-overlay" id="searchOverlay" onclick="closeSearch(event)">
   <div class="search-box">
     <div class="search-input-wrap">
@@ -810,218 +687,141 @@ footer{grid-template-columns:1fr;}
   </div>
 </div>
 
-<!-- ===== MAIN ===== -->
-<main id="mainContent">
+<!-- MAIN -->
+<main>
 
-  <!-- TAB: WEB HOME (default, existing content) -->
-  <div id="tab-webhome" class="tab-content active">
-
-    <!-- HERO -->
-    <section class="hero">
-      <div class="hero-badge">
-        <span class="hero-badge-dot"></span>
-        Live Markets · 24/7 Trading
-      </div>
-      <h1 class="hero-title">AVICNKNOV<br/><span>EXCHANGE</span></h1>
-      <p class="hero-sub">The next generation crypto exchange. Trade smarter, faster, and with complete confidence. Built for professionals and beginners alike.</p>
-      <!-- ===== HERO CTA: hide on login, show on logout ===== -->
-      <div class="hero-cta-block" id="heroCTA">
-        <button class="btn-hero-primary" onclick="openModal('signupModal')">Start Trading Free</button>
-        <button class="btn-hero-secondary" onclick="openModal('loginModal')">Login to Account</button>
-      </div>
-      <div class="stats">
-        <div class="stat">
-          <div class="stat-val" id="statVol">$2.4B</div>
-          <div class="stat-lab">24h Volume</div>
-        </div>
-        <div class="stat">
-          <div class="stat-val" id="statTokens">150+</div>
-          <div class="stat-lab">Tokens Listed</div>
-        </div>
-        <div class="stat">
-          <div class="stat-val" id="statUptime">99.9%</div>
-          <div class="stat-lab">Uptime</div>
-        </div>
-        <div class="stat">
-          <div class="stat-val" id="statUsers">2M+</div>
-          <div class="stat-lab">Users</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== NEWS BANNER — below hero, above marquee ===== -->
-    <!-- Loading placeholder: shows while news is being fetched -->
-    <div id="newsLoadingPlaceholder" class="news-loading-placeholder">
-      <div class="news-load-spinner"></div>
-      <span style="font-size:12px;letter-spacing:1px;font-family:'Space Mono',monospace;">Loading News...</span>
+<!-- ===== NEWS SECTION ===== -->
+<div class="news-section" id="newsSection" style="display:none;">
+  <div class="news-carousel-wrap" id="newsCarouselWrap">
+    <div class="news-carousel" id="newsCarousel"></div>
+    <div class="news-dots" id="newsDots"></div>
+    <div class="news-arrow prev" onclick="newsArrow(-1)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
     </div>
-
-    <!-- Actual news slider: hidden until data loads -->
-    <div class="news-banner-section" id="newsBannerSection">
-      <div class="news-slider-wrap" id="newsSliderWrap"
-        onmouseenter="pauseNews()" onmouseleave="resumeNews()"
-        ontouchstart="newsTouchStart(event)" ontouchend="newsTouchEnd(event)">
-
-        <div class="news-slider-track" id="newsSliderTrack"></div>
-
-        <!-- Arrows -->
-        <div class="news-arrow news-arrow-left" onclick="newsManualPrev()">
-          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-        </div>
-        <div class="news-arrow news-arrow-right" onclick="newsManualNext()">
-          <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-        </div>
-
-        <!-- Dots -->
-        <div class="news-dots" id="newsDots"></div>
-
-        <!-- Progress bar -->
-        <div class="news-progress-bar" id="newsProgressBar"></div>
-      </div>
-    </div>
-
-    <!-- MARQUEE -->
-    <div class="marquee-wrap">
-      <div class="marquee" id="marqueeEl"></div>
-    </div>
-
-    <!-- TOKEN TABLE -->
-    <section class="section">
-      <div class="section-header">
-        <div>
-          <div class="section-title">Live Markets</div>
-          <div class="section-sub">Real-time prices from AvicnKnov Exchange</div>
-        </div>
-        <span class="live-badge"><span class="live-dot"></span>LIVE</span>
-      </div>
-      <table class="token-table">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Token</th>
-            <th>Price</th>
-            <th>24h Change</th>
-            <th>Volume</th>
-            <th>Supply</th>
-          </tr>
-        </thead>
-        <tbody id="tokenTableBody">
-          <tr><td colspan="6" style="text-align:center;padding:40px;color:#555;">Loading markets...</td></tr>
-        </tbody>
-      </table>
-    </section>
-
-    <!-- FEATURES -->
-    <section class="features">
-      <div class="section-header" style="margin-bottom:48px;">
-        <div class="section-title">Why AvicnKnov</div>
-      </div>
-      <div class="feat-grid">
-        <div class="feat-card" onclick="triggerFeatAnim(this)">
-          <div class="feat-icon-box"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
-          <div class="feat-title">Sub-Millisecond Execution</div>
-          <div class="feat-desc">Our proprietary matching engine processes over 1.4 million orders per second with confirmed sub-0.3ms trade latency — the fastest execution infrastructure in the industry. Built on bare-metal servers across 9 global data centers.</div>
-        </div>
-        <div class="feat-card" onclick="triggerFeatAnim(this)">
-          <div class="feat-icon-box"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-          <div class="feat-title">Military-Grade Security Architecture</div>
-          <div class="feat-desc">98% of assets held in geographically distributed cold storage vaults. Real-time AI threat detection, multi-layer 2FA, biometric verification, and a $500M institutional insurance fund covering all user assets on the platform.</div>
-        </div>
-        <div class="feat-card" onclick="triggerFeatAnim(this)">
-          <div class="feat-icon-box"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
-          <div class="feat-title">Institutional-Grade Analytics Suite</div>
-          <div class="feat-desc">Deep order-book visualization, live market microstructure data, multi-timeframe heatmaps, and on-chain flow analysis — all in one unified terminal. The same tools used by the world's largest crypto trading desks, now available to everyone.</div>
-        </div>
-        <div class="feat-card" onclick="triggerFeatAnim(this)">
-          <div class="feat-icon-box"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
-          <div class="feat-title">Borderless Global Market Access</div>
-          <div class="feat-desc">Trade 150+ cryptocurrency pairs across every major blockchain — Ethereum, Solana, BTC Layer-2, Cosmos, and beyond — from a single unified account. Zero geographic restrictions. One API. Infinite opportunity.</div>
-        </div>
-        <div class="feat-card" onclick="triggerFeatAnim(this)">
-          <div class="feat-icon-box"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div>
-          <div class="feat-title">Aquarius Token Launchpad</div>
-          <div class="feat-desc">AvicnKnov's revolutionary Aquarius system is redefining token launches. Hyper-curated projects, AI-vetted smart contracts, real-time liquidity bootstrapping, and launch mechanics no other exchange on earth currently offers. The future of token discovery is here.</div>
-        </div>
-        <div class="feat-card" onclick="triggerFeatAnim(this)">
-          <div class="feat-icon-box"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 6v6l4 2"/><circle cx="19" cy="5" r="3"/></svg></div>
-          <div class="feat-title">AvicnKnov AI — Neural Trade Intelligence</div>
-          <div class="feat-desc">Our proprietary AI engine monitors 240+ market signals simultaneously, delivers predictive sentiment scoring, detects whale movement patterns, and surfaces high-probability trade setups in real time — exclusively for AvicnKnov users.</div>
-        </div>
-        <div class="feat-card" onclick="triggerFeatAnim(this)">
-          <div class="feat-icon-box"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-          <div class="feat-title">Zero-Friction Onboarding for Beginners</div>
-          <div class="feat-desc">From account creation to first trade in under 90 seconds. Guided learning paths, a paper trading simulator with real market data, and a live 24/7 support team with sub-2-minute response times ensure no beginner ever trades alone.</div>
-        </div>
-        <div class="feat-card" onclick="triggerFeatAnim(this)">
-          <div class="feat-icon-box"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
-          <div class="feat-title">99.997% Uptime Infrastructure</div>
-          <div class="feat-desc">Redundant multi-region cloud architecture with automatic failover means AvicnKnov has never experienced an unplanned outage exceeding 8 seconds in its operational history. When markets move, we are always on.</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- BRAND SECTION -->
-    <section class="brand-section" id="brandSection">
-      <div class="brand-logo-big">AvicnKnov Exchange</div>
-      <div class="brand-tagline">
-        <span class="brand-tag">
-          <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-          Sub-0.3ms Trade Execution
-        </span>
-        <span class="brand-tag">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/><circle cx="19" cy="5" r="3"/></svg>
-          Proprietary AI Neural Engine
-        </span>
-        <span class="brand-tag">
-          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          $500M Asset Insurance Fund
-        </span>
-        <span class="brand-tag">
-          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-          99.997% Uptime — Always Live
-        </span>
-      </div>
-      <p class="brand-desc" id="brandDesc">
-        AvicnKnov is not just an exchange — it is a sovereign trading ecosystem engineered from the ground up for the next era of finance. Powered by a self-evolving AI infrastructure, the Aquarius Token Launchpad, and institutional execution rails that most platforms cannot replicate, AvicnKnov is where serious capital moves. Whether you are deploying your first $10 or managing a $10M book, this is the last exchange you will ever need.
-      </p>
-    </section>
-
-    <!-- PLATFORMS SECTION -->
-    <section class="platforms-section" id="platformsSection">
-      <div class="section-header">
-        <div>
-          <div class="section-title">Explore Platforms</div>
-          <div class="section-sub">Connect with leading ecosystem partners</div>
-        </div>
-      </div>
-      <div class="platforms-grid" id="platformsGrid"></div>
-    </section>
-
-  </div><!-- /tab-webhome -->
-
-  <!-- TAB: AVICN&QING -->
-  <div id="tab-avicnqing" class="tab-content">
-    <div id="avicnqing-root">
-      <div class="tab-loading-state">
-        <div class="tab-loading-spinner"></div>
-        <span style="font-size:13px;letter-spacing:1px;">Loading Avicn&amp;Qing...</span>
-      </div>
+    <div class="news-arrow next" onclick="newsArrow(1)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
     </div>
   </div>
+</div>
 
-  <!-- TAB: MORE -->
-  <div id="tab-more" class="tab-content">
-    <div id="more-root">
-      <div class="tab-loading-state">
-        <div class="tab-loading-spinner"></div>
-        <span style="font-size:13px;letter-spacing:1px;">Loading More...</span>
-      </div>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">
+    <span class="hero-badge-dot"></span>
+    Live Markets · 24/7 Trading
+  </div>
+  <h1 class="hero-title">AVICNKNOV<br/><span>EXCHANGE</span></h1>
+  <p class="hero-sub">The next generation crypto exchange. Trade smarter, faster, and with complete confidence. Built for professionals and beginners alike.</p>
+  <div class="hero-cta-block" id="heroCTA">
+    <button class="btn-hero-primary" onclick="openModal('signupModal')">Start Trading Free</button>
+    <button class="btn-hero-secondary" onclick="openModal('loginModal')">Login to Account</button>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="stat-val" id="statVol">$2.4B</div><div class="stat-lab">24h Volume</div></div>
+    <div class="stat"><div class="stat-val" id="statTokens">150+</div><div class="stat-lab">Tokens Listed</div></div>
+    <div class="stat"><div class="stat-val" id="statUptime">99.9%</div><div class="stat-lab">Uptime</div></div>
+    <div class="stat"><div class="stat-val" id="statUsers">2M+</div><div class="stat-lab">Users</div></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee" id="marqueeEl"></div>
+</div>
+
+<!-- TOKENS TABLE -->
+<section class="section">
+  <div class="section-header">
+    <div>
+      <div class="section-title">Live Markets</div>
+      <div class="section-sub">Real-time prices from AvicnKnov Exchange</div>
+    </div>
+    <span class="live-badge"><span class="live-dot"></span>LIVE</span>
+  </div>
+  <table class="token-table">
+    <thead>
+      <tr>
+        <th>#</th><th>Token</th><th>Price</th><th>24h Change</th><th>Volume</th><th>Supply</th>
+      </tr>
+    </thead>
+    <tbody id="tokenTableBody">
+      <tr><td colspan="6" style="text-align:center;padding:40px;color:#555;">Loading markets...</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <div class="section-header" style="margin-bottom:48px;">
+    <div class="section-title">Why AvicnKnov</div>
+  </div>
+  <div class="feat-grid">
+    <div class="feat-card" onclick="triggerFeatAnim(this)">
+      <div class="feat-icon-box"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+      <div class="feat-title">Sub-Millisecond Execution</div>
+      <div class="feat-desc">Our proprietary matching engine processes over 1.4 million orders per second with confirmed sub-0.3ms trade latency — the fastest execution infrastructure in the industry. Built on bare-metal servers across 9 global data centers.</div>
+    </div>
+    <div class="feat-card" onclick="triggerFeatAnim(this)">
+      <div class="feat-icon-box"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+      <div class="feat-title">Military-Grade Security Architecture</div>
+      <div class="feat-desc">98% of assets held in geographically distributed cold storage vaults. Real-time AI threat detection, multi-layer 2FA, biometric verification, and a $500M institutional insurance fund covering all user assets on the platform.</div>
+    </div>
+    <div class="feat-card" onclick="triggerFeatAnim(this)">
+      <div class="feat-icon-box"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+      <div class="feat-title">Institutional-Grade Analytics Suite</div>
+      <div class="feat-desc">Deep order-book visualization, live market microstructure data, multi-timeframe heatmaps, and on-chain flow analysis — all in one unified terminal. The same tools used by the world's largest crypto trading desks, now available to everyone.</div>
+    </div>
+    <div class="feat-card" onclick="triggerFeatAnim(this)">
+      <div class="feat-icon-box"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+      <div class="feat-title">Borderless Global Market Access</div>
+      <div class="feat-desc">Trade 150+ cryptocurrency pairs across every major blockchain — Ethereum, Solana, BTC Layer-2, Cosmos, and beyond — from a single unified account. Zero geographic restrictions. One API. Infinite opportunity.</div>
+    </div>
+    <div class="feat-card" onclick="triggerFeatAnim(this)">
+      <div class="feat-icon-box"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div>
+      <div class="feat-title">Aquarius Token Launchpad</div>
+      <div class="feat-desc">AvicnKnov's revolutionary Aquarius system is redefining token launches. Hyper-curated projects, AI-vetted smart contracts, real-time liquidity bootstrapping, and launch mechanics no other exchange on earth currently offers. The future of token discovery is here.</div>
+    </div>
+    <div class="feat-card" onclick="triggerFeatAnim(this)">
+      <div class="feat-icon-box"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 6v6l4 2"/><circle cx="19" cy="5" r="3"/></svg></div>
+      <div class="feat-title">AvicnKnov AI — Neural Trade Intelligence</div>
+      <div class="feat-desc">Our proprietary AI engine monitors 240+ market signals simultaneously, delivers predictive sentiment scoring, detects whale movement patterns, and surfaces high-probability trade setups in real time — exclusively for AvicnKnov users.</div>
+    </div>
+    <div class="feat-card" onclick="triggerFeatAnim(this)">
+      <div class="feat-icon-box"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+      <div class="feat-title">Zero-Friction Onboarding for Beginners</div>
+      <div class="feat-desc">From account creation to first trade in under 90 seconds. Guided learning paths, a paper trading simulator with real market data, and a live 24/7 support team with sub-2-minute response times ensure no beginner ever trades alone.</div>
+    </div>
+    <div class="feat-card" onclick="triggerFeatAnim(this)">
+      <div class="feat-icon-box"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+      <div class="feat-title">99.997% Uptime Infrastructure</div>
+      <div class="feat-desc">Redundant multi-region cloud architecture with automatic failover means AvicnKnov has never experienced an unplanned outage exceeding 8 seconds in its operational history. When markets move, we are always on.</div>
     </div>
   </div>
+</section>
 
-</main>
+<!-- PLATFORM LINKS -->
+<section class="platforms-section" id="platformsSection" style="display:none;">
+  <div class="section-header" style="margin-bottom:24px;">
+    <div class="section-title">Partner Platforms</div>
+  </div>
+  <div class="platforms-grid" id="platformsGrid"></div>
+</section>
 
-<!-- ===== FOOTER ===== -->
+<!-- BRAND SECTION -->
+<section class="brand-section" id="brandSection">
+  <div class="brand-logo-big">AvicnKnov Exchange</div>
+  <div class="brand-tagline">
+    <span class="brand-tag"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>Sub-0.3ms Trade Execution</span>
+    <span class="brand-tag"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/><circle cx="19" cy="5" r="3"/></svg>Proprietary AI Neural Engine</span>
+    <span class="brand-tag"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>$500M Asset Insurance Fund</span>
+    <span class="brand-tag"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>99.997% Uptime — Always Live</span>
+  </div>
+  <p class="brand-desc" id="brandDesc">
+    AvicnKnov is not just an exchange — it is a sovereign trading ecosystem engineered from the ground up for the next era of finance. Powered by a self-evolving AI infrastructure, the Aquarius Token Launchpad, and institutional execution rails that most platforms cannot replicate, AvicnKnov is where serious capital moves. Whether you are deploying your first $10 or managing a $10M book, this is the last exchange you will ever need.
+  </p>
+</section>
+
+<!-- FOOTER -->
 <footer>
   <div class="foot-brand">
     <div class="foot-logo">AvicnKnov</div>
@@ -1048,6 +848,8 @@ footer{grid-template-columns:1fr;}
   <span class="foot-bottom-text" id="footCopy">© 2027 AvicnKnov Exchange — The World's Most Advanced Crypto Trading Ecosystem.</span>
   <span class="foot-bottom-text">Regulated &nbsp;·&nbsp; Secured &nbsp;·&nbsp; AI-Native &nbsp;·&nbsp; Always Live</span>
 </div>
+
+</main>
 
 <!-- ===== LOGIN MODAL ===== -->
 <div class="modal-backdrop" id="loginModal">
@@ -1149,7 +951,7 @@ footer{grid-template-columns:1fr;}
   </div>
 </div>
 
-<!-- ===== FORGOT PASSWORD MODAL ===== -->
+<!-- ===== FORGOT MODAL ===== -->
 <div class="modal-backdrop" id="forgotModal">
   <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-header">
@@ -1182,11 +984,67 @@ const tokenSupabase = createClient(
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh3cnZxeWlwb3pyc3h5amRwcWFnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA5MDc2NzksImV4cCI6MjA2NjQ4MzY3OX0.s43NjpUGDAJhs9qEmnwIXEY5aOh3gl6XqPdEveodFZM'
 );
 
-// ===== LOGO FALLBACK =====
-const logoImg = document.getElementById('logoImg');
-if(logoImg) logoImg.onerror = () => { logoImg.style.display='none'; };
+// ===== SESSION CHECK =====
+let currentUser = null;
+function checkSession(){
+  try{
+    const u = sessionStorage.getItem('avicnUser');
+    if(u){ currentUser = JSON.parse(u); applyLoggedInUI(); }
+  }catch(e){}
+}
 
-// ===== LOAD WEB_1ST_CONTROL =====
+function applyLoggedInUI(){
+  // Hide login/signup buttons
+  document.getElementById('btnLogin').style.display = 'none';
+  document.getElementById('btnSignup').style.display = 'none';
+  // Hide search, show nav tabs
+  document.getElementById('searchWrap').style.display = 'none';
+  document.getElementById('loggedNav').classList.add('show');
+  // Set default tab
+  switchTab('webhome', false);
+}
+
+// ===== NAV TABS =====
+let currentTab = 'webhome';
+function switchTab(tab, animate=true){
+  currentTab = tab;
+  // Update tab styles
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  const activeTab = document.getElementById('tab-'+tab);
+  if(activeTab) activeTab.classList.add('active');
+
+  // Show loading bar animation
+  if(animate){
+    const bar = document.getElementById('navLoadBar');
+    bar.style.display = 'block';
+    bar.style.animation = 'none';
+    bar.offsetWidth; // reflow
+    bar.style.animation = 'loadBar .5s ease forwards';
+    setTimeout(()=>{ bar.style.display='none'; }, 500);
+  }
+
+  // Load JS for tab if needed
+  if(tab === 'avicnqing') loadTabScript('avicn.js', 'avicnqing');
+  else if(tab === 'more') loadTabScript('more.js', 'more');
+  // 'webhome' uses current page — no extra load
+}
+
+const loadedScripts = {};
+function loadTabScript(src, tabName){
+  if(loadedScripts[src]) return;
+  loadedScripts[src] = true;
+  const script = document.createElement('script');
+  script.src = src;
+  script.onload = () => {
+    // Call init function if defined in that JS file
+    const fn = window[tabName + 'Init'];
+    if(typeof fn === 'function') fn();
+  };
+  script.onerror = () => { console.warn(`Could not load ${src}`); };
+  document.body.appendChild(script);
+}
+
+// ===== WEB CONTROL =====
 async function loadWebControl(){
   try{
     const {data,error} = await authSupabase.from('web_1st_control').select('*').limit(1).single();
@@ -1200,15 +1058,14 @@ async function loadWebControl(){
     if(data.foot_copy) document.getElementById('footCopy').textContent = data.foot_copy;
   }catch(e){}
 }
-loadWebControl();
 
 // ===== MODAL =====
 function openModal(id){ document.getElementById(id).classList.add('open'); document.body.style.overflow='hidden'; }
 function closeModal(id){ document.getElementById(id).classList.remove('open'); document.body.style.overflow=''; }
-document.querySelectorAll('.modal-backdrop').forEach(b => b.addEventListener('click', e => { if(e.target===b) closeModal(b.id); }));
-document.addEventListener('keydown', e => {
+document.querySelectorAll('.modal-backdrop').forEach(b=>b.addEventListener('click',e=>{if(e.target===b)closeModal(b.id);}));
+document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){
-    document.querySelectorAll('.modal-backdrop.open').forEach(m => closeModal(m.id));
+    document.querySelectorAll('.modal-backdrop.open').forEach(m=>closeModal(m.id));
     closeSearchBtn();
   }
 });
@@ -1227,6 +1084,7 @@ const searchOptions = [
   {name:'Sign Up',sub:'Create a new account',href:'#',isAction:true,action:'signup'},
   {name:'Forgot Password',sub:'Reset your password',href:'#',isAction:true,action:'forgot'},
 ];
+
 function openSearch(){
   document.getElementById('searchOverlay').classList.add('open');
   setTimeout(()=>document.getElementById('searchInput').focus(),100);
@@ -1237,13 +1095,17 @@ function closeSearchBtn(){
   document.getElementById('searchInput').value='';
   document.getElementById('searchResults').innerHTML='<div class="no-result" style="padding:28px 20px;color:#555;font-size:13px;">Start typing to search...</div>';
 }
-document.addEventListener('keydown', e => { if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();openSearch();} });
+document.addEventListener('keydown',e=>{ if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();openSearch();} });
+
 function doSearch(){
   const q = document.getElementById('searchInput').value.trim().toLowerCase();
   const results = document.getElementById('searchResults');
   if(!q){ results.innerHTML='<div class="no-result" style="padding:28px 20px;color:#555;font-size:13px;">Start typing to search...</div>'; return; }
-  const filtered = searchOptions.filter(o => o.name.toLowerCase().includes(q)||(o.sub||'').toLowerCase().includes(q));
-  if(!filtered.length){ results.innerHTML=`<div class="no-result"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>No results found for "<strong>${q}</strong>"</div>`; return; }
+  const filtered = searchOptions.filter(o=>o.name.toLowerCase().includes(q)||(o.sub||'').toLowerCase().includes(q));
+  if(!filtered.length){
+    results.innerHTML=`<div class="no-result"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>No results for "<strong>${q}</strong>"</div>`;
+    return;
+  }
   const icons = {
     'Spot Trading':'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>',
     'Futures':'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>',
@@ -1257,7 +1119,10 @@ function doSearch(){
         :o.action==='signup'?'openModal(\'signupModal\');closeSearchBtn()'
         :'openModal(\'forgotModal\');closeSearchBtn()'
       : `window.location='${o.href}';closeSearchBtn()`;
-    return `<div class="search-result-item" onclick="${onclick}"><div class="result-icon">${icon}</div><div><div class="result-name">${o.name}</div><div class="result-sub">${o.sub||''}</div></div></div>`;
+    return `<div class="search-result-item" onclick="${onclick}">
+      <div class="result-icon">${icon}</div>
+      <div><div class="result-name">${o.name}</div><div class="result-sub">${o.sub||''}</div></div>
+    </div>`;
   }).join('');
 }
 
@@ -1278,84 +1143,36 @@ function togglePass(id, btn){
 function showAlert(id, msg, type='error'){ document.getElementById(id).innerHTML=`<div class="alert alert-${type}">${msg}</div>`; }
 function clearAlert(id){ document.getElementById(id).innerHTML=''; }
 
-// ===== LOGIN STATE MANAGEMENT =====
-function handleLoginState(userData){
-  // Hide header login/signup buttons
-  document.getElementById('btnLogin').style.display='none';
-  document.getElementById('btnSignup').style.display='none';
-  // Show user info in header
-  document.getElementById('userHeaderInfo').classList.add('visible');
-
-  // ===== FIX: Hide hero CTA buttons when user is logged in =====
-  const heroCTA = document.getElementById('heroCTA');
-  if(heroCTA) heroCTA.style.display='none';
-
-  // Set avatar initials
-  const name = userData.full_name || userData.username || 'User';
-  const initials = name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-  document.getElementById('userAvatarCircle').textContent = initials;
-  document.getElementById('userDisplayName').textContent = name.split(' ')[0] || 'User';
-
-  // Show top nav tabs
-  document.getElementById('userTopNav').classList.add('visible');
-  document.body.classList.add('logged-in');
-
-  // Switch to webhome tab by default
-  switchTab('webhome');
-}
-
-function doLogout(){
-  sessionStorage.removeItem('avicnUser');
-  // Restore header login/signup buttons
-  document.getElementById('btnLogin').style.display='';
-  document.getElementById('btnSignup').style.display='';
-  document.getElementById('userHeaderInfo').classList.remove('visible');
-  document.getElementById('userTopNav').classList.remove('visible');
-  document.body.classList.remove('logged-in');
-
-  // ===== FIX: Restore hero CTA buttons on logout =====
-  const heroCTA = document.getElementById('heroCTA');
-  if(heroCTA) heroCTA.style.display='';
-
-  authSupabase.auth.signOut().catch(()=>{});
-}
-
-// Check existing session on load
-(function checkSession(){
-  const stored = sessionStorage.getItem('avicnUser');
-  if(stored){
-    try{ handleLoginState(JSON.parse(stored)); } catch(e){}
-  }
-})();
-
 // ===== LOGIN =====
 async function doLogin(){
   const identifier = document.getElementById('loginId').value.trim();
   const password = document.getElementById('loginPass').value;
   clearAlert('loginAlert');
-  if(!identifier||!password){ showAlert('loginAlert','Please fill in all fields.'); return; }
+  if(!identifier||!password){showAlert('loginAlert','Please fill in all fields.');return;}
   const btn = document.getElementById('loginBtn');
-  btn.disabled=true; btn.innerHTML='<span class="spinner"></span>Logging in...';
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Logging in...';
   try{
     const isEmail = identifier.includes('@');
     const field = isEmail?'email':'phone';
     const {data,error} = await authSupabase.from('user_verify').select('*').eq(field,identifier).single();
-    if(error||!data){ showAlert('loginAlert','Account not found. Please check your credentials.'); btn.disabled=false; btn.innerHTML='Login to Account'; return; }
-    if(data.password!==btoa(password)){ showAlert('loginAlert','Incorrect password. Please try again.'); btn.disabled=false; btn.innerHTML='Login to Account'; return; }
-    if(!data.verified){ showAlert('loginAlert','Please verify your email first. Check your inbox.'); btn.disabled=false; btn.innerHTML='Login to Account'; return; }
+    if(error||!data){showAlert('loginAlert','Account not found. Please check your credentials.');btn.disabled=false;btn.innerHTML='Login to Account';return;}
+    if(data.password!==btoa(password)){showAlert('loginAlert','Incorrect password. Please try again.');btn.disabled=false;btn.innerHTML='Login to Account';return;}
+    if(!data.verified){showAlert('loginAlert','Please verify your email first. Check your inbox.');btn.disabled=false;btn.innerHTML='Login to Account';return;}
+    // Save session & update UI on SAME page (no redirect)
     sessionStorage.setItem('avicnUser', JSON.stringify(data));
+    currentUser = data;
     closeModal('loginModal');
-    handleLoginState(data);
+    applyLoggedInUI();
   }catch(e){
     showAlert('loginAlert','Login failed. Please try again.');
-    btn.disabled=false; btn.innerHTML='Login to Account';
+    btn.disabled=false;btn.innerHTML='Login to Account';
   }
 }
 
 // ===== SIGNUP =====
 const countries = ["Afghanistan","Albania","Algeria","Andorra","Angola","Argentina","Armenia","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Belarus","Belgium","Belize","Benin","Bhutan","Bolivia","Bosnia","Botswana","Brazil","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Canada","Chad","Chile","China","Colombia","Congo","Costa Rica","Croatia","Cuba","Cyprus","Czech Republic","Denmark","Dominican Republic","Ecuador","Egypt","El Salvador","Estonia","Ethiopia","Fiji","Finland","France","Gabon","Gambia","Georgia","Germany","Ghana","Greece","Guatemala","Guinea","Haiti","Honduras","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Israel","Italy","Jamaica","Japan","Jordan","Kazakhstan","Kenya","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Liberia","Libya","Lithuania","Luxembourg","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Mauritania","Mauritius","Mexico","Moldova","Monaco","Mongolia","Montenegro","Morocco","Mozambique","Myanmar","Namibia","Nepal","Netherlands","New Zealand","Nicaragua","Niger","Nigeria","North Korea","Norway","Oman","Pakistan","Palestine","Panama","Paraguay","Peru","Philippines","Poland","Portugal","Qatar","Romania","Russia","Rwanda","Saudi Arabia","Senegal","Serbia","Sierra Leone","Singapore","Slovakia","Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka","Sudan","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Togo","Trinidad","Tunisia","Turkey","Turkmenistan","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States","Uruguay","Uzbekistan","Venezuela","Vietnam","Yemen","Zambia","Zimbabwe"];
 const sel = document.getElementById('country');
-countries.forEach(c=>{ const o=document.createElement('option'); o.value=c; o.textContent=c; sel.appendChild(o); });
+countries.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;sel.appendChild(o);});
 const maxDob = new Date();
 maxDob.setFullYear(maxDob.getFullYear()-18);
 document.getElementById('dob').max = maxDob.toISOString().split('T')[0];
@@ -1372,19 +1189,19 @@ async function doSignup(){
   const phone=document.getElementById('phone').value.trim();
   const email=document.getElementById('signupEmail').value.trim().toLowerCase();
   const password=document.getElementById('signupPass').value;
-  if(!firstName||!lastName||!username||!dob||!gender||!country||!phone||!email||!password){ showAlert('signupAlert','Please fill in all fields.'); return; }
-  if(!email.includes('@')){ showAlert('signupAlert','Please enter a valid email address.'); return; }
-  if(password.length<6){ showAlert('signupAlert','Password must be at least 6 characters.'); return; }
+  if(!firstName||!lastName||!username||!dob||!gender||!country||!phone||!email||!password){showAlert('signupAlert','Please fill in all fields.');return;}
+  if(!email.includes('@')){showAlert('signupAlert','Please enter a valid email address.');return;}
+  if(password.length<6){showAlert('signupAlert','Password must be at least 6 characters.');return;}
   const dobDate=new Date(dob);
   const age=Math.floor((new Date()-dobDate)/31557600000);
-  if(age<18){ showAlert('signupAlert','You must be 18 or older to register.'); return; }
+  if(age<18){showAlert('signupAlert','You must be 18 or older to register.');return;}
   const btn=document.getElementById('signupBtn');
-  btn.disabled=true; btn.innerHTML='<span class="spinner"></span>Creating account...';
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Creating account...';
   try{
     const {data:existEmail}=await authSupabase.from('user_verify').select('id').eq('email',email).maybeSingle();
-    if(existEmail){ showAlert('signupAlert','This email is already registered. Please login.'); btn.disabled=false; btn.innerHTML='Create Account'; return; }
+    if(existEmail){showAlert('signupAlert','This email is already registered. Please login.');btn.disabled=false;btn.innerHTML='Create Account';return;}
     const {data:existPhone}=await authSupabase.from('user_verify').select('id').eq('phone',phone).maybeSingle();
-    if(existPhone){ showAlert('signupAlert','This phone number is already registered.'); btn.disabled=false; btn.innerHTML='Create Account'; return; }
+    if(existPhone){showAlert('signupAlert','This phone number is already registered.');btn.disabled=false;btn.innerHTML='Create Account';return;}
     await authSupabase.from('user_verify_process').insert({
       full_name:`${firstName} ${lastName}`,username,dob,gender,country,phone,email,
       password:btoa(password),verified:false,created_at:new Date().toISOString()
@@ -1400,7 +1217,7 @@ async function doSignup(){
     btn.innerHTML='Email Sent';
   }catch(e){
     showAlert('signupAlert','Sign up failed. Please try again.');
-    btn.disabled=false; btn.innerHTML='Create Account';
+    btn.disabled=false;btn.innerHTML='Create Account';
   }
 }
 
@@ -1408,53 +1225,18 @@ async function doSignup(){
 async function doForgot(){
   clearAlert('forgotAlert');
   const email=document.getElementById('forgotEmail').value.trim().toLowerCase();
-  if(!email){ showAlert('forgotAlert','Please enter your email address.'); return; }
+  if(!email){showAlert('forgotAlert','Please enter your email address.');return;}
   const btn=document.getElementById('forgotBtn');
-  btn.disabled=true; btn.innerHTML='<span class="spinner"></span>Sending link...';
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Sending link...';
   try{
-    await authSupabase.auth.resetPasswordForEmail(email,{ redirectTo:'https://avicnknovex.github.io/AvicnKnov-Web/reset-password.html' });
+    await authSupabase.auth.resetPasswordForEmail(email,{
+      redirectTo:'https://avicnknovex.github.io/AvicnKnov-Web/reset-password.html'
+    });
     showAlert('forgotAlert','Reset link sent. Check your inbox and spam folder.','success');
     btn.innerHTML='Link Sent';
   }catch(e){
     showAlert('forgotAlert','Failed to send reset email. Please try again.');
-    btn.disabled=false; btn.innerHTML='Send Reset Link';
-  }
-}
-
-// ===== TAB SYSTEM =====
-const tabScriptsMap = {
-  'webhome': null, // built-in, no external script
-  'avicnqing': 'avicn.js',
-  'more': 'more.js'
-};
-const loadedTabScripts = new Set(['webhome']);
-
-function switchTab(tabName){
-  // Update buttons
-  document.querySelectorAll('.top-nav-btn').forEach(b => b.classList.remove('active'));
-  const btn = document.querySelector(`[data-tab="${tabName}"]`);
-  if(btn) btn.classList.add('active');
-
-  // Update tab content
-  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-  const tabEl = document.getElementById('tab-' + tabName);
-  if(tabEl) tabEl.classList.add('active');
-
-  // Load external script if needed
-  if(tabScriptsMap[tabName] && !loadedTabScripts.has(tabName)){
-    loadedTabScripts.add(tabName);
-    const script = document.createElement('script');
-    script.src = tabScriptsMap[tabName];
-    script.onload = () => {
-      // Call init function from the loaded script
-      const initFnName = 'init' + tabName.charAt(0).toUpperCase() + tabName.slice(1).replace('&','').replace(' ','');
-      if(typeof window[initFnName] === 'function') window[initFnName]();
-    };
-    script.onerror = () => {
-      const root = document.getElementById(tabName + '-root');
-      if(root) root.innerHTML = `<div class="tab-loading-state" style="color:#555"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="font-size:13px">Module not found</span></div>`;
-    };
-    document.body.appendChild(script);
+    btn.disabled=false;btn.innerHTML='Send Reset Link';
   }
 }
 
@@ -1462,18 +1244,18 @@ function switchTab(tabName){
 let tokensData = [];
 let livePrices = {};
 
+// Tokens hidden from "website" platform
 async function loadTokens(){
   try{
-    const {data,error} = await tokenSupabase.from('crypto_token_control').select('*').order('id');
+    const {data,error}=await tokenSupabase.from('crypto_token_control').select('*').order('id');
     if(error||!data||!data.length){
       document.getElementById('tokenTableBody').innerHTML='<tr><td colspan="6" style="text-align:center;padding:40px;color:#555;">No tokens listed yet.</td></tr>';
       return;
     }
-    // ===== FIX: Use correct column name nosupported_js (not nosupported) =====
-    // Pattern from favourites-all.js: check if 'website' is in nosupported_js column
+    // Filter: hide tokens where nosupported_js includes 'website'
     tokensData = data.filter(t => {
       const ns = (t.nosupported_js || '').toLowerCase();
-      return !ns.includes('website');
+      return !ns.split(',').map(s=>s.trim()).includes('website');
     });
     renderTokenTable();
     buildMarquee();
@@ -1485,7 +1267,10 @@ async function loadTokens(){
 
 function renderTokenTable(){
   const tbody = document.getElementById('tokenTableBody');
-  if(!tokensData.length){ tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:40px;color:#555;">No tokens listed.</td></tr>'; return; }
+  if(!tokensData.length){
+    tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:40px;color:#555;">No tokens listed yet.</td></tr>';
+    return;
+  }
   tbody.innerHTML = tokensData.map((t,i)=>{
     const price = livePrices[t.id] || t.manual_price || 0;
     const change = ((Math.random()*6)-3).toFixed(2);
@@ -1517,7 +1302,7 @@ async function fetchLiveApiPrice(token){
     const res = await fetch(`https://min-api.cryptocompare.com/data/price?fsym=${token.symbol}&tsyms=USD`);
     const d = await res.json();
     return d.USD||null;
-  }catch{ return null; }
+  }catch{return null;}
 }
 
 async function startPriceUpdates(){
@@ -1551,7 +1336,7 @@ function updatePriceCell(id, price){
     const prev = parseFloat(el.dataset.prev||price);
     el.textContent = `$${formatPrice(price)}`;
     el.style.color = price>prev?'var(--green)':price<prev?'var(--red)':'var(--white)';
-    setTimeout(()=>{ if(el) el.style.color='var(--white)'; }, 600);
+    setTimeout(()=>{if(el)el.style.color='var(--white)';},600);
     el.dataset.prev = price;
   }
   updateMarqueeItem(id, price);
@@ -1559,6 +1344,7 @@ function updatePriceCell(id, price){
 
 // ===== MARQUEE =====
 function buildMarquee(){
+  if(!tokensData.length) return;
   const el = document.getElementById('marqueeEl');
   const items = [...tokensData,...tokensData].map(t=>`
     <div class="marquee-item">
@@ -1573,223 +1359,142 @@ function updateMarqueeItem(id, price){
   document.querySelectorAll(`[id^="mqp_${id}_"]`).forEach(el=>{ el.textContent=`$${formatPrice(price)}`; });
 }
 
-// ===== FEAT CARD CLICK ANIM =====
+// ===== FEAT CARD =====
 function triggerFeatAnim(el){
-  el.classList.remove('clicked');
-  void el.offsetWidth;
-  el.classList.add('clicked');
+  el.classList.remove('clicked');void el.offsetWidth;el.classList.add('clicked');
   el.addEventListener('animationend',()=>el.classList.remove('clicked'),{once:true});
 }
 
 // ===== NEWS CAROUSEL =====
-let newsItems = [];
-let currentNewsIndex = 0;
-let newsAutoTimer = null;
-let newsProgressAnimFrame = null;
-let newsProgressStart = null;
-let newsPaused = false;
-let newsSlideStartTime = null;
-let newsTouchStartX = 0;
+let newsSlides = [];
+let newsIdx = 0;
+let newsTimer = null;
 
 async function loadNews(){
   try{
-    const {data, error} = await authSupabase
-      .from('news_control')
-      .select('*')
-      .order('sort_order', {ascending: true});
-
-    // Hide loading placeholder after fetch attempt completes
-    const placeholder = document.getElementById('newsLoadingPlaceholder');
-
-    if(error || !data || !data.length){
-      // No news — hide placeholder silently (no visible gap)
-      if(placeholder) placeholder.style.display='none';
-      return;
-    }
-    // Filter active items (support both is_active and no field)
-    newsItems = data.filter(n => n.is_active !== false);
-    if(!newsItems.length){
-      if(placeholder) placeholder.style.display='none';
-      return;
-    }
-    // Hide placeholder, show slider
-    if(placeholder) placeholder.style.display='none';
-    initNewsCarousel();
-  }catch(e){
-    const placeholder = document.getElementById('newsLoadingPlaceholder');
-    if(placeholder) placeholder.style.display='none';
-  }
-}
-
-function initNewsCarousel(){
-  const section = document.getElementById('newsBannerSection');
-  section.classList.add('visible');
-  buildNewsSlides();
-  buildNewsDots();
-  showNewsSlide(0, false);
-}
-
-function buildNewsSlides(){
-  const track = document.getElementById('newsSliderTrack');
-  track.innerHTML = newsItems.map((item, i) => {
-    let mediaHTML = '';
-    const mt = (item.media_type||'').toLowerCase();
-    if((mt==='video') && item.media_url){
-      mediaHTML = `<video class="news-media" id="newsVid_${i}" autoplay muted playsinline src="${item.media_url}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"></video>`;
-    } else if((mt==='image'||mt==='gif'||mt==='') && item.media_url){
-      mediaHTML = `<img class="news-media" src="${item.media_url}" alt="${item.title||''}" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"/>`;
-    } else {
-      // Text-only background
-      mediaHTML = `<div style="position:absolute;inset:0;background:linear-gradient(135deg,#0d0d0d 0%,#181818 50%,#111 100%);"></div>`;
-    }
-    // Platform button (only if platform_name exists)
-    const platformBtn = item.platform_name
-      ? `<a href="${item.platform_url||'#'}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.13);border:1px solid rgba(255,255,255,0.22);backdrop-filter:blur(8px);color:#fff;text-decoration:none;border-radius:6px;padding:5px 13px;font-size:11px;font-weight:600;letter-spacing:.5px;transition:all .2s;" onmouseover="this.style.background='rgba(255,255,255,0.22)'" onmouseout="this.style.background='rgba(255,255,255,0.13)'">${item.platform_name}<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>`
-      : '';
-    return `<div class="news-slide" style="position:relative;min-width:100%;width:100%;height:100%;flex-shrink:0;overflow:hidden;">
-      ${mediaHTML}
-      <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.85) 0%,rgba(0,0,0,0.25) 55%,rgba(0,0,0,0.08) 100%);display:flex;align-items:flex-end;padding:20px 28px;">
-        <div style="max-width:640px;">
-          ${item.title?`<div style="font-family:'Bebas Neue',sans-serif;font-size:clamp(17px,2.8vw,26px);letter-spacing:2px;line-height:1.15;margin-bottom:5px;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,0.8);">${item.title}</div>`:''}
-          ${item.description?`<div style="font-size:clamp(11px,1.4vw,13px);color:rgba(255,255,255,0.72);line-height:1.5;margin-bottom:${item.platform_name?'10px':'0'};display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${item.description}</div>`:''}
-          ${platformBtn}
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function buildNewsDots(){
-  const dotsEl = document.getElementById('newsDots');
-  dotsEl.innerHTML = newsItems.map((_, i) => `<div class="news-dot${i===0?' active':''}" onclick="newsGoTo(${i})"></div>`).join('');
-}
-
-function showNewsSlide(index, animate=true){
-  if(!newsItems.length) return;
-  currentNewsIndex = ((index % newsItems.length) + newsItems.length) % newsItems.length;
-  const track = document.getElementById('newsSliderTrack');
-  if(track) track.style.transform = `translateX(-${currentNewsIndex * 100}%)`;
-
-  // Update dots
-  document.querySelectorAll('.news-dot').forEach((d,i) => {
-    d.classList.toggle('active', i===currentNewsIndex);
-  });
-
-  // Cancel previous progress
-  if(newsProgressAnimFrame) cancelAnimationFrame(newsProgressAnimFrame);
-  const progressBar = document.getElementById('newsProgressBar');
-  if(progressBar){ progressBar.style.width='0'; progressBar.style.transition='none'; }
-
-  // Pause any playing video from previous slide
-  document.querySelectorAll('video[id^="newsVid_"]').forEach(v => {
-    v.pause(); v.currentTime=0;
-  });
-
-  // Start auto-advance for this slide
-  startNewsSlideTimer();
-}
-
-function startNewsSlideTimer(){
-  if(newsAutoTimer) clearTimeout(newsAutoTimer);
-  if(newsPaused) return;
-
-  const item = newsItems[currentNewsIndex];
-  const mt = (item.media_type||'').toLowerCase();
-  const vid = document.getElementById(`newsVid_${currentNewsIndex}`);
-  const progressBar = document.getElementById('newsProgressBar');
-
-  if(mt==='video' && vid){
-    // Play video; advance only when video ends
-    vid.currentTime = 0;
-    vid.play().catch(()=>{});
-    const onEnd = () => { vid.removeEventListener('ended', onEnd); if(!newsPaused) advanceNews(); };
-    vid.addEventListener('ended', onEnd);
-    // Video duration-based progress bar
-    const updateProg = () => {
-      if(vid.duration&&vid.duration>0){
-        const pct = (vid.currentTime/vid.duration)*100;
-        if(progressBar) progressBar.style.width = pct+'%';
-      }
-      if(!vid.ended && !newsPaused) newsProgressAnimFrame = requestAnimationFrame(updateProg);
-    };
-    newsProgressAnimFrame = requestAnimationFrame(updateProg);
-  } else {
-    // 5 second auto-advance for image/gif/text
-    const duration = 5000;
-    newsSlideStartTime = performance.now();
-    const animateProgress = (ts) => {
-      if(newsPaused){ newsProgressAnimFrame = requestAnimationFrame(animateProgress); return; }
-      const elapsed = ts - newsSlideStartTime;
-      const pct = Math.min((elapsed/duration)*100, 100);
-      if(progressBar) progressBar.style.width = pct+'%';
-      if(pct < 100){
-        newsProgressAnimFrame = requestAnimationFrame(animateProgress);
-      } else {
-        advanceNews();
-      }
-    };
-    newsProgressAnimFrame = requestAnimationFrame(animateProgress);
-  }
-}
-
-function advanceNews(){ showNewsSlide(currentNewsIndex + 1); }
-function newsManualNext(){ showNewsSlide(currentNewsIndex + 1); }
-function newsManualPrev(){ showNewsSlide(currentNewsIndex - 1); }
-function newsGoTo(i){ showNewsSlide(i); }
-function pauseNews(){ newsPaused = true; }
-function resumeNews(){
-  newsPaused = false;
-  const item = newsItems[currentNewsIndex];
-  const mt = (item&&item.media_type||'').toLowerCase();
-  if(mt!=='video'){
-    // Adjust start time to account for time spent paused
-    newsSlideStartTime = performance.now();
-  }
-  startNewsSlideTimer();
-}
-function newsTouchStart(e){ newsTouchStartX = e.touches[0].clientX; }
-function newsTouchEnd(e){
-  const diff = newsTouchStartX - e.changedTouches[0].clientX;
-  if(Math.abs(diff)>40){ diff>0?newsManualNext():newsManualPrev(); }
-}
-
-// ===== PLATFORMS =====
-async function loadPlatforms(){
-  try{
-    const {data, error} = await authSupabase
-      .from('platform_control')
-      .select('*')
-      .order('sort_order', {ascending: true});
+    const {data,error} = await authSupabase.from('news_control').select('*').order('id');
     if(error||!data||!data.length) return;
-    const platforms = data.filter(p => p.is_active !== false);
-    if(!platforms.length) return;
-    renderPlatforms(platforms);
+    newsSlides = data;
+    buildNewsCarousel();
+    document.getElementById('newsSection').style.display = 'block';
+    startNewsTimer();
   }catch(e){}
 }
 
-function renderPlatforms(platforms){
-  const section = document.getElementById('platformsSection');
-  const grid = document.getElementById('platformsGrid');
-  if(!section||!grid) return;
-  grid.innerHTML = platforms.map(p => `
-    <a href="${p.platform_url||p.url||'#'}" target="_blank" rel="noopener" class="platform-card">
-      <div class="platform-icon-wrap">
-        ${p.icon_url
-          ? `<img src="${p.icon_url}" alt="${p.name||''}" onerror="this.style.display='none';this.parentNode.innerHTML='<span class=\\'platform-icon-placeholder\\'>${(p.name||'P')[0]}</span>'"/>`
-          : `<span class="platform-icon-placeholder">${(p.name||'P')[0]}</span>`}
-      </div>
-      <span class="platform-name">${p.name||'Platform'}</span>
-      <div class="platform-arrow"><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
-    </a>
-  `).join('');
-  section.classList.add('visible');
+function buildNewsCarousel(){
+  const carousel = document.getElementById('newsCarousel');
+  const dots = document.getElementById('newsDots');
+  carousel.innerHTML = newsSlides.map((slide,i) => buildNewsSlide(slide,i)).join('');
+  dots.innerHTML = newsSlides.map((s,i) => `<div class="news-dot${i===0?' active':''}" onclick="goToSlide(${i})"></div>`).join('');
+}
+
+function buildNewsSlide(slide, i){
+  const type = (slide.type||'image').toLowerCase(); // 'image','video','gif','text'
+  let mediaHtml = '';
+
+  if(type === 'video' && slide.media_url){
+    mediaHtml = `<div class="news-media">
+      <video autoplay muted playsinline id="newsVideo_${i}" onended="onVideoEnd(${i})">
+        <source src="${slide.media_url}" type="video/mp4"/>
+      </video>
+    </div>`;
+  } else if((type === 'image' || type === 'gif') && slide.media_url){
+    mediaHtml = `<div class="news-media"><img src="${slide.media_url}" alt="${slide.title||''}"/></div>`;
+  } else if(type === 'text'){
+    mediaHtml = `<div class="news-media"><div class="news-text-content">${slide.text_content||slide.title||''}</div></div>`;
+  } else if(slide.media_url){
+    mediaHtml = `<div class="news-media"><img src="${slide.media_url}" alt="${slide.title||''}"/></div>`;
+  }
+
+  // Platform button
+  let platformBtn = '';
+  if(slide.platform_url && slide.platform_name){
+    const iconHtml = slide.platform_icon ? `<img class="news-platform-icon" src="${slide.platform_icon}" alt=""/>` : '';
+    platformBtn = `<button class="news-platform-btn" onclick="window.open('${slide.platform_url}','_blank')">${iconHtml}${slide.platform_name} ↗</button>`;
+  }
+
+  // Info bar (title + desc + btn) — always shown if any info exists
+  const hasInfo = slide.title || slide.description || platformBtn;
+  const infoHtml = hasInfo ? `<div class="news-info">
+    <div class="news-info-left">
+      ${slide.title?`<div class="news-title-text">${slide.title}</div>`:''}
+      ${slide.description?`<div class="news-desc-text">${slide.description}</div>`:''}
+    </div>
+    ${platformBtn}
+  </div>` : '';
+
+  return `<div class="news-slide type-${type}" id="newsSlide_${i}">${mediaHtml}${infoHtml}</div>`;
+}
+
+function startNewsTimer(){
+  if(newsTimer) clearInterval(newsTimer);
+  newsTimer = setInterval(()=>{
+    // For video slides: wait for onVideoEnd to advance
+    const currentSlide = newsSlides[newsIdx];
+    const type = (currentSlide?.type||'image').toLowerCase();
+    if(type !== 'video'){
+      newsArrow(1);
+    }
+  }, 5000);
+}
+
+function onVideoEnd(i){
+  if(i === newsIdx) newsArrow(1);
+}
+
+function goToSlide(idx){
+  newsIdx = idx;
+  updateCarouselPos();
+  resetNewsTimer();
+}
+
+function newsArrow(dir){
+  newsIdx = (newsIdx + dir + newsSlides.length) % newsSlides.length;
+  updateCarouselPos();
+  resetNewsTimer();
+}
+
+function updateCarouselPos(){
+  document.getElementById('newsCarousel').style.transform = `translateX(-${newsIdx*100}%)`;
+  document.querySelectorAll('.news-dot').forEach((d,i)=> d.classList.toggle('active', i===newsIdx));
+  // Autoplay video if current slide is video
+  document.querySelectorAll('.news-slide video').forEach((v,i) => {
+    if(i === newsIdx){ v.currentTime=0; v.play().catch(()=>{}); }
+    else v.pause();
+  });
+}
+
+function resetNewsTimer(){
+  if(newsTimer) clearInterval(newsTimer);
+  startNewsTimer();
+}
+
+// ===== PLATFORM LINKS =====
+async function loadPlatforms(){
+  try{
+    const {data,error} = await authSupabase.from('platform_control').select('*').order('id');
+    if(error||!data||!data.length) return;
+    const grid = document.getElementById('platformsGrid');
+    grid.innerHTML = data.map(p => {
+      const iconHtml = p.icon_url
+        ? `<div class="platform-icon"><img src="${p.icon_url}" alt="${p.name}" onerror="this.parentNode.textContent='🌐'"/></div>`
+        : `<div class="platform-icon">🌐</div>`;
+      return `<a class="platform-card" href="${p.url||'#'}" target="_blank" rel="noopener">
+        ${iconHtml}
+        <span class="platform-name">${p.name||''}</span>
+        <svg class="platform-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </a>`;
+    }).join('');
+    document.getElementById('platformsSection').style.display = 'block';
+  }catch(e){}
 }
 
 // ===== INIT =====
+checkSession();
+loadWebControl();
 loadTokens();
 loadNews();
 loadPlatforms();
 </script>
-
 </body>
 </html>
