@@ -3,13 +3,15 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>AvicnKnov Web</title>
+<title>AvicnKnov Exchange</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
-  --bg:#0a0a0a;--surface:#111111;--surface2:#1a1a1a;--border:#222;--border2:#333;
-  --white:#ffffff;--gray:#888;--gray2:#555;--accent:#ffffff;--red:#ff3b3b;--green:#00e676;
+--bg:#0a0a0a;--surface:#111111;--surface2:#1a1a1a;
+--border:#222;--border2:#333;--white:#ffffff;
+--gray:#888;--gray2:#555;--accent:#ffffff;
+--red:#ff3b3b;--green:#00e676;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 html,body{height:100%;background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;overflow-x:hidden;}
@@ -17,74 +19,41 @@ html,body{height:100%;background:var(--bg);color:var(--white);font-family:'DM Sa
 ::-webkit-scrollbar-track{background:#0a0a0a;}
 ::-webkit-scrollbar-thumb{background:#333;border-radius:2px;}
 body::before{
-  content:'';position:fixed;inset:0;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-  pointer-events:none;z-index:9999;opacity:0.4;
-}
-
-/* ===== TOP NAV TABS (Web Home / Avicn&Qing / More) ===== */
-.top-tabs{
-  position:fixed;top:0;left:0;right:0;z-index:200;
-  height:44px;background:rgba(6,6,6,0.97);
-  border-bottom:1px solid #1a1a1a;
-  display:flex;align-items:center;justify-content:center;gap:0;
-  backdrop-filter:blur(20px);
-}
-.top-tab{
-  display:flex;align-items:center;gap:7px;
-  padding:0 22px;height:44px;cursor:pointer;
-  font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;
-  letter-spacing:.8px;text-transform:uppercase;
-  color:var(--gray);border-bottom:2px solid transparent;
-  transition:color .2s,border-color .2s;
-  position:relative;
-}
-.top-tab:hover{color:var(--white);}
-.top-tab.active{color:var(--white);border-bottom-color:var(--white);}
-.top-tab svg{width:13px;height:13px;stroke:currentColor;stroke-width:2;fill:none;}
-.tab-content{display:none;}
-.tab-content.active{display:block;}
-.tab-loading{
-  display:flex;align-items:center;justify-content:center;
-  min-height:200px;gap:12px;color:var(--gray);font-size:13px;
-}
-.tab-spinner{
-  width:18px;height:18px;border:2px solid #333;
-  border-top-color:var(--white);border-radius:50%;
-  animation:spin .6s linear infinite;
+content:'';position:fixed;inset:0;
+background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+pointer-events:none;z-index:9999;opacity:0.4;
 }
 
 /* HEADER */
 header{
-  position:fixed;top:44px;left:0;right:0;z-index:100;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 24px;height:60px;
-  background:rgba(10,10,10,0.94);
-  backdrop-filter:blur(20px);
-  border-bottom:1px solid var(--border);
+position:fixed;top:0;left:0;right:0;z-index:100;
+display:flex;align-items:center;justify-content:space-between;
+padding:0 24px;height:64px;
+background:rgba(10,10,10,0.92);
+backdrop-filter:blur(20px);
+border-bottom:1px solid var(--border);
 }
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
 .logo-icon-wrap{
-  width:38px;height:38px;border-radius:10px;
-  background:rgba(255,255,255,0.05);
-  border:1px solid rgba(255,255,255,0.12);
-  backdrop-filter:blur(12px);
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 2px 16px rgba(255,255,255,0.06),inset 0 1px 0 rgba(255,255,255,0.1);
-  overflow:hidden;transition:box-shadow .3s;
+width:38px;height:38px;border-radius:10px;
+background:rgba(255,255,255,0.05);
+border:1px solid rgba(255,255,255,0.12);
+backdrop-filter:blur(12px);
+display:flex;align-items:center;justify-content:center;
+box-shadow:0 2px 16px rgba(255,255,255,0.06),inset 0 1px 0 rgba(255,255,255,0.1);
+overflow:hidden;transition:box-shadow .3s;
 }
 .logo-icon-wrap:hover{box-shadow:0 4px 24px rgba(255,255,255,0.12),inset 0 1px 0 rgba(255,255,255,0.15);}
-.logo-icon{width:26px;height:26px;object-fit:contain;display:block;}
-
+.logo-icon{width:34px;height:34px;object-fit:contain;display:block;border-radius:8px;}
 .logo-text{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:var(--white);}
 
 /* SEARCH */
 .search-wrap{position:relative;flex:1;max-width:420px;margin:0 32px;}
 .search-bar{
-  display:flex;align-items:center;gap:8px;
-  background:var(--surface2);border:1px solid var(--border2);
-  border-radius:10px;padding:0 14px;height:38px;cursor:pointer;
-  transition:border-color .2s,box-shadow .2s;
+display:flex;align-items:center;gap:8px;
+background:var(--surface2);border:1px solid var(--border2);
+border-radius:10px;padding:0 14px;height:40px;cursor:pointer;
+transition:border-color .2s,box-shadow .2s;
 }
 .search-bar:hover{border-color:#444;box-shadow:0 0 0 1px #333;}
 .search-icon{color:var(--gray);font-size:14px;}
@@ -93,18 +62,18 @@ header{
 
 /* SEARCH OVERLAY */
 .search-overlay{
-  position:fixed;inset:0;z-index:400;
-  background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);
-  opacity:0;pointer-events:none;transition:opacity .25s;
+position:fixed;inset:0;z-index:200;
+background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);
+opacity:0;pointer-events:none;transition:opacity .25s;
 }
 .search-overlay.open{opacity:1;pointer-events:all;}
 .search-box{
-  position:absolute;top:80px;left:50%;transform:translateX(-50%);
-  width:min(600px,90vw);
-  background:var(--surface);border:1px solid var(--border2);
-  border-radius:16px;overflow:hidden;
-  box-shadow:0 32px 80px rgba(0,0,0,0.8);
-  animation:slideDown .25s ease;
+position:absolute;top:80px;left:50%;transform:translateX(-50%);
+width:min(600px,90vw);
+background:var(--surface);border:1px solid var(--border2);
+border-radius:16px;overflow:hidden;
+box-shadow:0 32px 80px rgba(0,0,0,0.8);
+animation:slideDown .25s ease;
 }
 @keyframes slideDown{from{transform:translateX(-50%) translateY(-20px);opacity:0;}to{transform:translateX(-50%) translateY(0);opacity:1;}}
 .search-input-wrap{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--border);}
@@ -115,8 +84,8 @@ header{
 .search-close-btn:hover{background:#2a2a2a;}
 .search-results{max-height:340px;overflow-y:auto;}
 .search-result-item{
-  display:flex;align-items:center;gap:12px;padding:14px 20px;
-  cursor:pointer;transition:background .15s;border-bottom:1px solid var(--border);
+display:flex;align-items:center;gap:12px;padding:14px 20px;
+cursor:pointer;transition:background .15s;border-bottom:1px solid var(--border);
 }
 .search-result-item:hover{background:var(--surface2);}
 .search-result-item:last-child{border-bottom:none;}
@@ -129,196 +98,190 @@ header{
 /* HEADER RIGHT */
 .header-right{display:flex;align-items:center;gap:12px;}
 .btn-login{
-  background:none;border:1px solid var(--border2);color:var(--white);
-  padding:7px 16px;border-radius:8px;font-family:'DM Sans',sans-serif;
-  font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;
+background:none;border:1px solid var(--border2);color:var(--white);
+padding:8px 18px;border-radius:8px;font-family:'DM Sans',sans-serif;
+font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;
 }
 .btn-login:hover{border-color:#555;background:#111;}
 .btn-signup{
-  background:var(--white);border:1px solid var(--white);color:#000;
-  padding:7px 16px;border-radius:8px;font-family:'DM Sans',sans-serif;
-  font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;
+background:var(--white);border:1px solid var(--white);color:#000;
+padding:8px 18px;border-radius:8px;font-family:'DM Sans',sans-serif;
+font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;
 }
 .btn-signup:hover{background:#e0e0e0;}
-
-/* USER AVATAR (logged in) */
-.user-avatar-btn{
-  width:34px;height:34px;border-radius:50%;
-  background:linear-gradient(135deg,#333,#555);
-  border:1.5px solid #444;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  font-size:13px;font-weight:700;color:var(--white);
-  transition:border-color .2s,box-shadow .2s;
-  overflow:hidden;
-}
-.user-avatar-btn:hover{border-color:#666;box-shadow:0 0 0 3px rgba(255,255,255,.08);}
-.user-avatar-btn img{width:100%;height:100%;object-fit:cover;}
-
 .sidebar-toggle{
-  width:34px;height:34px;border-radius:8px;
-  background:var(--surface2);border:1px solid var(--border2);
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;transition:background .2s;color:var(--white);
+width:36px;height:36px;border-radius:8px;
+background:var(--surface2);border:1px solid var(--border2);
+display:flex;align-items:center;justify-content:center;
+cursor:pointer;transition:background .2s;color:var(--white);
 }
 .sidebar-toggle:hover{background:#2a2a2a;}
 
+/* USER NAV TABS - shown after login */
+.user-nav-tabs{
+display:none;align-items:center;gap:2px;
+background:var(--surface2);border:1px solid var(--border2);
+border-radius:10px;padding:3px;
+}
+.user-nav-tabs.visible{display:flex;}
+.nav-tab{
+padding:6px 14px;border-radius:7px;font-size:13px;font-weight:500;
+color:var(--gray);cursor:pointer;transition:all .2s;white-space:nowrap;
+border:none;background:none;font-family:'DM Sans',sans-serif;
+}
+.nav-tab.active{background:var(--surface);color:var(--white);box-shadow:0 1px 4px rgba(0,0,0,0.4);}
+.nav-tab:hover:not(.active){color:var(--white);background:rgba(255,255,255,0.05);}
+
 /* SIDEBAR */
 .sidebar{
-  position:fixed;right:0;top:104px;bottom:0;width:64px;
-  background:var(--surface);border-left:1px solid var(--border);
-  display:flex;flex-direction:column;align-items:center;
-  padding:16px 0;gap:8px;z-index:90;
-  transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);
+position:fixed;right:0;top:64px;bottom:0;width:64px;
+background:var(--surface);border-left:1px solid var(--border);
+display:flex;flex-direction:column;align-items:center;
+padding:16px 0;gap:8px;z-index:90;
+transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);
 }
 .sidebar.open{transform:translateX(0);}
 .sidebar-item{
-  width:44px;height:44px;border-radius:10px;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
-  cursor:pointer;transition:background .2s;color:var(--gray);
-  position:relative;text-decoration:none;
+width:44px;height:44px;border-radius:10px;
+display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+cursor:pointer;transition:background .2s;color:var(--gray);
+position:relative;text-decoration:none;
 }
 .sidebar-item:hover{background:var(--surface2);color:var(--white);}
 .sidebar-item svg{width:18px;height:18px;}
 .sidebar-item span{font-size:8px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;}
 .sidebar-divider{width:30px;height:1px;background:var(--border);margin:4px 0;}
 .sidebar-close{
-  margin-top:auto;width:44px;height:44px;border-radius:10px;
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;transition:background .2s;color:var(--gray);
+margin-top:auto;width:44px;height:44px;border-radius:10px;
+display:flex;align-items:center;justify-content:center;
+cursor:pointer;transition:background .2s;color:var(--gray);
 }
 .sidebar-close:hover{background:var(--surface2);color:var(--white);}
 
 /* MAIN */
-main{padding-top:104px;min-height:100vh;}
+main{padding-top:64px;min-height:100vh;}
 
-/* ===== NEWS SLIDER ===== */
+/* NEWS CAROUSEL */
 .news-section{
-  width:100%;overflow:hidden;position:relative;
-  background:var(--surface);
-  border-bottom:1px solid var(--border);
+padding:20px 40px 0;
 }
-.news-track-wrapper{
-  display:flex;width:100%;overflow:hidden;position:relative;
+.news-carousel-wrap{
+position:relative;width:100%;overflow:hidden;
+border-radius:16px;border:1px solid var(--border2);
+background:var(--surface);
 }
-.news-track{
-  display:flex;transition:transform .6s cubic-bezier(.4,0,.2,1);
-  will-change:transform;
+.news-carousel-track{
+display:flex;transition:transform .6s cubic-bezier(.4,0,.2,1);
 }
 .news-slide{
-  min-width:100%;position:relative;overflow:hidden;
-  cursor:pointer;
+min-width:100%;display:flex;align-items:stretch;
+position:relative;overflow:hidden;cursor:pointer;
+min-height:220px;
 }
-.news-slide-inner{
-  display:flex;align-items:center;
-  min-height:260px;position:relative;
+.news-slide-media{
+flex:0 0 340px;position:relative;overflow:hidden;
+background:#111;
 }
-.news-media{
-  width:100%;height:260px;position:absolute;inset:0;
-  overflow:hidden;
+.news-slide-media img,.news-slide-media video{
+width:100%;height:100%;object-fit:cover;display:block;
+transition:transform .6s ease;
 }
-.news-media img,.news-media gif-img{
-  width:100%;height:100%;object-fit:cover;
-  transition:transform .8s ease;
+.news-slide:hover .news-slide-media img,
+.news-slide:hover .news-slide-media video{transform:scale(1.04);}
+.news-slide-media-overlay{
+position:absolute;inset:0;
+background:linear-gradient(90deg,transparent 60%,var(--surface));
+pointer-events:none;
 }
-.news-slide:hover .news-media img{transform:scale(1.03);}
-.news-media video{width:100%;height:100%;object-fit:cover;}
-.news-media-overlay{
-  position:absolute;inset:0;
-  background:linear-gradient(90deg,rgba(0,0,0,.82) 0%,rgba(0,0,0,.5) 50%,rgba(0,0,0,.15) 100%);
+.news-slide-content{
+flex:1;padding:28px 32px;display:flex;flex-direction:column;justify-content:center;gap:10px;
 }
-.news-text-only-bg{
-  position:absolute;inset:0;
-  background:linear-gradient(135deg,#0d0d0d 0%,#111 50%,#0a0a0a 100%);
+.news-slide-badge{
+display:inline-flex;align-items:center;gap:6px;
+font-family:'Space Mono',monospace;font-size:10px;font-weight:700;
+text-transform:uppercase;letter-spacing:1.5px;
+color:var(--green);
 }
-.news-content{
-  position:relative;z-index:2;
-  padding:32px 40px 32px;
-  max-width:600px;
+.news-slide-badge-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite;}
+.news-slide-title{
+font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:2px;
+line-height:1.1;color:var(--white);
 }
-.news-badge{
-  display:inline-flex;align-items:center;gap:6px;
-  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);
-  border-radius:100px;padding:3px 10px;font-size:10px;
-  color:rgba(255,255,255,.7);margin-bottom:12px;
-  font-family:'Space Mono',monospace;letter-spacing:.5px;text-transform:uppercase;
+.news-slide-desc{font-size:13px;color:var(--gray);line-height:1.6;max-width:480px;}
+.news-slide-platform{
+display:inline-flex;align-items:center;gap:8px;
+background:rgba(255,255,255,0.05);border:1px solid var(--border2);
+border-radius:8px;padding:7px 14px;width:fit-content;
+text-decoration:none;color:var(--white);font-size:12px;font-weight:600;
+transition:all .2s;margin-top:4px;
 }
-.news-badge-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
-.news-title{
-  font-family:'Bebas Neue',sans-serif;font-size:clamp(20px,3vw,32px);
-  letter-spacing:2px;line-height:1.1;margin-bottom:8px;color:var(--white);
-}
-.news-desc{font-size:13px;color:rgba(255,255,255,.65);line-height:1.6;margin-bottom:14px;max-width:480px;}
-.news-platform-btn{
-  display:inline-flex;align-items:center;gap:7px;
-  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
-  backdrop-filter:blur(8px);
-  border-radius:8px;padding:7px 14px;font-size:12px;font-weight:600;
-  color:var(--white);text-decoration:none;letter-spacing:.3px;
-  transition:background .2s,border-color .2s;cursor:pointer;
-}
-.news-platform-btn:hover{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.35);}
-.news-platform-icon{width:16px;height:16px;border-radius:4px;object-fit:cover;}
-.news-nav{
-  position:absolute;bottom:16px;right:20px;z-index:5;
-  display:flex;align-items:center;gap:8px;
+.news-slide-platform:hover{background:rgba(255,255,255,0.1);border-color:#555;transform:translateY(-1px);}
+.news-slide-platform img{width:16px;height:16px;border-radius:3px;object-fit:cover;}
+.news-slide-platform-name{color:var(--white);}
+.news-carousel-dots{
+position:absolute;bottom:14px;right:20px;
+display:flex;gap:6px;align-items:center;
 }
 .news-dot{
-  width:7px;height:7px;border-radius:50%;
-  background:rgba(255,255,255,.3);cursor:pointer;
-  transition:background .2s,transform .2s;
+width:6px;height:6px;border-radius:50%;background:var(--border2);
+cursor:pointer;transition:all .3s;
 }
-.news-dot.active{background:var(--white);transform:scale(1.2);}
-.news-arrow{
-  width:30px;height:30px;border-radius:50%;
-  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;color:var(--white);transition:background .2s;
-  position:absolute;top:50%;transform:translateY(-50%);z-index:5;
+.news-dot.active{background:var(--white);width:20px;border-radius:3px;}
+.news-carousel-btn{
+position:absolute;top:50%;transform:translateY(-50%);
+width:36px;height:36px;border-radius:50%;
+background:rgba(10,10,10,0.8);border:1px solid var(--border2);
+color:var(--white);cursor:pointer;
+display:flex;align-items:center;justify-content:center;
+transition:all .2s;z-index:5;
 }
-.news-arrow:hover{background:rgba(255,255,255,.18);}
-.news-arrow.prev{left:12px;}
-.news-arrow.next{right:12px;}
-.news-arrow svg{width:14px;height:14px;stroke:currentColor;stroke-width:2.5;fill:none;}
+.news-carousel-btn:hover{background:rgba(30,30,30,0.95);border-color:#555;}
+.news-carousel-prev{left:12px;}
+.news-carousel-next{right:12px;}
+.news-empty{
+display:flex;align-items:center;justify-content:center;
+min-height:100px;color:var(--gray2);font-size:13px;
+}
 
 /* HERO */
 .hero{
-  padding:70px 40px 50px;
-  display:flex;flex-direction:column;align-items:center;
-  text-align:center;position:relative;overflow:hidden;
+padding:60px 40px 60px;
+display:flex;flex-direction:column;align-items:center;
+text-align:center;position:relative;overflow:hidden;
 }
 .hero::before{
-  content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);
-  width:600px;height:600px;
-  background:radial-gradient(circle,rgba(255,255,255,0.04) 0%,transparent 70%);
-  pointer-events:none;
+content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);
+width:600px;height:600px;
+background:radial-gradient(circle,rgba(255,255,255,0.04) 0%,transparent 70%);
+pointer-events:none;
 }
 .hero-badge{
-  display:inline-flex;align-items:center;gap:6px;
-  background:var(--surface2);border:1px solid var(--border2);
-  border-radius:100px;padding:5px 14px;font-size:12px;
-  color:var(--gray);margin-bottom:28px;
-  animation:fadeUp .6s ease both;
+display:inline-flex;align-items:center;gap:6px;
+background:var(--surface2);border:1px solid var(--border2);
+border-radius:100px;padding:5px 14px;font-size:12px;
+color:var(--gray);margin-bottom:28px;
+animation:fadeUp .6s ease both;
 }
 .hero-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
 h1.hero-title{
-  font-family:'Bebas Neue',sans-serif;
-  font-size:clamp(56px,8vw,120px);
-  letter-spacing:4px;line-height:.9;
-  margin-bottom:20px;
-  animation:fadeUp .6s .1s ease both;
+font-family:'Bebas Neue',sans-serif;
+font-size:clamp(56px,8vw,120px);
+letter-spacing:4px;line-height:.9;
+margin-bottom:20px;
+animation:fadeUp .6s .1s ease both;
 }
 h1.hero-title span{color:var(--gray2);}
 .hero-sub{
-  font-size:16px;color:var(--gray);max-width:480px;line-height:1.7;
-  animation:fadeUp .6s .2s ease both;margin-bottom:40px;
+font-size:16px;color:var(--gray);max-width:480px;line-height:1.7;
+animation:fadeUp .6s .2s ease both;margin-bottom:40px;
 }
 @keyframes fadeUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
 
 /* STATS */
 .stats{
-  display:flex;gap:40px;margin-bottom:60px;
-  animation:fadeUp .6s .3s ease both;
+display:flex;gap:40px;margin-bottom:60px;
+animation:fadeUp .6s .3s ease both;
 }
 .stat{text-align:center;}
 .stat-val{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;}
@@ -326,14 +289,14 @@ h1.hero-title span{color:var(--gray2);}
 
 /* MARQUEE */
 .marquee-wrap{
-  width:100%;overflow:hidden;border-top:1px solid var(--border);
-  border-bottom:1px solid var(--border);
-  background:var(--surface);padding:12px 0;margin-bottom:0;
+width:100%;overflow:hidden;border-top:1px solid var(--border);
+border-bottom:1px solid var(--border);
+background:var(--surface);padding:12px 0;margin-bottom:0;
 }
 .marquee{display:flex;gap:0;animation:marquee 30s linear infinite;width:max-content;}
 .marquee-item{
-  display:flex;align-items:center;gap:8px;padding:0 32px;
-  border-right:1px solid var(--border);white-space:nowrap;
+display:flex;align-items:center;gap:8px;padding:0 32px;
+border-right:1px solid var(--border);white-space:nowrap;
 }
 .marquee-sym{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;}
 .marquee-price{font-size:13px;color:var(--gray);}
@@ -349,9 +312,9 @@ h1.hero-title span{color:var(--gray2);}
 .section-sub{font-size:12px;color:var(--gray);text-transform:uppercase;letter-spacing:1px;}
 .token-table{width:100%;border-collapse:collapse;}
 .token-table th{
-  font-family:'Space Mono',monospace;font-size:10px;
-  text-transform:uppercase;letter-spacing:1px;color:var(--gray2);
-  padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);
+font-family:'Space Mono',monospace;font-size:10px;
+text-transform:uppercase;letter-spacing:1px;color:var(--gray2);
+padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);
 }
 .token-table td{padding:14px 16px;border-bottom:1px solid var(--border);}
 .token-table tr{transition:background .15s;}
@@ -366,10 +329,10 @@ h1.hero-title span{color:var(--gray2);}
 .tok-chg{font-size:13px;font-weight:600;}
 .tok-vol{font-size:13px;color:var(--gray);}
 .live-badge{
-  display:inline-flex;align-items:center;gap:4px;
-  background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.2);
-  color:var(--green);border-radius:4px;padding:2px 7px;font-size:10px;font-weight:700;
-  font-family:'Space Mono',monospace;
+display:inline-flex;align-items:center;gap:4px;
+background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.2);
+color:var(--green);border-radius:4px;padding:2px 7px;font-size:10px;font-weight:700;
+font-family:'Space Mono',monospace;
 }
 .live-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite;}
 
@@ -377,29 +340,29 @@ h1.hero-title span{color:var(--gray2);}
 .features{padding:80px 40px;background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
 .feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);}
 .feat-card{
-  background:var(--surface);padding:36px 30px;
-  transition:background .3s,transform .3s;
-  cursor:default;position:relative;overflow:hidden;
+background:var(--surface);padding:36px 30px;
+transition:background .3s,transform .3s;
+cursor:default;position:relative;overflow:hidden;
 }
 .feat-card::before{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(circle at 20% 20%,rgba(255,255,255,0.03) 0%,transparent 60%);
-  opacity:0;transition:opacity .3s;
+content:'';position:absolute;inset:0;
+background:radial-gradient(circle at 20% 20%,rgba(255,255,255,0.03) 0%,transparent 60%);
+opacity:0;transition:opacity .3s;
 }
 .feat-card:hover{background:var(--surface2);}
 .feat-card:hover::before{opacity:1;}
 .feat-icon-box{
-  width:48px;height:48px;border-radius:12px;
-  background:rgba(255,255,255,0.04);
-  border:1px solid rgba(255,255,255,0.08);
-  display:flex;align-items:center;justify-content:center;
-  margin-bottom:20px;
-  transition:border-color .3s,background .3s,transform .3s;
+width:48px;height:48px;border-radius:12px;
+background:rgba(255,255,255,0.04);
+border:1px solid rgba(255,255,255,0.08);
+display:flex;align-items:center;justify-content:center;
+margin-bottom:20px;
+transition:border-color .3s,background .3s,transform .3s;
 }
 .feat-card:hover .feat-icon-box{
-  border-color:rgba(255,255,255,0.16);
-  background:rgba(255,255,255,0.07);
-  transform:scale(1.08);
+border-color:rgba(255,255,255,0.16);
+background:rgba(255,255,255,0.07);
+transform:scale(1.08);
 }
 .feat-icon-box svg{width:22px;height:22px;stroke:var(--white);stroke-width:1.5;fill:none;}
 .feat-title{font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:2px;margin-bottom:10px;}
@@ -407,154 +370,113 @@ h1.hero-title span{color:var(--gray2);}
 @keyframes featPop{0%{transform:scale(1);}40%{transform:scale(.97);}100%{transform:scale(1);}}
 .feat-card.clicked{animation:featPop .3s ease;}
 
-/* ===== PLATFORM LINKS ===== */
-.platforms-section{
-  padding:60px 40px;
-  border-top:1px solid var(--border);
-}
-.platforms-grid{
-  display:flex;flex-wrap:wrap;gap:14px;
-  margin-top:28px;
-}
-.platform-card{
-  display:flex;align-items:center;gap:10px;
-  background:var(--surface);border:1px solid var(--border2);
-  border-radius:12px;padding:12px 18px;
-  cursor:pointer;text-decoration:none;
-  transition:background .2s,border-color .2s,transform .2s,box-shadow .2s;
-  min-width:160px;
-}
-.platform-card:hover{
-  background:var(--surface2);border-color:#444;
-  transform:translateY(-2px);
-  box-shadow:0 8px 24px rgba(0,0,0,.4);
-}
-.platform-card:active{transform:translateY(0);}
-.platform-icon{
-  width:32px;height:32px;border-radius:8px;
-  background:#222;display:flex;align-items:center;justify-content:center;
-  overflow:hidden;flex-shrink:0;
-  border:1px solid #333;
-}
-.platform-icon img{width:100%;height:100%;object-fit:cover;}
-.platform-name{font-size:13px;font-weight:600;color:var(--white);}
-.platform-arrow{margin-left:auto;color:var(--gray);}
-.platform-arrow svg{width:12px;height:12px;stroke:currentColor;stroke-width:2.5;fill:none;}
-
 /* BRAND SECTION */
 .brand-section{
-  padding:80px 40px;
-  display:flex;flex-direction:column;align-items:center;
-  text-align:center;border-top:1px solid var(--border);
+padding:80px 40px;
+display:flex;flex-direction:column;align-items:center;
+text-align:center;border-top:1px solid var(--border);
 }
 .brand-logo-big{
-  font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,5vw,48px);
-  letter-spacing:5px;margin-bottom:16px;
+font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,5vw,48px);
+letter-spacing:5px;margin-bottom:16px;
 }
 .brand-tagline{
-  display:flex;flex-wrap:wrap;justify-content:center;gap:18px;
-  margin-bottom:20px;
+display:flex;flex-wrap:wrap;justify-content:center;gap:18px;
+margin-bottom:20px;
 }
 .brand-tag{
-  display:flex;align-items:center;gap:8px;
-  font-size:13px;color:var(--gray);
-  padding:6px 14px;border:1px solid var(--border2);border-radius:100px;
-  background:var(--surface2);
+display:flex;align-items:center;gap:8px;
+font-size:13px;color:var(--gray);
+padding:6px 14px;border:1px solid var(--border2);border-radius:100px;
+background:var(--surface2);
 }
 .brand-tag svg{width:14px;height:14px;stroke:var(--white);stroke-width:1.5;fill:none;flex-shrink:0;}
 .brand-desc{font-size:14px;color:var(--gray);line-height:1.8;max-width:600px;}
 
-/* HERO CTA */
-.hero-cta-block{
-  display:flex;gap:16px;margin-bottom:48px;
-  animation:fadeUp .6s .25s ease both;
+/* PLATFORMS SECTION */
+.platforms-section{
+padding:60px 40px;
+border-top:1px solid var(--border);
 }
-.btn-hero-primary{
-  padding:14px 32px;background:var(--white);color:#000;
-  border:none;border-radius:10px;font-family:'DM Sans',sans-serif;
-  font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;
-  letter-spacing:.5px;
+.platforms-title{
+font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:3px;
+color:var(--gray);text-align:center;margin-bottom:28px;
 }
-.btn-hero-primary:hover{background:#e0e0e0;transform:translateY(-2px);}
-.btn-hero-secondary{
-  padding:14px 32px;background:none;color:var(--white);
-  border:1px solid var(--border2);border-radius:10px;font-family:'DM Sans',sans-serif;
-  font-size:14px;font-weight:500;cursor:pointer;transition:all .2s;
+.platforms-grid{
+display:flex;flex-wrap:wrap;justify-content:center;gap:12px;
 }
-.btn-hero-secondary:hover{border-color:#555;background:#111;transform:translateY(-2px);}
-
-/* HERO LOGGED IN */
-.hero-welcome{
-  animation:fadeUp .6s .25s ease both;
-  margin-bottom:48px;
-  display:flex;flex-direction:column;align-items:center;gap:12px;
+.platform-card{
+display:flex;align-items:center;gap:10px;
+background:var(--surface);border:1px solid var(--border2);
+border-radius:12px;padding:12px 20px;
+text-decoration:none;color:var(--white);
+transition:all .25s;cursor:pointer;
 }
-.hero-welcome-name{
-  font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;
-  color:var(--gray);
+.platform-card:hover{
+background:var(--surface2);border-color:#444;
+transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.4);
 }
-.hero-welcome-name span{color:var(--white);}
-.btn-hero-trade{
-  padding:14px 36px;background:var(--white);color:#000;
-  border:none;border-radius:10px;font-family:'DM Sans',sans-serif;
-  font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;
-  letter-spacing:.5px;
+.platform-card-icon{
+width:32px;height:32px;border-radius:8px;object-fit:cover;
+background:#222;display:flex;align-items:center;justify-content:center;
+font-size:14px;flex-shrink:0;overflow:hidden;
 }
-.btn-hero-trade:hover{background:#e0e0e0;transform:translateY(-2px);}
+.platform-card-icon img{width:100%;height:100%;object-fit:cover;border-radius:8px;}
+.platform-card-name{font-size:13px;font-weight:600;}
 
 /* MODALS */
 .modal-backdrop{
-  position:fixed;inset:0;z-index:300;
-  background:rgba(0,0,0,0.75);backdrop-filter:blur(10px);
-  display:flex;align-items:center;justify-content:center;
-  opacity:0;pointer-events:none;transition:opacity .25s;
+position:fixed;inset:0;z-index:300;
+background:rgba(0,0,0,0.75);backdrop-filter:blur(10px);
+display:flex;align-items:center;justify-content:center;
+opacity:0;pointer-events:none;transition:opacity .25s;
 }
 .modal-backdrop.open{opacity:1;pointer-events:all;}
 .modal{
-  background:var(--surface);border:1px solid var(--border2);
-  border-radius:20px;width:min(440px,95vw);
-  box-shadow:0 40px 100px rgba(0,0,0,0.9);
-  animation:modalIn .25s ease;overflow:hidden;max-height:90vh;overflow-y:auto;
+background:var(--surface);border:1px solid var(--border2);
+border-radius:20px;width:min(440px,95vw);
+box-shadow:0 40px 100px rgba(0,0,0,0.9);
+animation:modalIn .25s ease;overflow:hidden;max-height:90vh;overflow-y:auto;
 }
 @keyframes modalIn{from{transform:scale(.96) translateY(20px);opacity:0;}to{transform:scale(1) translateY(0);opacity:1;}}
 .modal-header{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:24px 28px 0;
+display:flex;align-items:center;justify-content:space-between;
+padding:24px 28px 0;
 }
 .modal-title{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:3px;}
 .modal-close{
-  width:32px;height:32px;border-radius:8px;background:var(--surface2);
-  border:1px solid var(--border2);color:var(--gray);cursor:pointer;
-  display:flex;align-items:center;justify-content:center;font-size:16px;
-  transition:all .2s;
+width:32px;height:32px;border-radius:8px;background:var(--surface2);
+border:1px solid var(--border2);color:var(--gray);cursor:pointer;
+display:flex;align-items:center;justify-content:center;font-size:16px;
+transition:all .2s;
 }
 .modal-close:hover{background:#2a2a2a;color:var(--white);}
 .modal-body{padding:24px 28px 28px;}
 .form-group{margin-bottom:16px;}
 .form-label{display:block;font-size:12px;font-weight:600;letter-spacing:.5px;color:var(--gray);text-transform:uppercase;margin-bottom:8px;}
 .form-control{
-  width:100%;background:var(--surface2);border:1px solid var(--border2);
-  border-radius:10px;padding:12px 16px;color:var(--white);
-  font-family:'DM Sans',sans-serif;font-size:14px;outline:none;
-  transition:border-color .2s,box-shadow .2s;
+width:100%;background:var(--surface2);border:1px solid var(--border2);
+border-radius:10px;padding:12px 16px;color:var(--white);
+font-family:'DM Sans',sans-serif;font-size:14px;outline:none;
+transition:border-color .2s,box-shadow .2s;
 }
 .form-control:focus{border-color:#555;box-shadow:0 0 0 3px rgba(255,255,255,.04);}
 .form-control::placeholder{color:var(--gray2);}
 .input-wrap{position:relative;}
 .input-wrap .form-control{padding-right:46px;}
 .eye-btn{
-  position:absolute;right:14px;top:50%;transform:translateY(-50%);
-  background:none;border:none;color:var(--gray);cursor:pointer;
-  display:flex;align-items:center;transition:color .2s;
+position:absolute;right:14px;top:50%;transform:translateY(-50%);
+background:none;border:none;color:var(--gray);cursor:pointer;
+display:flex;align-items:center;transition:color .2s;
 }
 .eye-btn:hover{color:var(--white);}
 select.form-control option{background:#1a1a1a;}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .btn-primary{
-  width:100%;padding:14px;background:var(--white);color:#000;
-  border:none;border-radius:10px;font-family:'DM Sans',sans-serif;
-  font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;
-  letter-spacing:.5px;margin-top:8px;
+width:100%;padding:14px;background:var(--white);color:#000;
+border:none;border-radius:10px;font-family:'DM Sans',sans-serif;
+font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;
+letter-spacing:.5px;margin-top:8px;
 }
 .btn-primary:hover{background:#e0e0e0;transform:translateY(-1px);}
 .btn-primary:active{transform:translateY(0);}
@@ -568,22 +490,22 @@ select.form-control option{background:#1a1a1a;}
 .alert-error{background:rgba(255,59,59,.08);border-color:rgba(255,59,59,.2);color:#ff6b6b;}
 .alert-success{background:rgba(0,230,118,.08);border-color:rgba(0,230,118,.2);color:var(--green);}
 .forgot-link{
-  display:block;text-align:right;font-size:12px;color:var(--gray);
-  text-decoration:none;margin-top:-8px;margin-bottom:8px;transition:color .2s;
+display:block;text-align:right;font-size:12px;color:var(--gray);
+text-decoration:none;margin-top:-8px;margin-bottom:8px;transition:color .2s;
 }
 .forgot-link:hover{color:var(--white);}
 .spinner{
-  width:16px;height:16px;border:2px solid rgba(0,0,0,.3);
-  border-top-color:#000;border-radius:50%;
-  animation:spin .6s linear infinite;display:inline-block;margin-right:6px;vertical-align:middle;
+width:16px;height:16px;border:2px solid rgba(0,0,0,.3);
+border-top-color:#000;border-radius:50%;
+animation:spin .6s linear infinite;display:inline-block;margin-right:6px;vertical-align:middle;
 }
 @keyframes spin{to{transform:rotate(360deg);}}
 
 /* FOOTER */
 footer{
-  background:var(--surface);border-top:1px solid var(--border);
-  padding:48px 40px;display:grid;
-  grid-template-columns:2fr 1fr 1fr;gap:40px;
+background:var(--surface);border-top:1px solid var(--border);
+padding:48px 40px;display:grid;
+grid-template-columns:2fr 1fr 1fr;gap:40px;
 }
 .foot-brand{}
 .foot-logo{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:3px;margin-bottom:12px;}
@@ -593,50 +515,63 @@ footer{
 .foot-links a{text-decoration:none;color:var(--gray);font-size:13px;transition:color .2s;}
 .foot-links a:hover{color:var(--white);}
 .foot-bottom{
-  background:var(--surface);border-top:1px solid var(--border);
-  padding:20px 40px;display:flex;align-items:center;justify-content:space-between;
+background:var(--surface);border-top:1px solid var(--border);
+padding:20px 40px;display:flex;align-items:center;justify-content:space-between;
 }
 .foot-bottom-text{font-size:12px;color:var(--gray2);}
 
+/* HERO CTA */
+.hero-cta-block{
+display:flex;gap:16px;margin-bottom:48px;
+animation:fadeUp .6s .25s ease both;
+}
+.btn-hero-primary{
+padding:14px 32px;background:var(--white);color:#000;
+border:none;border-radius:10px;font-family:'DM Sans',sans-serif;
+font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;
+letter-spacing:.5px;
+}
+.btn-hero-primary:hover{background:#e0e0e0;transform:translateY(-2px);}
+.btn-hero-secondary{
+padding:14px 32px;background:none;color:var(--white);
+border:1px solid var(--border2);border-radius:10px;font-family:'DM Sans',sans-serif;
+font-size:14px;font-weight:500;cursor:pointer;transition:all .2s;
+}
+.btn-hero-secondary:hover{border-color:#555;background:#111;transform:translateY(-2px);}
+
+/* DYNAMIC TAB CONTENT AREA */
+.tab-content-area{display:none;padding:40px;}
+.tab-content-area.active{display:block;}
+
 /* RESPONSIVE */
 @media(max-width:768px){
-  .stats{gap:24px;flex-wrap:wrap;justify-content:center;}
-  .feat-grid{grid-template-columns:1fr 1fr;}
-  footer{grid-template-columns:1fr 1fr;}
-  .hero{padding:50px 20px 30px;}
-  .section{padding:40px 20px;}
-  .form-row{grid-template-columns:1fr;}
-  .hero-cta-block{flex-direction:column;align-items:center;}
-  .news-content{padding:24px 20px;}
-  .platforms-section{padding:40px 20px;}
-  header{padding:0 16px;}
-  .top-tab{padding:0 12px;font-size:11px;}
+.stats{gap:24px;flex-wrap:wrap;justify-content:center;}
+.feat-grid{grid-template-columns:1fr 1fr;}
+footer{grid-template-columns:1fr 1fr;}
+.hero{padding:60px 20px 40px;}
+.section{padding:40px 20px;}
+.form-row{grid-template-columns:1fr;}
+.hero-cta-block{flex-direction:column;align-items:center;}
+.news-section{padding:16px 16px 0;}
+.news-slide-media{flex:0 0 160px;}
+.news-slide-content{padding:18px 18px;}
+.news-slide-title{font-size:18px;}
+.platforms-section{padding:40px 20px;}
+.search-wrap{max-width:none;margin:0 12px;}
+.user-nav-tabs{display:none!important;}
 }
 @media(max-width:480px){
-  .hero-title{font-size:48px !important;}
-  .stats{gap:16px;}
-  footer{grid-template-columns:1fr;}
-  .foot-bottom{flex-direction:column;gap:8px;text-align:center;}
+.hero-title{font-size:48px !important;}
+.stats{gap:16px;}
+footer{grid-template-columns:1fr;}
+.foot-bottom{flex-direction:column;gap:8px;text-align:center;}
+.news-slide{flex-direction:column;}
+.news-slide-media{flex:0 0 160px;width:100%;}
+.news-slide-media-overlay{background:linear-gradient(180deg,transparent 60%,var(--surface));}
 }
 </style>
 </head>
 <body>
-
-<!-- ===== TOP TABS ===== -->
-<div class="top-tabs" id="topTabs">
-  <div class="top-tab active" id="tab-webhome" onclick="switchTab('webhome')">
-    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-    Web Home
-  </div>
-  <div class="top-tab" id="tab-avicnqing" onclick="switchTab('avicnqing')">
-    <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-    Avicn&amp;Qing
-  </div>
-  <div class="top-tab" id="tab-more" onclick="switchTab('more')">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
-    More
-  </div>
-</div>
 
 <!-- HEADER -->
 <header>
@@ -646,6 +581,7 @@ footer{
     </div>
     <span class="logo-text">AvicnKnov</span>
   </a>
+
   <div class="search-wrap">
     <div class="search-bar" onclick="openSearch()">
       <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
@@ -653,9 +589,19 @@ footer{
       <span class="search-shortcut">⌘K</span>
     </div>
   </div>
-  <div class="header-right" id="headerRight">
-    <button class="btn-login" onclick="openModal('loginModal')">Login</button>
-    <button class="btn-signup" onclick="openModal('signupModal')">Sign Up</button>
+
+  <div class="header-right">
+    <!-- Shown before login -->
+    <div id="guestButtons">
+      <button class="btn-login" onclick="openModal('loginModal')">Login</button>
+      <button class="btn-signup" onclick="openModal('signupModal')">Sign Up</button>
+    </div>
+    <!-- Shown after login: 3 tabs -->
+    <div class="user-nav-tabs" id="userNavTabs">
+      <button class="nav-tab active" id="tabWebHome" onclick="switchTab('webHome')">Web Home</button>
+      <button class="nav-tab" id="tabAvicnQing" onclick="switchTab('avicnQing')">Avicn&amp;Qing</button>
+      <button class="nav-tab" id="tabMore" onclick="switchTab('more')">More</button>
+    </div>
     <div class="sidebar-toggle" onclick="toggleSidebar()">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </div>
@@ -664,13 +610,14 @@ footer{
 
 <!-- SIDEBAR -->
 <nav class="sidebar" id="sidebar">
+  <a class="sidebar-item" href="help.html" title="Help &amp; Support">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <span>Help</span>
+  </a>
+  <div class="sidebar-divider"></div>
   <a class="sidebar-item" href="profile.html" title="Profile">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
     <span>Profile</span>
-  </a>
-  <a class="sidebar-item" href="help.html" title="Help & Support">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-    <span>Help</span>
   </a>
   <div class="sidebar-close" onclick="toggleSidebar()">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -694,189 +641,188 @@ footer{
 <!-- MAIN -->
 <main>
 
-<!-- ===== TAB: WEB HOME ===== -->
-<div class="tab-content active" id="content-webhome">
-
-  <!-- NEWS SECTION -->
-  <div class="news-section" id="newsSection" style="display:none;">
-    <div style="position:relative;">
-      <div class="news-arrow prev" onclick="newsSlide(-1)">
-        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-      </div>
-      <div class="news-track-wrapper">
-        <div class="news-track" id="newsTrack"></div>
-      </div>
-      <div class="news-arrow next" onclick="newsSlide(1)">
-        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-      </div>
+  <!-- NEWS CAROUSEL -->
+  <div class="news-section" id="newsSection">
+    <div class="news-carousel-wrap" id="newsCarouselWrap">
+      <div class="news-carousel-track" id="newsTrack"></div>
+      <button class="news-carousel-btn news-carousel-prev" id="newsPrev" onclick="newsSlide(-1)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <button class="news-carousel-btn news-carousel-next" id="newsNext" onclick="newsSlide(1)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+      <div class="news-carousel-dots" id="newsDots"></div>
     </div>
-    <div class="news-nav" id="newsNav"></div>
   </div>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-badge">
-      <span class="hero-badge-dot"></span>
-      Live Markets · 24/7 Trading
-    </div>
-    <h1 class="hero-title">AVICNKNOV<br/><span>EXCHANGE</span></h1>
-    <p class="hero-sub">The next generation crypto exchange. Trade smarter, faster, and with complete confidence. Built for professionals and beginners alike.</p>
-    <div id="heroCTA" class="hero-cta-block">
-      <button class="btn-hero-primary" onclick="openModal('signupModal')">Start Trading Free</button>
-      <button class="btn-hero-secondary" onclick="openModal('loginModal')">Login to Account</button>
-    </div>
-    <div class="stats">
-      <div class="stat">
-        <div class="stat-val" id="statVol">$2.4B</div>
-        <div class="stat-lab">24h Volume</div>
-      </div>
-      <div class="stat">
-        <div class="stat-val" id="statTokens">150+</div>
-        <div class="stat-lab">Tokens Listed</div>
-      </div>
-      <div class="stat">
-        <div class="stat-val" id="statUptime">99.9%</div>
-        <div class="stat-lab">Uptime</div>
-      </div>
-      <div class="stat">
-        <div class="stat-val" id="statUsers">2M+</div>
-        <div class="stat-lab">Users</div>
-      </div>
-    </div>
-  </section>
+  <!-- WEB HOME TAB CONTENT (default, always visible before login and after login on webHome tab) -->
+  <div id="mainContent">
 
-  <!-- MARQUEE -->
-  <div class="marquee-wrap">
-    <div class="marquee" id="marqueeEl"></div>
-  </div>
-
-  <!-- TOKENS TABLE -->
-  <section class="section">
-    <div class="section-header">
-      <div>
-        <div class="section-title">Live Markets</div>
-        <div class="section-sub">Real-time prices from AvicnKnov Exchange</div>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        Live Markets · 24/7 Trading
       </div>
-      <span class="live-badge"><span class="live-dot"></span>LIVE</span>
-    </div>
-    <table class="token-table">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Token</th>
-          <th>Price</th>
-          <th>24h Change</th>
-          <th>Volume</th>
-          <th>Supply</th>
-        </tr>
-      </thead>
-      <tbody id="tokenTableBody">
-        <tr><td colspan="6" style="text-align:center;padding:40px;color:#555;">Loading markets...</td></tr>
-      </tbody>
-    </table>
-  </section>
+      <h1 class="hero-title">AVICNKNOV<br/><span>EXCHANGE</span></h1>
+      <p class="hero-sub">The next generation crypto exchange. Trade smarter, faster, and with complete confidence. Built for professionals and beginners alike.</p>
+      <div class="hero-cta-block" id="heroCTA">
+        <button class="btn-hero-primary" onclick="openModal('signupModal')">Start Trading Free</button>
+        <button class="btn-hero-secondary" onclick="openModal('loginModal')">Login to Account</button>
+      </div>
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-val" id="statVol">$2.4B</div>
+          <div class="stat-lab">24h Volume</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val" id="statTokens">150+</div>
+          <div class="stat-lab">Tokens Listed</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val" id="statUptime">99.9%</div>
+          <div class="stat-lab">Uptime</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val" id="statUsers">2M+</div>
+          <div class="stat-lab">Users</div>
+        </div>
+      </div>
+    </section>
 
-  <!-- FEATURES -->
-  <section class="features">
-    <div class="section-header" style="margin-bottom:48px;">
-      <div class="section-title">Why AvicnKnov</div>
+    <!-- MARQUEE -->
+    <div class="marquee-wrap">
+      <div class="marquee" id="marqueeEl"></div>
     </div>
-    <div class="feat-grid">
-      <div class="feat-card" onclick="triggerFeatAnim(this)">
-        <div class="feat-icon-box">
+
+    <!-- TOKENS TABLE -->
+    <section class="section">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Live Markets</div>
+          <div class="section-sub">Real-time prices from AvicnKnov Exchange</div>
+        </div>
+        <span class="live-badge"><span class="live-dot"></span>LIVE</span>
+      </div>
+      <table class="token-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Token</th>
+            <th>Price</th>
+            <th>24h Change</th>
+            <th>Volume</th>
+            <th>Supply</th>
+          </tr>
+        </thead>
+        <tbody id="tokenTableBody">
+          <tr><td colspan="6" style="text-align:center;padding:40px;color:#555;">Loading markets...</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="features">
+      <div class="section-header" style="margin-bottom:48px;">
+        <div class="section-title">Why AvicnKnov</div>
+      </div>
+      <div class="feat-grid">
+        <div class="feat-card" onclick="triggerFeatAnim(this)">
+          <div class="feat-icon-box">
+            <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          </div>
+          <div class="feat-title">Sub-Millisecond Execution</div>
+          <div class="feat-desc">Our proprietary matching engine processes over 1.4 million orders per second with confirmed sub-0.3ms trade latency — the fastest execution infrastructure in the industry. Built on bare-metal servers across 9 global data centers.</div>
+        </div>
+        <div class="feat-card" onclick="triggerFeatAnim(this)">
+          <div class="feat-icon-box">
+            <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <div class="feat-title">Military-Grade Security Architecture</div>
+          <div class="feat-desc">98% of assets held in geographically distributed cold storage vaults. Real-time AI threat detection, multi-layer 2FA, biometric verification, and a $500M institutional insurance fund covering all user assets on the platform.</div>
+        </div>
+        <div class="feat-card" onclick="triggerFeatAnim(this)">
+          <div class="feat-icon-box">
+            <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          </div>
+          <div class="feat-title">Institutional-Grade Analytics Suite</div>
+          <div class="feat-desc">Deep order-book visualization, live market microstructure data, multi-timeframe heatmaps, and on-chain flow analysis — all in one unified terminal. The same tools used by the world's largest crypto trading desks, now available to everyone.</div>
+        </div>
+        <div class="feat-card" onclick="triggerFeatAnim(this)">
+          <div class="feat-icon-box">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          </div>
+          <div class="feat-title">Borderless Global Market Access</div>
+          <div class="feat-desc">Trade 150+ cryptocurrency pairs across every major blockchain — Ethereum, Solana, BTC Layer-2, Cosmos, and beyond — from a single unified account. Zero geographic restrictions. One API. Infinite opportunity.</div>
+        </div>
+        <div class="feat-card" onclick="triggerFeatAnim(this)">
+          <div class="feat-icon-box">
+            <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+          </div>
+          <div class="feat-title">Aquarius Token Launchpad</div>
+          <div class="feat-desc">AvicnKnov's revolutionary Aquarius system is redefining token launches. Hyper-curated projects, AI-vetted smart contracts, real-time liquidity bootstrapping, and launch mechanics no other exchange on earth currently offers. The future of token discovery is here.</div>
+        </div>
+        <div class="feat-card" onclick="triggerFeatAnim(this)">
+          <div class="feat-icon-box">
+            <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 6v6l4 2"/><circle cx="19" cy="5" r="3"/></svg>
+          </div>
+          <div class="feat-title">AvicnKnov AI — Neural Trade Intelligence</div>
+          <div class="feat-desc">Our proprietary AI engine monitors 240+ market signals simultaneously, delivers predictive sentiment scoring, detects whale movement patterns, and surfaces high-probability trade setups in real time — exclusively for AvicnKnov users.</div>
+        </div>
+        <div class="feat-card" onclick="triggerFeatAnim(this)">
+          <div class="feat-icon-box">
+            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="feat-title">Zero-Friction Onboarding for Beginners</div>
+          <div class="feat-desc">From account creation to first trade in under 90 seconds. Guided learning paths, a paper trading simulator with real market data, and a live 24/7 support team with sub-2-minute response times ensure no beginner ever trades alone.</div>
+        </div>
+        <div class="feat-card" onclick="triggerFeatAnim(this)">
+          <div class="feat-icon-box">
+            <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <div class="feat-title">99.997% Uptime Infrastructure</div>
+          <div class="feat-desc">Redundant multi-region cloud architecture with automatic failover means AvicnKnov has never experienced an unplanned outage exceeding 8 seconds in its operational history. When markets move, we are always on.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BRAND SECTION -->
+    <section class="brand-section" id="brandSection">
+      <div class="brand-logo-big">AvicnKnov Exchange</div>
+      <div class="brand-tagline">
+        <span class="brand-tag">
           <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-        </div>
-        <div class="feat-title">Sub-Millisecond Execution</div>
-        <div class="feat-desc">Our proprietary matching engine processes over 1.4 million orders per second with confirmed sub-0.3ms trade latency — the fastest execution infrastructure in the industry. Built on bare-metal servers across 9 global data centers.</div>
-      </div>
-      <div class="feat-card" onclick="triggerFeatAnim(this)">
-        <div class="feat-icon-box">
-          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        </div>
-        <div class="feat-title">Military-Grade Security Architecture</div>
-        <div class="feat-desc">98% of assets held in geographically distributed cold storage vaults. Real-time AI threat detection, multi-layer 2FA, biometric verification, and a $500M institutional insurance fund covering all user assets on the platform.</div>
-      </div>
-      <div class="feat-card" onclick="triggerFeatAnim(this)">
-        <div class="feat-icon-box">
-          <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-        </div>
-        <div class="feat-title">Institutional-Grade Analytics Suite</div>
-        <div class="feat-desc">Deep order-book visualization, live market microstructure data, multi-timeframe heatmaps, and on-chain flow analysis — all in one unified terminal. The same tools used by the world's largest crypto trading desks, now available to everyone.</div>
-      </div>
-      <div class="feat-card" onclick="triggerFeatAnim(this)">
-        <div class="feat-icon-box">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-        </div>
-        <div class="feat-title">Borderless Global Market Access</div>
-        <div class="feat-desc">Trade 150+ cryptocurrency pairs across every major blockchain — Ethereum, Solana, BTC Layer-2, Cosmos, and beyond — from a single unified account. Zero geographic restrictions. One API. Infinite opportunity.</div>
-      </div>
-      <div class="feat-card" onclick="triggerFeatAnim(this)">
-        <div class="feat-icon-box">
-          <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-        </div>
-        <div class="feat-title">Aquarius Token Launchpad</div>
-        <div class="feat-desc">AvicnKnov's revolutionary Aquarius system is redefining token launches. Hyper-curated projects, AI-vetted smart contracts, real-time liquidity bootstrapping, and launch mechanics no other exchange on earth currently offers. The future of token discovery is here.</div>
-      </div>
-      <div class="feat-card" onclick="triggerFeatAnim(this)">
-        <div class="feat-icon-box">
-          <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 6v6l4 2"/><circle cx="19" cy="5" r="3"/></svg>
-        </div>
-        <div class="feat-title">AvicnKnov AI — Neural Trade Intelligence</div>
-        <div class="feat-desc">Our proprietary AI engine monitors 240+ market signals simultaneously, delivers predictive sentiment scoring, detects whale movement patterns, and surfaces high-probability trade setups in real time — exclusively for AvicnKnov users.</div>
-      </div>
-      <div class="feat-card" onclick="triggerFeatAnim(this)">
-        <div class="feat-icon-box">
-          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        </div>
-        <div class="feat-title">Zero-Friction Onboarding for Beginners</div>
-        <div class="feat-desc">From account creation to first trade in under 90 seconds. Guided learning paths, a paper trading simulator with real market data, and a live 24/7 support team with sub-2-minute response times ensure no beginner ever trades alone.</div>
-      </div>
-      <div class="feat-card" onclick="triggerFeatAnim(this)">
-        <div class="feat-icon-box">
+          Sub-0.3ms Trade Execution
+        </span>
+        <span class="brand-tag">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/><circle cx="19" cy="5" r="3"/></svg>
+          Proprietary AI Neural Engine
+        </span>
+        <span class="brand-tag">
+          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          $500M Asset Insurance Fund
+        </span>
+        <span class="brand-tag">
           <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-        </div>
-        <div class="feat-title">99.997% Uptime Infrastructure</div>
-        <div class="feat-desc">Redundant multi-region cloud architecture with automatic failover means AvicnKnov has never experienced an unplanned outage exceeding 8 seconds in its operational history. When markets move, we are always on.</div>
+          99.997% Uptime — Always Live
+        </span>
       </div>
-    </div>
-  </section>
+      <p class="brand-desc" id="brandDesc">
+        AvicnKnov is not just an exchange — it is a sovereign trading ecosystem engineered from the ground up for the next era of finance. Powered by a self-evolving AI infrastructure, the Aquarius Token Launchpad, and institutional execution rails that most platforms cannot replicate, AvicnKnov is where serious capital moves. Whether you are deploying your first $10 or managing a $10M book, this is the last exchange you will ever need.
+      </p>
+    </section>
 
-  <!-- PLATFORMS SECTION -->
-  <section class="platforms-section" id="platformsSection" style="display:none;">
-    <div class="section-header">
-      <div>
-        <div class="section-title">Explore Platforms</div>
-        <div class="section-sub">Connect with our ecosystem partners</div>
-      </div>
-    </div>
-    <div class="platforms-grid" id="platformsGrid"></div>
-  </section>
+    <!-- PLATFORMS SECTION -->
+    <section class="platforms-section" id="platformsSection">
+      <div class="platforms-title">EXPLORE PLATFORMS</div>
+      <div class="platforms-grid" id="platformsGrid"></div>
+    </section>
 
-  <!-- BRAND SECTION -->
-  <section class="brand-section" id="brandSection">
-    <div class="brand-logo-big">AvicnKnov Exchange</div>
-    <div class="brand-tagline">
-      <span class="brand-tag">
-        <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-        Sub-0.3ms Trade Execution
-      </span>
-      <span class="brand-tag">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/><circle cx="19" cy="5" r="3"/></svg>
-        Proprietary AI Neural Engine
-      </span>
-      <span class="brand-tag">
-        <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        $500M Asset Insurance Fund
-      </span>
-      <span class="brand-tag">
-        <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-        99.997% Uptime — Always Live
-      </span>
-    </div>
-    <p class="brand-desc" id="brandDesc">
-      AvicnKnov is not just an exchange — it is a sovereign trading ecosystem engineered from the ground up for the next era of finance. Powered by a self-evolving AI infrastructure, the Aquarius Token Launchpad, and institutional execution rails that most platforms cannot replicate, AvicnKnov is where serious capital moves. Whether you are deploying your first $10 or managing a $10M book, this is the last exchange you will ever need.
-    </p>
-  </section>
+  </div><!-- end #mainContent -->
+
+  <!-- TAB CONTENT AREAS (loaded from JS files dynamically) -->
+  <div class="tab-content-area" id="tabContentAvicnQing"></div>
+  <div class="tab-content-area" id="tabContentMore"></div>
 
   <!-- FOOTER -->
   <footer>
@@ -905,26 +851,6 @@ footer{
     <span class="foot-bottom-text" id="footCopy">© 2027 AvicnKnov Exchange — The World's Most Advanced Crypto Trading Ecosystem.</span>
     <span class="foot-bottom-text">Regulated &nbsp;·&nbsp; Secured &nbsp;·&nbsp; AI-Native &nbsp;·&nbsp; Always Live</span>
   </div>
-
-</div><!-- end webhome tab -->
-
-<!-- ===== TAB: AVICN&QING ===== -->
-<div class="tab-content" id="content-avicnqing">
-  <div class="tab-loading" id="loadingAvicnqing">
-    <div class="tab-spinner"></div>
-    <span>Loading Avicn&amp;Qing...</span>
-  </div>
-  <div id="avicnqing-mount"></div>
-</div>
-
-<!-- ===== TAB: MORE ===== -->
-<div class="tab-content" id="content-more">
-  <div class="tab-loading" id="loadingMore">
-    <div class="tab-spinner"></div>
-    <span>Loading More...</span>
-  </div>
-  <div id="more-mount"></div>
-</div>
 
 </main>
 
@@ -1060,95 +986,11 @@ const tokenSupabase = createClient(
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh3cnZxeWlwb3pyc3h5amRwcWFnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA5MDc2NzksImV4cCI6MjA2NjQ4MzY3OX0.s43NjpUGDAJhs9qEmnwIXEY5aOh3gl6XqPdEveodFZM'
 );
 
-// ===== LOGO =====
+// ===== LOGO FALLBACK =====
 const logoImg = document.getElementById('logoImg');
 logoImg.onerror = () => { logoImg.style.display='none'; };
 
-// ===== SESSION CHECK & UI =====
-let currentUser = null;
-function checkSession(){
-  try{
-    const saved = sessionStorage.getItem('avicnUser');
-    if(saved){
-      currentUser = JSON.parse(saved);
-      updateHeaderForUser();
-    }
-  }catch(e){}
-}
-function updateHeaderForUser(){
-  if(!currentUser) return;
-  const hr = document.getElementById('headerRight');
-  const initials = (currentUser.full_name||currentUser.username||'U').split(' ').map(x=>x[0]).join('').toUpperCase().slice(0,2);
-  hr.innerHTML = `
-    <div class="user-avatar-btn" title="${currentUser.full_name||currentUser.username||'Profile'}" onclick="window.location='profile.html'">
-      ${initials}
-    </div>
-    <div class="sidebar-toggle" onclick="toggleSidebar()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-    </div>
-  `;
-  // Update hero CTA
-  const cta = document.getElementById('heroCTA');
-  if(cta){
-    const name = (currentUser.full_name||currentUser.username||'Trader').split(' ')[0];
-    cta.outerHTML = `
-      <div class="hero-welcome" id="heroCTA">
-        <div class="hero-welcome-name">Welcome back, <span>${name}</span></div>
-        <button class="btn-hero-trade" onclick="window.location='trading.html'">Go to Trading</button>
-      </div>
-    `;
-  }
-}
-checkSession();
-
-// ===== TOP TABS =====
-const tabLoaded = {webhome:true, avicnqing:false, more:false};
-
-function switchTab(name){
-  document.querySelectorAll('.top-tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
-  document.getElementById('tab-'+name).classList.add('active');
-  document.getElementById('content-'+name).classList.add('active');
-  if(!tabLoaded[name]){
-    tabLoaded[name]=true;
-    if(name==='avicnqing') loadAvicnQingTab();
-    if(name==='more') loadMoreTab();
-  }
-}
-
-// Dynamically load avicn.js
-function loadAvicnQingTab(){
-  const loading = document.getElementById('loadingAvicnqing');
-  const mount = document.getElementById('avicnqing-mount');
-  const script = document.createElement('script');
-  script.src = 'avicn.js';
-  script.onload = ()=>{
-    if(loading) loading.style.display='none';
-    if(typeof initAvicnQing === 'function') initAvicnQing(mount, authSupabase, tokenSupabase);
-  };
-  script.onerror = ()=>{
-    if(loading) loading.innerHTML = '<span style="color:#555;font-size:13px;">Avicn&Qing section coming soon.</span>';
-  };
-  document.head.appendChild(script);
-}
-
-// Dynamically load more.js
-function loadMoreTab(){
-  const loading = document.getElementById('loadingMore');
-  const mount = document.getElementById('more-mount');
-  const script = document.createElement('script');
-  script.src = 'more.js';
-  script.onload = ()=>{
-    if(loading) loading.style.display='none';
-    if(typeof initMore === 'function') initMore(mount, authSupabase, tokenSupabase);
-  };
-  script.onerror = ()=>{
-    if(loading) loading.innerHTML = '<span style="color:#555;font-size:13px;">More section coming soon.</span>';
-  };
-  document.head.appendChild(script);
-}
-
-// ===== WEB CONTROL =====
+// ===== LOAD WEB_1ST_CONTROL TABLE =====
 async function loadWebControl(){
   try{
     const {data,error} = await authSupabase.from('web_1st_control').select('*').limit(1).single();
@@ -1164,124 +1006,63 @@ async function loadWebControl(){
 }
 loadWebControl();
 
-// ===== NEWS SYSTEM =====
-let newsData = [];
-let newsIndex = 0;
-let newsTimer = null;
-
-async function loadNews(){
-  try{
-    const {data,error} = await authSupabase.from('news_control').select('*').order('created_at',{ascending:false});
-    if(error||!data||!data.length) return;
-    newsData = data;
-    buildNewsSlider();
-    document.getElementById('newsSection').style.display='block';
-  }catch(e){}
-}
-
-function buildNewsSlider(){
-  const track = document.getElementById('newsTrack');
-  const nav = document.getElementById('newsNav');
-  track.innerHTML = newsData.map((item,i)=>buildNewsSlide(item,i)).join('');
-  nav.innerHTML = newsData.map((_,i)=>`<div class="news-dot${i===0?' active':''}" onclick="goNewsSlide(${i})"></div>`).join('');
-  startNewsTimer();
-}
-
-function buildNewsSlide(item, i){
-  const BUCKET_URL = 'https://kjxnbofpwfvheuzmeynd.supabase.co/storage/v1/object/public/news_content/';
-  let mediaHtml = '';
-  let overlayHtml = '';
-
-  if(item.media_type === 'video' && item.media_file){
-    mediaHtml = `<div class="news-media"><video autoplay muted loop playsinline onended="onVideoEnd(${i})" src="${BUCKET_URL}${item.media_file}"></video><div class="news-media-overlay"></div></div>`;
-  } else if((item.media_type === 'image' || item.media_type === 'gif') && item.media_file){
-    mediaHtml = `<div class="news-media"><img src="${BUCKET_URL}${item.media_file}" alt=""/><div class="news-media-overlay"></div></div>`;
-  } else {
-    mediaHtml = `<div class="news-text-only-bg"></div>`;
+// ===== SESSION CHECK =====
+function checkSession(){
+  const user = sessionStorage.getItem('avicnUser');
+  if(user){
+    document.getElementById('guestButtons').style.display='none';
+    document.getElementById('userNavTabs').classList.add('visible');
   }
+}
+checkSession();
 
-  let platformBtn = '';
-  if(item.platform_link && item.platform_name){
-    platformBtn = `<a class="news-platform-btn" href="${item.platform_link}" target="_blank" rel="noopener">
-      ${item.platform_icon ? `<img class="news-platform-icon" src="${item.platform_icon}" alt=""/>` : ''}
-      ${item.platform_name}
-      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-    </a>`;
+// ===== TAB SWITCHING =====
+let loadedTabs = {};
+function switchTab(tab){
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('mainContent').style.display = 'none';
+  document.getElementById('tabContentAvicnQing').classList.remove('active');
+  document.getElementById('tabContentMore').classList.remove('active');
+
+  if(tab==='webHome'){
+    document.getElementById('tabWebHome').classList.add('active');
+    document.getElementById('mainContent').style.display = 'block';
+  } else if(tab==='avicnQing'){
+    document.getElementById('tabAvicnQing').classList.add('active');
+    document.getElementById('tabContentAvicnQing').classList.add('active');
+    if(!loadedTabs['avicnQing']){
+      loadedTabs['avicnQing']=true;
+      loadTabScript('avicn.js','tabContentAvicnQing');
+    }
+  } else if(tab==='more'){
+    document.getElementById('tabMore').classList.add('active');
+    document.getElementById('tabContentMore').classList.add('active');
+    if(!loadedTabs['more']){
+      loadedTabs['more']=true;
+      loadTabScript('more.js','tabContentMore');
+    }
   }
-
-  return `<div class="news-slide">
-    ${mediaHtml}
-    <div class="news-slide-inner">
-      <div class="news-content">
-        <div class="news-badge"><span class="news-badge-dot"></span>AvicnKnov News</div>
-        ${item.title ? `<div class="news-title">${item.title}</div>` : ''}
-        ${item.description ? `<div class="news-desc">${item.description}</div>` : ''}
-        ${platformBtn}
-      </div>
-    </div>
-  </div>`;
 }
 
-function goNewsSlide(idx){
-  newsIndex = idx;
-  applyNewsSlide();
-  resetNewsTimer();
+function loadTabScript(src, containerId){
+  const container = document.getElementById(containerId);
+  container.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;padding:80px;color:#555;font-size:14px;gap:10px;"><div style="width:18px;height:18px;border:2px solid #333;border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;"></div> Loading...</div>';
+  const s = document.createElement('script');
+  s.src = src;
+  s.onload = ()=>{ if(typeof window['init_'+containerId]==='function') window['init_'+containerId](); };
+  s.onerror = ()=>{ container.innerHTML='<div style="padding:60px;text-align:center;color:#555;font-size:13px;">Module not available.</div>'; };
+  document.head.appendChild(s);
 }
-
-function newsSlide(dir){
-  newsIndex = (newsIndex + dir + newsData.length) % newsData.length;
-  applyNewsSlide();
-  resetNewsTimer();
-}
-
-function applyNewsSlide(){
-  document.getElementById('newsTrack').style.transform = `translateX(-${newsIndex*100}%)`;
-  document.querySelectorAll('.news-dot').forEach((d,i)=>d.classList.toggle('active',i===newsIndex));
-}
-
-function onVideoEnd(idx){
-  if(idx === newsIndex) newsSlide(1);
-}
-
-function startNewsTimer(){
-  newsTimer = setInterval(()=>{
-    const cur = newsData[newsIndex];
-    if(cur && cur.media_type==='video') return; // video controls its own timing
-    newsIndex = (newsIndex+1) % newsData.length;
-    applyNewsSlide();
-  }, 5000);
-}
-
-function resetNewsTimer(){
-  clearInterval(newsTimer);
-  startNewsTimer();
-}
-
-loadNews();
-
-// ===== PLATFORMS =====
-async function loadPlatforms(){
-  try{
-    const {data,error} = await authSupabase.from('platform_control').select('*').order('id');
-    if(error||!data||!data.length) return;
-    const grid = document.getElementById('platformsGrid');
-    grid.innerHTML = data.map(p=>`
-      <a class="platform-card" href="${p.url||'#'}" target="_blank" rel="noopener">
-        <div class="platform-icon">
-          ${p.icon_url ? `<img src="${p.icon_url}" alt="${p.name||''}"/>` : `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>`}
-        </div>
-        <span class="platform-name">${p.name||'Platform'}</span>
-        <span class="platform-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
-      </a>
-    `).join('');
-    document.getElementById('platformsSection').style.display='block';
-  }catch(e){}
-}
-loadPlatforms();
 
 // ===== MODAL =====
-function openModal(id){ document.getElementById(id).classList.add('open'); document.body.style.overflow='hidden'; }
-function closeModal(id){ document.getElementById(id).classList.remove('open'); document.body.style.overflow=''; }
+function openModal(id){
+  document.getElementById(id).classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(id){
+  document.getElementById(id).classList.remove('open');
+  document.body.style.overflow='';
+}
 document.querySelectorAll('.modal-backdrop').forEach(b=>b.addEventListener('click',e=>{if(e.target===b)closeModal(b.id);}));
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){
@@ -1304,16 +1085,37 @@ const searchOptions = [
   {name:'Sign Up',sub:'Create a new account',href:'#',isAction:true,action:'signup'},
   {name:'Forgot Password',sub:'Reset your password',href:'#',isAction:true,action:'forgot'},
 ];
-function openSearch(){ document.getElementById('searchOverlay').classList.add('open'); setTimeout(()=>document.getElementById('searchInput').focus(),100); }
-function closeSearch(e){ if(e.target===document.getElementById('searchOverlay')) closeSearchBtn(); }
-function closeSearchBtn(){ document.getElementById('searchOverlay').classList.remove('open'); document.getElementById('searchInput').value=''; document.getElementById('searchResults').innerHTML='<div class="no-result" style="padding:28px 20px;color:#555;font-size:13px;">Start typing to search...</div>'; }
-document.addEventListener('keydown',e=>{ if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();openSearch();} });
+
+function openSearch(){
+  document.getElementById('searchOverlay').classList.add('open');
+  setTimeout(()=>document.getElementById('searchInput').focus(),100);
+}
+function closeSearch(e){
+  if(e.target===document.getElementById('searchOverlay')) closeSearchBtn();
+}
+function closeSearchBtn(){
+  document.getElementById('searchOverlay').classList.remove('open');
+  document.getElementById('searchInput').value='';
+  document.getElementById('searchResults').innerHTML='<div class="no-result" style="padding:28px 20px;color:#555;font-size:13px;">Start typing to search...</div>';
+}
+document.addEventListener('keydown',e=>{
+  if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();openSearch();}
+});
+
 function doSearch(){
   const q = document.getElementById('searchInput').value.trim().toLowerCase();
   const results = document.getElementById('searchResults');
-  if(!q){ results.innerHTML='<div class="no-result" style="padding:28px 20px;color:#555;font-size:13px;">Start typing to search...</div>'; return; }
-  const filtered = searchOptions.filter(o=> o.name.toLowerCase().includes(q)||(o.sub||'').toLowerCase().includes(q));
-  if(!filtered.length){ results.innerHTML=`<div class="no-result"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>No results found for "<strong>${q}</strong>"</div>`; return; }
+  if(!q){
+    results.innerHTML='<div class="no-result" style="padding:28px 20px;color:#555;font-size:13px;">Start typing to search...</div>';
+    return;
+  }
+  const filtered = searchOptions.filter(o=>
+    o.name.toLowerCase().includes(q)||(o.sub||'').toLowerCase().includes(q)
+  );
+  if(!filtered.length){
+    results.innerHTML=`<div class="no-result"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>No results found for "<strong>${q}</strong>"</div>`;
+    return;
+  }
   results.innerHTML = filtered.slice(0,8).map(o=>{
     const icons = {
       'Spot Trading':'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>',
@@ -1322,16 +1124,25 @@ function doSearch(){
       'Sign Up':'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
     };
     const icon = icons[o.name]||'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>';
-    const onclick = o.isAction ? o.action==='login'?'openModal(\'loginModal\');closeSearchBtn()' : o.action==='signup'?'openModal(\'signupModal\');closeSearchBtn()' : 'openModal(\'forgotModal\');closeSearchBtn()' : `window.location='${o.href}';closeSearchBtn()`;
+    const onclick = o.isAction
+      ? o.action==='login'?'openModal(\'loginModal\');closeSearchBtn()'
+        :o.action==='signup'?'openModal(\'signupModal\');closeSearchBtn()'
+        :'openModal(\'forgotModal\');closeSearchBtn()'
+      : `window.location='${o.href}';closeSearchBtn()`;
     return `<div class="search-result-item" onclick="${onclick}">
       <div class="result-icon">${icon}</div>
-      <div><div class="result-name">${o.name}</div><div class="result-sub">${o.sub||''}</div></div>
+      <div>
+        <div class="result-name">${o.name}</div>
+        <div class="result-sub">${o.sub||''}</div>
+      </div>
     </div>`;
   }).join('');
 }
 
 // ===== SIDEBAR =====
-function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); }
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+}
 
 // ===== PASS TOGGLE =====
 function togglePass(id, btn){
@@ -1344,10 +1155,12 @@ function togglePass(id, btn){
 }
 
 // ===== ALERTS =====
-function showAlert(id, msg, type='error'){ document.getElementById(id).innerHTML=`<div class="alert alert-${type}">${msg}</div>`; }
+function showAlert(id, msg, type='error'){
+  document.getElementById(id).innerHTML=`<div class="alert alert-${type}">${msg}</div>`;
+}
 function clearAlert(id){ document.getElementById(id).innerHTML=''; }
 
-// ===== LOGIN =====
+// ===== LOGIN (stays on index.html) =====
 async function doLogin(){
   const identifier = document.getElementById('loginId').value.trim();
   const password = document.getElementById('loginPass').value;
@@ -1363,9 +1176,12 @@ async function doLogin(){
     if(data.password!==btoa(password)){showAlert('loginAlert','Incorrect password. Please try again.');btn.disabled=false;btn.innerHTML='Login to Account';return;}
     if(!data.verified){showAlert('loginAlert','Please verify your email first. Check your inbox.');btn.disabled=false;btn.innerHTML='Login to Account';return;}
     sessionStorage.setItem('avicnUser', JSON.stringify(data));
-    currentUser = data;
     closeModal('loginModal');
-    updateHeaderForUser();
+    // Show user tabs, hide guest buttons
+    document.getElementById('guestButtons').style.display='none';
+    document.getElementById('userNavTabs').classList.add('visible');
+    // Stay on index, default to Web Home tab
+    switchTab('webHome');
   }catch(e){
     showAlert('loginAlert','Login failed. Please try again.');
     btn.disabled=false;btn.innerHTML='Login to Account';
@@ -1376,7 +1192,8 @@ async function doLogin(){
 const countries = ["Afghanistan","Albania","Algeria","Andorra","Angola","Argentina","Armenia","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Belarus","Belgium","Belize","Benin","Bhutan","Bolivia","Bosnia","Botswana","Brazil","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Canada","Chad","Chile","China","Colombia","Congo","Costa Rica","Croatia","Cuba","Cyprus","Czech Republic","Denmark","Dominican Republic","Ecuador","Egypt","El Salvador","Estonia","Ethiopia","Fiji","Finland","France","Gabon","Gambia","Georgia","Germany","Ghana","Greece","Guatemala","Guinea","Haiti","Honduras","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Israel","Italy","Jamaica","Japan","Jordan","Kazakhstan","Kenya","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Liberia","Libya","Lithuania","Luxembourg","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Mauritania","Mauritius","Mexico","Moldova","Monaco","Mongolia","Montenegro","Morocco","Mozambique","Myanmar","Namibia","Nepal","Netherlands","New Zealand","Nicaragua","Niger","Nigeria","North Korea","Norway","Oman","Pakistan","Palestine","Panama","Paraguay","Peru","Philippines","Poland","Portugal","Qatar","Romania","Russia","Rwanda","Saudi Arabia","Senegal","Serbia","Sierra Leone","Singapore","Slovakia","Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka","Sudan","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Togo","Trinidad","Tunisia","Turkey","Turkmenistan","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States","Uruguay","Uzbekistan","Venezuela","Vietnam","Yemen","Zambia","Zimbabwe"];
 const sel = document.getElementById('country');
 countries.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;sel.appendChild(o);});
-const maxDob = new Date(); maxDob.setFullYear(maxDob.getFullYear()-18);
+const maxDob = new Date();
+maxDob.setFullYear(maxDob.getFullYear()-18);
 document.getElementById('dob').max = maxDob.toISOString().split('T')[0];
 document.getElementById('dob').min = new Date(new Date().setFullYear(new Date().getFullYear()-100)).toISOString().split('T')[0];
 
@@ -1391,7 +1208,9 @@ async function doSignup(){
   const phone=document.getElementById('phone').value.trim();
   const email=document.getElementById('signupEmail').value.trim().toLowerCase();
   const password=document.getElementById('signupPass').value;
-  if(!firstName||!lastName||!username||!dob||!gender||!country||!phone||!email||!password){showAlert('signupAlert','Please fill in all fields.');return;}
+  if(!firstName||!lastName||!username||!dob||!gender||!country||!phone||!email||!password){
+    showAlert('signupAlert','Please fill in all fields.');return;
+  }
   if(!email.includes('@')){showAlert('signupAlert','Please enter a valid email address.');return;}
   if(password.length<6){showAlert('signupAlert','Password must be at least 6 characters.');return;}
   const dobDate=new Date(dob);
@@ -1445,6 +1264,8 @@ async function doForgot(){
 // ===== TOKEN TABLE =====
 let tokensData = [];
 let livePrices = {};
+// Tokens to hide (from nosupported_js field containing 'website')
+let hiddenOnWebsite = new Set();
 
 async function loadTokens(){
   try{
@@ -1453,11 +1274,11 @@ async function loadTokens(){
       document.getElementById('tokenTableBody').innerHTML='<tr><td colspan="6" style="text-align:center;padding:40px;color:#555;">No tokens listed yet.</td></tr>';
       return;
     }
-    // Filter: exclude tokens where nosupported_js contains 'website'
-    tokensData = data.filter(t => {
-      if(!t.nosupported_js) return true;
-      const ns = (t.nosupported_js||'').toLowerCase().split(',').map(x=>x.trim());
-      return !ns.includes('website');
+    // Filter out tokens where nosupported_js contains 'website'
+    tokensData = data.filter(t=>{
+      const ns = (t.nosupported_js||'').toLowerCase();
+      if(ns.includes('website')){hiddenOnWebsite.add(t.id);return false;}
+      return true;
     });
     renderTokenTable();
     buildMarquee();
@@ -1508,7 +1329,10 @@ async function fetchLiveApiPrice(token){
 async function startPriceUpdates(){
   for(const t of tokensData){
     if(t.is_live_api && t.api_url){
-      const updateApiPrice = async()=>{ const p = await fetchLiveApiPrice(t); if(p!==null) updatePriceCell(t.id, p); };
+      const updateApiPrice = async()=>{
+        const p = await fetchLiveApiPrice(t);
+        if(p!==null) updatePriceCell(t.id, p);
+      };
       updateApiPrice();
       setInterval(updateApiPrice, 1000);
     } else {
@@ -1552,7 +1376,9 @@ function buildMarquee(){
   el.innerHTML = items;
 }
 function updateMarqueeItem(id, price){
-  document.querySelectorAll(`[id^="mqp_${id}_"]`).forEach(el=>{ el.textContent=`$${formatPrice(price)}`; });
+  document.querySelectorAll(`[id^="mqp_${id}_"]`).forEach(el=>{
+    el.textContent=`$${formatPrice(price)}`;
+  });
 }
 
 // ===== FEAT CARD CLICK ANIM =====
@@ -1563,9 +1389,154 @@ function triggerFeatAnim(el){
   el.addEventListener('animationend',()=>el.classList.remove('clicked'),{once:true});
 }
 
+// ===== NEWS CAROUSEL =====
+let newsItems = [];
+let newsCurrentIdx = 0;
+let newsAutoTimer = null;
+
+async function loadNews(){
+  try{
+    const {data,error} = await authSupabase.from('news_control').select('*').order('id');
+    if(error||!data||!data.length){
+      document.getElementById('newsSection').style.display='none';
+      return;
+    }
+    newsItems = data;
+    renderNews();
+    startNewsAuto();
+  }catch(e){
+    document.getElementById('newsSection').style.display='none';
+  }
+}
+
+function renderNews(){
+  const track = document.getElementById('newsTrack');
+  const dots = document.getElementById('newsDots');
+  if(!newsItems.length){
+    document.getElementById('newsSection').style.display='none';
+    return;
+  }
+
+  track.innerHTML = newsItems.map((item,i)=>{
+    let mediaHtml = '';
+    if(item.video_url){
+      mediaHtml = `<video src="${item.video_url}" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;"></video>`;
+    } else if(item.image_url){
+      mediaHtml = `<img src="${item.image_url}" alt="" loading="lazy"/>`;
+    } else if(item.gif_url){
+      mediaHtml = `<img src="${item.gif_url}" alt="" loading="lazy"/>`;
+    }
+
+    const hasMedia = !!(item.video_url || item.image_url || item.gif_url);
+    const platformBtn = item.platform_url && item.platform_name
+      ? `<a class="news-slide-platform" href="${item.platform_url}" target="_blank" rel="noopener">
+           ${item.platform_icon?`<img src="${item.platform_icon}" alt=""/>`:''}
+           <span class="news-slide-platform-name">${item.platform_name}</span>
+           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+         </a>`
+      : '';
+
+    return `<div class="news-slide" data-idx="${i}" data-has-video="${!!item.video_url}" data-duration="${item.video_url?0:5000}">
+      ${hasMedia?`<div class="news-slide-media">${mediaHtml}<div class="news-slide-media-overlay"></div></div>`:''}
+      <div class="news-slide-content">
+        <div class="news-slide-badge"><span class="news-slide-badge-dot"></span>NEWS</div>
+        ${item.title?`<div class="news-slide-title">${item.title}</div>`:''}
+        ${item.description?`<div class="news-slide-desc">${item.description}</div>`:''}
+        ${platformBtn}
+      </div>
+    </div>`;
+  }).join('');
+
+  dots.innerHTML = newsItems.map((_,i)=>
+    `<div class="news-dot${i===0?' active':''}" onclick="goToNews(${i})"></div>`
+  ).join('');
+
+  // Hide prev/next if only one
+  if(newsItems.length<=1){
+    document.getElementById('newsPrev').style.display='none';
+    document.getElementById('newsNext').style.display='none';
+  }
+
+  updateNewsPosition();
+}
+
+function updateNewsPosition(){
+  const track = document.getElementById('newsTrack');
+  track.style.transform = `translateX(-${newsCurrentIdx*100}%)`;
+  document.querySelectorAll('.news-dot').forEach((d,i)=>d.classList.toggle('active',i===newsCurrentIdx));
+}
+
+function newsSlide(dir){
+  clearNewsAuto();
+  newsCurrentIdx = (newsCurrentIdx + dir + newsItems.length) % newsItems.length;
+  updateNewsPosition();
+  startNewsAuto();
+}
+
+function goToNews(idx){
+  clearNewsAuto();
+  newsCurrentIdx = idx;
+  updateNewsPosition();
+  startNewsAuto();
+}
+
+function startNewsAuto(){
+  clearNewsAuto();
+  if(newsItems.length<=1) return;
+  const item = newsItems[newsCurrentIdx];
+  if(item && item.video_url){
+    // For video, advance after video ends or 30s max
+    const vid = document.querySelectorAll('.news-slide')[newsCurrentIdx]?.querySelector('video');
+    if(vid){
+      const onEnd = ()=>{ newsSlide(1); vid.removeEventListener('ended',onEnd); };
+      vid.addEventListener('ended',onEnd);
+      newsAutoTimer = setTimeout(()=>{ newsSlide(1); vid.removeEventListener('ended',onEnd); }, 30000);
+    } else {
+      newsAutoTimer = setTimeout(()=>newsSlide(1), 5000);
+    }
+  } else {
+    newsAutoTimer = setTimeout(()=>newsSlide(1), 5000);
+  }
+}
+
+function clearNewsAuto(){
+  if(newsAutoTimer){ clearTimeout(newsAutoTimer); newsAutoTimer=null; }
+}
+
+// Touch/swipe for news
+let newsTouchStartX = 0;
+document.getElementById('newsTrack').addEventListener('touchstart',e=>{newsTouchStartX=e.touches[0].clientX;},{passive:true});
+document.getElementById('newsTrack').addEventListener('touchend',e=>{
+  const diff = newsTouchStartX - e.changedTouches[0].clientX;
+  if(Math.abs(diff)>40) newsSlide(diff>0?1:-1);
+});
+
+// ===== PLATFORMS SECTION =====
+async function loadPlatforms(){
+  try{
+    const {data,error} = await authSupabase.from('platform_control').select('*').order('id');
+    if(error||!data||!data.length){
+      document.getElementById('platformsSection').style.display='none';
+      return;
+    }
+    const grid = document.getElementById('platformsGrid');
+    grid.innerHTML = data.map(p=>`
+      <a class="platform-card" href="${p.url||'#'}" target="_blank" rel="noopener">
+        <div class="platform-card-icon">
+          ${p.icon_url?`<img src="${p.icon_url}" alt="${p.name||''}"/>`:(p.name||'P')[0]}
+        </div>
+        <span class="platform-card-name">${p.name||''}</span>
+      </a>
+    `).join('');
+  }catch(e){
+    document.getElementById('platformsSection').style.display='none';
+  }
+}
+
 // ===== INIT =====
 loadTokens();
+loadNews();
+loadPlatforms();
 </script>
-
 </body>
 </html>
