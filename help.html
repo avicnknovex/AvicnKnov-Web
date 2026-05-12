@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Help & Support — AvicnKnov</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  --bg: #08080a;
+  --surface: #0f0f12;
+  --surface2: #16161c;
+  --surface3: #1e1e26;
+  --border: #1e1e28;
+  --border2: #2a2a38;
+  --white: #ffffff;
+  --gray: #6b6b80;
+  --gray2: #3a3a4a;
+  --green: #00e676;
+  --red: #ff3b3b;
+  --yellow: #ffd600;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;overflow-x:hidden;}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:#0a0a0a;}
+::-webkit-scrollbar-thumb{background:#2a2a38;border-radius:2px;}
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:9999;opacity:0.35;
+}
+
+/* HEADER */
+header {
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;height:64px;
+  background:rgba(8,8,10,0.94);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.logo {
+  display:flex;align-items:center;gap:10px;text-decoration:none;
+}
+.logo-icon-wrap {
+  width:36px;height:36px;border-radius:9px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.logo-icon {width:32px;height:32px;object-fit:contain;border-radius:7px;}
+.logo-text {font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;color:var(--white);}
+.header-right {display:flex;align-items:center;gap:12px;}
+.btn-back {
+  display:flex;align-items:center;gap:7px;
+  background:none;border:1px solid var(--border2);color:var(--gray);
+  padding:7px 16px;border-radius:8px;font-family:'DM Sans',sans-serif;
+  font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;
+  text-decoration:none;letter-spacing:.5px;text-transform:uppercase;
+}
+.btn-back:hover{border-color:#444;color:var(--white);}
+.btn-back svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;}
+
+/* MY TICKETS BTN */
+.btn-my-tickets {
+  display:flex;align-items:center;gap:8px;
+  background:var(--surface2);border:1px solid var(--border2);
+  color:var(--white);padding:8px 18px;border-radius:8px;
+  font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;
+  cursor:pointer;transition:all .2s;letter-spacing:.3px;
+}
+.btn-my-tickets:hover{background:var(--surface3);border-color:#444;}
+.btn-my-tickets svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;}
+.ticket-count-badge {
+  background:var(--white);color:#000;
+  border-radius:50%;width:18px;height:18px;
+  font-size:10px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* MAIN */
+main {padding-top:64px;min-height:100vh;}
+
+/* HERO */
+.help-hero {
+  padding:72px 40px 48px;
+  text-align:center;position:relative;overflow:hidden;
+}
+.help-hero::before {
+  content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);
+  width:600px;height:400px;
+  background:radial-gradient(ellipse, rgba(255,255,255,0.04) 0%, transparent 70%);
+  pointer-events:none;
+}
+.help-eyebrow {
+  display:inline-flex;align-items:center;gap:7px;
+  font-family:'Space Mono',monospace;font-size:10px;font-weight:700;
+  letter-spacing:3px;text-transform:uppercase;color:var(--gray);
+  border:1px solid var(--border2);border-radius:100px;
+  padding:6px 16px;background:var(--surface2);margin-bottom:24px;
+}
+.help-eyebrow-dot {
+  width:5px;height:5px;border-radius:50%;background:var(--green);
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.help-hero h1 {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(48px,7vw,88px);
+  letter-spacing:4px;line-height:.9;
+  margin-bottom:16px;
+}
+.help-hero h1 span{color:var(--gray2);}
+.help-hero p {
+  font-size:15px;color:var(--gray);max-width:500px;
+  margin:0 auto 16px;line-height:1.7;
+}
+.help-contact-bar {
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--surface2);border:1px solid var(--border2);
+  border-radius:8px;padding:8px 18px;
+  font-size:12px;color:var(--gray);
+  margin-top:8px;
+}
+.help-contact-bar a{color:var(--white);text-decoration:none;font-weight:600;font-family:'Space Mono',monospace;font-size:11px;}
+.help-contact-bar a:hover{text-decoration:underline;}
+.help-contact-bar svg{width:13px;height:13px;stroke:var(--gray);fill:none;stroke-width:2;flex-shrink:0;}
+
+/* SECTION DIVIDER */
+.section-div {
+  display:flex;align-items:center;gap:16px;
+  padding:0 40px;margin:0 0 40px;
+}
+.section-div-line{flex:1;height:1px;background:var(--border);}
+.section-div-label {
+  font-family:'Space Mono',monospace;font-size:10px;font-weight:700;
+  letter-spacing:3px;text-transform:uppercase;color:var(--gray2);white-space:nowrap;
+}
+
+/* TICKET GRID */
+.ticket-grid-section {padding:0 40px 80px;}
+.ticket-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:1px;background:var(--border);
+  border:1px solid var(--border);border-radius:16px;overflow:hidden;
+}
+.ticket-box {
+  background:var(--surface);padding:28px 26px;
+  cursor:pointer;transition:background .2s,transform .15s;
+  position:relative;overflow:hidden;
+  display:flex;flex-direction:column;gap:14px;
+}
+.ticket-box::before {
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 20% 20%,rgba(255,255,255,0.04) 0%,transparent 60%);
+  opacity:0;transition:opacity .25s;
+}
+.ticket-box:hover {background:var(--surface2);}
+.ticket-box:hover::before{opacity:1;}
+.ticket-box:active{transform:scale(.985);}
+.ticket-box.selected {
+  background:var(--surface2);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,0.1);
+}
+.ticket-box-icon {
+  width:46px;height:46px;border-radius:12px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.07);
+  display:flex;align-items:center;justify-content:center;
+  transition:all .25s;flex-shrink:0;
+}
+.ticket-box:hover .ticket-box-icon {
+  background:rgba(255,255,255,0.08);
+  border-color:rgba(255,255,255,0.15);
+  transform:scale(1.08);
+}
+.ticket-box-icon svg {width:20px;height:20px;stroke:var(--white);stroke-width:1.5;fill:none;}
+.ticket-box-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:18px;letter-spacing:2px;color:var(--white);
+  line-height:1.1;
+}
+.ticket-box-desc {
+  font-size:12px;color:var(--gray);line-height:1.7;
+  flex:1;
+}
+.ticket-box-arrow {
+  display:flex;align-items:center;gap:6px;
+  font-family:'Space Mono',monospace;font-size:9px;
+  font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--gray2);margin-top:4px;
+  transition:color .2s,gap .2s;
+}
+.ticket-box-arrow svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.5;}
+.ticket-box:hover .ticket-box-arrow{color:var(--white);gap:10px;}
+
+/* SELECTED TICKET HEADER */
+.selected-ticket-bar {
+  display:none;
+  align-items:center;justify-content:space-between;
+  padding:18px 40px;
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  flex-wrap:wrap;gap:12px;
+}
+.selected-ticket-bar.visible{display:flex;}
+.selected-ticket-info {display:flex;align-items:center;gap:14px;}
+.selected-ticket-icon {
+  width:40px;height:40px;border-radius:10px;
+  background:rgba(255,255,255,0.06);
+  border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.selected-ticket-icon svg{width:18px;height:18px;stroke:var(--white);stroke-width:1.5;fill:none;}
+.selected-ticket-label {
+  font-family:'Space Mono',monospace;font-size:9px;
+  font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--gray);margin-bottom:3px;
+}
+.selected-ticket-name {
+  font-family:'Bebas Neue',sans-serif;font-size:18px;
+  letter-spacing:2px;color:var(--white);
+}
+.btn-cancel-ticket {
+  display:flex;align-items:center;gap:6px;
+  background:none;border:1px solid var(--border2);
+  color:var(--gray);padding:8px 16px;border-radius:8px;
+  font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;
+  cursor:pointer;transition:all .2s;letter-spacing:.3px;
+}
+.btn-cancel-ticket:hover{border-color:var(--red);color:var(--red);}
+.btn-cancel-ticket svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.5;}
+
+/* FORM SECTION */
+.form-section {
+  display:none;
+  padding:40px;
+  max-width:720px;margin:0 auto;
+}
+.form-section.visible{display:block;}
+.form-section-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:26px;letter-spacing:3px;margin-bottom:6px;
+}
+.form-section-sub {font-size:13px;color:var(--gray);margin-bottom:32px;line-height:1.6;}
+
+.form-card {
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:16px;padding:32px;
+  display:flex;flex-direction:column;gap:18px;
+}
+.form-row {display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.form-group{display:flex;flex-direction:column;gap:7px;}
+.form-label {
+  font-family:'Space Mono',monospace;font-size:10px;font-weight:700;
+  letter-spacing:1.5px;text-transform:uppercase;color:var(--gray);
+}
+.form-control {
+  background:var(--surface2);border:1px solid var(--border2);
+  border-radius:10px;padding:12px 16px;color:var(--white);
+  font-family:'DM Sans',sans-serif;font-size:14px;outline:none;
+  transition:border-color .2s,box-shadow .2s;width:100%;
+}
+.form-control:focus{border-color:#444;box-shadow:0 0 0 3px rgba(255,255,255,.04);}
+.form-control::placeholder{color:var(--gray2);}
+textarea.form-control{resize:vertical;min-height:100px;}
+select.form-control option{background:#16161c;}
+
+/* SCREENSHOT TOGGLE */
+.screenshot-toggle-wrap {
+  display:flex;flex-direction:column;gap:12px;
+}
+.screenshot-question {
+  font-size:13px;color:var(--gray);margin-bottom:4px;
+}
+.toggle-options {display:flex;gap:8px;}
+.toggle-opt {
+  display:flex;align-items:center;gap:7px;
+  padding:9px 18px;border-radius:8px;
+  border:1px solid var(--border2);background:var(--surface2);
+  cursor:pointer;transition:all .2s;
+  font-size:13px;font-weight:600;color:var(--gray);
+}
+.toggle-opt.active{border-color:var(--white);color:var(--white);background:rgba(255,255,255,0.06);}
+.toggle-opt svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;}
+.screenshot-upload-area {
+  display:none;
+  border:1px dashed var(--border2);border-radius:10px;
+  padding:28px;text-align:center;cursor:pointer;
+  transition:all .2s;
+  flex-direction:column;align-items:center;gap:10px;
+}
+.screenshot-upload-area.visible{display:flex;}
+.screenshot-upload-area:hover{border-color:#444;background:rgba(255,255,255,.02);}
+.screenshot-upload-area svg{width:28px;height:28px;stroke:var(--gray2);fill:none;stroke-width:1.5;}
+.screenshot-upload-area p{font-size:12px;color:var(--gray2);}
+.screenshot-preview {
+  display:none;
+  max-width:100%;max-height:200px;
+  border-radius:8px;border:1px solid var(--border2);
+  object-fit:contain;
+}
+.screenshot-preview.visible{display:block;}
+#screenshotFileInput{display:none;}
+.screenshot-file-name {
+  font-family:'Space Mono',monospace;font-size:10px;
+  color:var(--green);margin-top:4px;
+}
+
+/* SUBMIT BTN */
+.btn-submit-ticket {
+  width:100%;padding:15px;background:var(--white);color:#000;
+  border:none;border-radius:10px;font-family:'DM Sans',sans-serif;
+  font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;
+  letter-spacing:.5px;display:flex;align-items:center;justify-content:center;gap:8px;
+  margin-top:6px;
+}
+.btn-submit-ticket:hover{background:#e8e8e8;transform:translateY(-1px);}
+.btn-submit-ticket:active{transform:translateY(0);}
+.btn-submit-ticket:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+.btn-submit-ticket svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.5;}
+.spinner-sm{
+  width:15px;height:15px;border:2px solid rgba(0,0,0,.2);
+  border-top-color:#000;border-radius:50%;
+  animation:spin .5s linear infinite;flex-shrink:0;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ALERT */
+.form-alert{
+  padding:12px 16px;border-radius:8px;font-size:13px;
+  border:1px solid transparent;line-height:1.5;
+}
+.alert-error{background:rgba(255,59,59,.08);border-color:rgba(255,59,59,.2);color:#ff6b6b;}
+.alert-success{background:rgba(0,230,118,.08);border-color:rgba(0,230,118,.2);color:var(--green);}
+
+/* FOOTER CONTACT */
+.help-footer-contact {
+  padding:60px 40px 80px;
+  text-align:center;
+  border-top:1px solid var(--border);
+}
+.hfc-title {
+  font-family:'Bebas Neue',sans-serif;font-size:28px;
+  letter-spacing:3px;margin-bottom:10px;
+}
+.hfc-desc {font-size:13px;color:var(--gray);max-width:460px;margin:0 auto 24px;line-height:1.7;}
+.hfc-email-btn {
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--surface);border:1px solid var(--border2);
+  border-radius:10px;padding:14px 28px;
+  text-decoration:none;color:var(--white);
+  font-size:14px;font-weight:600;
+  transition:all .25s;
+}
+.hfc-email-btn:hover{background:var(--surface2);border-color:#444;transform:translateY(-2px);}
+.hfc-email-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;flex-shrink:0;}
+
+/* ====== MY TICKETS PANEL (OVERLAY) ====== */
+.my-tickets-overlay {
+  position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,0,.75);backdrop-filter:blur(10px);
+  opacity:0;pointer-events:none;transition:opacity .25s;
+}
+.my-tickets-overlay.open{opacity:1;pointer-events:all;}
+.my-tickets-panel {
+  position:absolute;right:0;top:0;bottom:0;width:min(480px,100vw);
+  background:var(--surface);border-left:1px solid var(--border);
+  display:flex;flex-direction:column;
+  transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);
+  overflow:hidden;
+}
+.my-tickets-overlay.open .my-tickets-panel{transform:translateX(0);}
+.my-tickets-panel-header {
+  padding:24px 24px 0;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--border);padding-bottom:18px;
+  flex-shrink:0;
+}
+.panel-title {font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;}
+.panel-close {
+  width:32px;height:32px;border-radius:8px;
+  background:var(--surface2);border:1px solid var(--border2);
+  color:var(--gray);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;font-size:14px;
+}
+.panel-close:hover{background:var(--surface3);color:var(--white);}
+.my-tickets-list {flex:1;overflow-y:auto;padding:16px;}
+.my-ticket-item {
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:12px;padding:18px 20px;margin-bottom:10px;
+  cursor:pointer;transition:all .2s;
+}
+.my-ticket-item:hover{border-color:var(--border2);background:var(--surface3);}
+.mti-top {display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px;}
+.mti-type {
+  font-family:'Space Mono',monospace;font-size:9px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;color:var(--gray);margin-bottom:4px;
+}
+.mti-title {font-weight:600;font-size:14px;}
+.mti-status {
+  font-family:'Space Mono',monospace;font-size:9px;font-weight:700;
+  letter-spacing:1.5px;text-transform:uppercase;padding:4px 9px;
+  border-radius:5px;flex-shrink:0;
+}
+.status-pending{background:rgba(255,214,0,.08);border:1px solid rgba(255,214,0,.2);color:var(--yellow);}
+.status-replied{background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.2);color:var(--green);}
+.status-rejected{background:rgba(255,59,59,.08);border:1px solid rgba(255,59,59,.2);color:var(--red);}
+.mti-meta {
+  font-size:11px;color:var(--gray2);
+  font-family:'Space Mono',monospace;
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+}
+.mti-reply {
+  margin-top:12px;padding:12px 14px;
+  background:var(--bg);border:1px solid var(--border);
+  border-radius:8px;font-size:12px;color:var(--gray);line-height:1.6;
+}
+.mti-reply-label {
+  font-family:'Space Mono',monospace;font-size:9px;font-weight:700;
+  letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--green);margin-bottom:6px;
+}
+.mti-reply-img {
+  max-width:100%;border-radius:6px;margin-top:8px;
+  border:1px solid var(--border);display:block;
+}
+.mti-platform-links {
+  display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;
+}
+.mti-platform-link {
+  display:flex;align-items:center;gap:6px;
+  background:var(--surface2);border:1px solid var(--border2);
+  border-radius:7px;padding:6px 12px;
+  text-decoration:none;color:var(--white);font-size:12px;font-weight:600;
+  transition:all .2s;
+}
+.mti-platform-link:hover{background:var(--surface3);border-color:#444;}
+.mti-platform-link svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2;}
+.no-tickets-msg {
+  text-align:center;padding:60px 20px;color:var(--gray2);font-size:13px;
+}
+.no-tickets-msg svg{display:block;margin:0 auto 12px;width:32px;height:32px;stroke:var(--gray2);fill:none;stroke-width:1.5;}
+
+/* ====== ADMIN PANEL (WEB_HELP TABLE) ====== */
+.admin-panel-wrap {
+  padding:40px;
+}
+.admin-section-header {
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:28px;flex-wrap:wrap;gap:12px;
+}
+.admin-title {
+  font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:3px;
+}
+.admin-table-wrap {
+  overflow-x:auto;border-radius:12px;
+  border:1px solid var(--border);background:var(--surface);
+}
+.admin-table {width:100%;border-collapse:collapse;}
+.admin-table th {
+  font-family:'Space Mono',monospace;font-size:9px;
+  text-transform:uppercase;letter-spacing:1.5px;color:var(--gray2);
+  padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);
+  white-space:nowrap;
+}
+.admin-table td {
+  padding:13px 16px;border-bottom:1px solid var(--border);
+  font-size:13px;vertical-align:top;
+}
+.admin-table tbody tr:last-child td{border-bottom:none;}
+.admin-table tbody tr:hover{background:var(--surface2);}
+.admin-row-expand {cursor:pointer;}
+.admin-expand-area {
+  display:none;padding:20px;
+  background:var(--surface2);border-top:1px solid var(--border);
+}
+.admin-expand-area.open{display:block;}
+.admin-info-grid {
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:12px;margin-bottom:16px;
+}
+.admin-info-cell {
+  background:var(--bg);border:1px solid var(--border);
+  border-radius:8px;padding:10px 14px;
+}
+.admin-info-key {
+  font-family:'Space Mono',monospace;font-size:9px;
+  letter-spacing:1.5px;text-transform:uppercase;color:var(--gray2);margin-bottom:4px;
+}
+.admin-info-val {font-size:12px;color:var(--white);word-break:break-all;}
+.admin-screenshot {
+  max-width:220px;border-radius:8px;border:1px solid var(--border);
+  margin-top:8px;cursor:pointer;transition:opacity .2s;
+}
+.admin-screenshot:hover{opacity:.8;}
+.admin-reply-area {
+  display:flex;flex-direction:column;gap:10px;margin-top:14px;
+}
+.admin-reply-label {
+  font-family:'Space Mono',monospace;font-size:10px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;color:var(--gray);margin-bottom:4px;
+}
+.admin-reply-input {
+  width:100%;background:var(--bg);border:1px solid var(--border2);
+  border-radius:8px;padding:11px 14px;color:var(--white);
+  font-family:'DM Sans',sans-serif;font-size:13px;outline:none;
+  resize:vertical;min-height:80px;transition:border-color .2s;
+}
+.admin-reply-input:focus{border-color:#444;}
+.admin-reply-input::placeholder{color:var(--gray2);}
+.admin-controls {
+  display:flex;gap:8px;flex-wrap:wrap;align-items:center;
+}
+.admin-status-select {
+  background:var(--bg);border:1px solid var(--border2);
+  border-radius:7px;padding:8px 12px;color:var(--white);
+  font-family:'Space Mono',monospace;font-size:10px;
+  letter-spacing:1px;outline:none;cursor:pointer;
+}
+.admin-status-select option{background:#0f0f12;}
+.btn-admin-reply {
+  padding:8px 18px;background:var(--white);color:#000;
+  border:none;border-radius:8px;font-family:'DM Sans',sans-serif;
+  font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;
+}
+.btn-admin-reply:hover{background:#e8e8e8;}
+.btn-admin-reply:disabled{opacity:.5;cursor:not-allowed;}
+/* Platform add */
+.admin-platform-add {
+  display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;
+}
+.admin-platform-input {
+  flex:1;min-width:140px;background:var(--bg);
+  border:1px solid var(--border2);border-radius:7px;
+  padding:8px 12px;color:var(--white);font-family:'DM Sans',sans-serif;
+  font-size:12px;outline:none;
+}
+.admin-platform-input:focus{border-color:#444;}
+.admin-platform-input::placeholder{color:var(--gray2);}
+.btn-add-platform {
+  padding:8px 14px;background:var(--surface2);border:1px solid var(--border2);
+  color:var(--white);border-radius:7px;font-size:12px;font-weight:600;
+  cursor:pointer;transition:all .2s;white-space:nowrap;
+}
+.btn-add-platform:hover{background:var(--surface3);}
+/* Given image */
+.admin-given-image {
+  max-width:160px;max-height:100px;
+  border-radius:6px;border:1px solid var(--border);
+  object-fit:cover;cursor:pointer;
+  transition:opacity .2s;
+}
+.admin-given-image:hover{opacity:.8;}
+.given-image-label {
+  font-family:'Space Mono',monospace;font-size:9px;
+  letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--gray2);margin-bottom:6px;margin-top:12px;
+}
+.given-image-upload-btn {
+  display:inline-flex;align-items:center;gap:6px;
+  padding:7px 14px;background:var(--surface2);
+  border:1px solid var(--border2);border-radius:7px;
+  color:var(--gray);font-size:12px;font-weight:600;
+  cursor:pointer;transition:all .2s;
+}
+.given-image-upload-btn:hover{color:var(--white);border-color:#444;}
+.given-image-upload-btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;}
+
+/* LIGHTBOX */
+.lightbox {
+  position:fixed;inset:0;z-index:500;
+  background:rgba(0,0,0,.92);backdrop-filter:blur(8px);
+  display:none;align-items:center;justify-content:center;cursor:pointer;
+}
+.lightbox.open{display:flex;}
+.lightbox img{max-width:90vw;max-height:90vh;border-radius:8px;object-fit:contain;}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .ticket-grid{grid-template-columns:1fr 1fr;}
+  .form-row{grid-template-columns:1fr;}
+  .ticket-grid-section,.form-section,.admin-panel-wrap{padding:20px;}
+  .section-div{padding:0 20px;}
+  .help-hero{padding:60px 20px 36px;}
+  header{padding:0 16px;}
+}
+@media(max-width:480px){
+  .ticket-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <a class="logo" href="index.html">
+    <div class="logo-icon-wrap">
+      <img class="logo-icon" src="https://kjxnbofpwfvheuzmeynd.supabase.co/storage/v1/object/public/avicnknov/1774528165689.png" alt="AvicnKnov" onerror="this.style.display='none'"/>
+    </div>
+    <span class="logo-text">AvicnKnov</span>
+  </a>
+  <div class="header-right">
+    <a class="btn-back" href="index.html">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      Back
+    </a>
+    <button class="btn-my-tickets" onclick="openMyTickets()">
+      <svg viewBox="0 0 24 24"><path d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 0 0-2 2v3a2 2 0 0 1 0 4v3a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-3a2 2 0 0 1 0-4V7a2 2 0 0 0-2-2H5z"/></svg>
+      My Tickets
+      <span class="ticket-count-badge" id="ticketCountBadge">0</span>
+    </button>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main>
+
+  <!-- HERO -->
+  <div class="help-hero">
+    <div class="help-eyebrow">
+      <span class="help-eyebrow-dot"></span>
+      Help & Support Center
+    </div>
+    <h1>HOW CAN WE<br/><span>HELP YOU</span></h1>
+    <p>Select a support category below and submit a ticket. Our team will review your request and respond as quickly as possible — usually within 24 hours.</p>
+    <div class="help-contact-bar">
+      <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      Or reach us directly at &nbsp;<a href="mailto:help.avicnkvonteam@gmail.com">help.avicnkvonteam@gmail.com</a>
+    </div>
+  </div>
+
+  <!-- SELECTED TICKET BAR -->
+  <div class="selected-ticket-bar" id="selectedTicketBar">
+    <div class="selected-ticket-info">
+      <div class="selected-ticket-icon" id="selectedTicketIcon"></div>
+      <div>
+        <div class="selected-ticket-label">Selected Category</div>
+        <div class="selected-ticket-name" id="selectedTicketName">—</div>
+      </div>
+    </div>
+    <button class="btn-cancel-ticket" onclick="cancelTicketSelection()">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      Cancel Selection
+    </button>
+  </div>
+
+  <!-- SECTION DIV -->
+  <div class="section-div" id="mainSectionDiv">
+    <div class="section-div-line"></div>
+    <div class="section-div-label">Choose Support Category</div>
+    <div class="section-div-line"></div>
+  </div>
+
+  <!-- TICKET GRID -->
+  <div class="ticket-grid-section" id="ticketGridSection">
+    <div class="ticket-grid" id="ticketGrid">
+      <!-- Filled by JS -->
+    </div>
+  </div>
+
+  <!-- FORM SECTION -->
+  <div class="form-section" id="formSection">
+    <div class="form-section-title">Submit Your Ticket</div>
+    <div class="form-section-sub" id="formSectionSub">Fill in the details below and our support team will get back to you shortly.</div>
+    <div id="formAlert"></div>
+    <div class="form-card">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input type="text" class="form-control" id="fFullName" placeholder="Your full name"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Country</label>
+          <select class="form-control" id="fCountry">
+            <option value="">Select Country</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Contact Email (Gmail)</label>
+          <input type="email" class="form-control" id="fEmail" placeholder="yourname@gmail.com"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Web / Platform ID</label>
+          <input type="text" class="form-control" id="fWebId" placeholder="Your AvicnKnov username / ID"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Phone Number</label>
+        <input type="tel" class="form-control" id="fPhone" placeholder="+1 234 567 8900"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Problem Title</label>
+        <input type="text" class="form-control" id="fProblemTitle" placeholder="Brief title of your issue"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Problem Description</label>
+        <textarea class="form-control" id="fDescription" placeholder="Describe your issue in detail. Include any relevant context, error messages, or steps to reproduce the problem..."></textarea>
+      </div>
+
+      <!-- Screenshot Toggle -->
+      <div class="screenshot-toggle-wrap">
+        <div class="screenshot-question">Do you want to attach a screenshot?</div>
+        <div class="toggle-options">
+          <div class="toggle-opt" id="toggleNo" onclick="setScreenshot(false)">
+            <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            No
+          </div>
+          <div class="toggle-opt" id="toggleYes" onclick="setScreenshot(true)">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            Yes
+          </div>
+        </div>
+        <div class="screenshot-upload-area" id="screenshotUploadArea" onclick="document.getElementById('screenshotFileInput').click()">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <p>Click to select a screenshot (PNG, JPG, WEBP)</p>
+          <span class="screenshot-file-name" id="screenshotFileName"></span>
+        </div>
+        <img class="screenshot-preview" id="screenshotPreview" alt="Preview"/>
+        <input type="file" id="screenshotFileInput" accept="image/*" onchange="handleScreenshotSelect(event)"/>
+      </div>
+
+      <button class="btn-submit-ticket" id="submitTicketBtn" onclick="submitTicket()">
+        <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        Submit Ticket
+      </button>
+    </div>
+  </div>
+
+  <!-- FOOTER CONTACT -->
+  <div class="help-footer-contact" id="helpFooterContact">
+    <div class="hfc-title">STILL NEED HELP?</div>
+    <div class="hfc-desc">If you cannot find the right category or prefer to reach out directly, our team is always available via email. We respond to all inquiries within 24 hours, typically much faster.</div>
+    <a class="hfc-email-btn" href="mailto:help.avicnkvonteam@gmail.com">
+      <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      help.avicnkvonteam@gmail.com
+    </a>
+  </div>
+
+</main>
+
+<!-- MY TICKETS OVERLAY -->
+<div class="my-tickets-overlay" id="myTicketsOverlay" onclick="closeMyTickets(event)">
+  <div class="my-tickets-panel">
+    <div class="my-tickets-panel-header">
+      <div class="panel-title">MY TICKETS</div>
+      <div class="panel-close" onclick="closeMyTickets(null,true)">✕</div>
+    </div>
+    <div class="my-tickets-list" id="myTicketsList">
+      <div class="no-tickets-msg">
+        <svg viewBox="0 0 24 24"><path d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 0 0-2 2v3a2 2 0 0 1 0 4v3a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-3a2 2 0 0 1 0-4V7a2 2 0 0 0-2-2H5z"/></svg>
+        No tickets submitted yet.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <img id="lightboxImg" src="" alt=""/>
+</div>
+
+<script>
+// ===== SUPABASE INIT =====
+const { createClient } = supabase;
+const sb = createClient(
+  'https://kjxnbofpwfvheuzmeynd.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqeG5ib2Zwd2Z2aGV1em1leW5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxODUxMTEsImV4cCI6MjA5Mjc2MTExMX0.OBVQFJCWUJh5gTx0Nk8E7EMZEprRNq1L-jCTRFJRbOo'
+);
+
+// ===== TICKET CATEGORIES =====
+const ticketCategories = [
+  {
+    id: 'account_problem',
+    title: 'Account Problem',
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`,
+    desc: 'Experiencing issues with your AvicnKnov account? This category covers login failures, account lockouts, two-factor authentication problems, email verification issues, profile update errors, account suspension queries, and any identity-related concerns. If you cannot access your account, have noticed unauthorized activity, or are facing issues with your account settings or personal information, submit a ticket here. Our account security and management team reviews these requests with priority. Please include as much detail as possible, including the email or phone number associated with your account, the exact error message you are receiving, and the approximate time the issue began. Account recovery requests are handled with strict identity verification protocols to ensure the security of your assets and information.'
+  },
+  {
+    id: 'trading_problem',
+    title: 'Trading Problem',
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>`,
+    desc: 'Having trouble executing trades, experiencing unexpected order rejections, or noticing discrepancies in your trade history? This category handles all trading-related issues including order not filling, unexpected cancellations, incorrect price executions, margin call queries, liquidation disputes, trading pair unavailability, and API trading errors. If your order is stuck in a pending state, if you experienced slippage beyond expected parameters, or if a trade appears to have executed at an incorrect price, our trading operations team will investigate thoroughly. Please include the order ID or transaction hash, the asset pair, the time of the incident, and screenshots of the issue if available. Trading disputes are reviewed against our system logs to provide accurate and fair resolutions.'
+  },
+  {
+    id: 'future_plans',
+    title: 'Future Plans & Suggestions',
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`,
+    desc: 'Have an idea that could make AvicnKnov better? Want to suggest a new feature, trading pair listing, or platform improvement? This is the right place. We genuinely value community input as a core driver of our product roadmap. Whether you want to propose a new token listing, suggest an improvement to the trading interface, recommend a new analytics feature, or share feedback about any aspect of the platform, our product team reads every single submission. Great ideas submitted here have directly influenced our development priorities. Please be as specific as possible — detailed, well-reasoned suggestions are more likely to be prioritized. Include mockups or references if you have them. Your voice shapes the future of AvicnKnov.'
+  },
+  {
+    id: 'deposit_withdrawal',
+    title: 'Deposit & Withdrawal',
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`,
+    desc: 'Is a deposit not reflecting in your account? Has a withdrawal been delayed beyond the expected timeframe? This category covers all fund movement issues including failed deposits, missing withdrawals, incorrect transaction amounts, blockchain confirmation delays, wallet address issues, fiat on-ramp and off-ramp problems, and fee disputes related to transfers. Please provide the transaction ID or hash, the amount involved, the blockchain network used, the wallet address you sent to or received from, and the date and time of the transaction. Our finance team investigates all fund movement discrepancies with blockchain-level verification. Note that some network delays are outside our control but we will provide complete transparency on every case submitted through this channel.'
+  },
+  {
+    id: 'security_concern',
+    title: 'Security Concern',
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
+    desc: 'Have you noticed suspicious activity on your account, received a phishing email claiming to be from AvicnKnov, or discovered a potential security vulnerability in our platform? Security reports are treated with the highest priority in our organization. Whether you are reporting an unauthorized login attempt, a suspicious transaction you did not authorize, a potential bug that could be exploited, or social engineering attempts targeting AvicnKnov users, our security team will respond with urgency. Responsible vulnerability disclosure is rewarded — if you have discovered a genuine security flaw, submit it here and we will acknowledge and address it appropriately. Do not share sensitive vulnerability details publicly before contacting us. Your security report helps protect the entire AvicnKnov community.'
+  },
+  {
+    id: 'kyc_verification',
+    title: 'KYC & Verification',
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>`,
+    desc: 'Facing delays or rejections with your identity verification process? This category covers all KYC-related issues including document upload failures, verification pending for an extended period, identity documents rejected with unclear reasons, address verification problems, enhanced due diligence requests, and account tier upgrade queries. Our compliance team handles all KYC tickets with strict data protection protocols. When submitting, please specify exactly which step of the verification process you are stuck on, what document type you attempted to submit, and any error message displayed. Do not include sensitive document images in this form — our team may request them separately through a secure channel. Verification processing times vary by volume but we prioritize tickets from users experiencing unusual delays.'
+  },
+  {
+    id: 'api_technical',
+    title: 'API & Technical Issue',
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>`,
+    desc: 'Are you a developer experiencing issues with the AvicnKnov API? This category is for API connectivity problems, authentication failures, rate limit queries, WebSocket disconnection issues, SDK bugs, endpoint errors, and data feed discrepancies. Please include the API endpoint you were calling, the HTTP method, the exact error response received, your programming language and SDK version, and whether the issue is intermittent or consistent. For WebSocket issues include the stream name and the error code if available. Our API engineering team triages technical issues based on severity and reproduction consistency. If you have a reproducible test case, please include the minimal code example. We take API reliability seriously and all verified bugs are escalated to our engineering team within hours of confirmation.'
+  },
+  {
+    id: 'fees_billing',
+    title: 'Fees & Billing',
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>`,
+    desc: 'Have questions about trading fees, withdrawal fees, or believe you have been charged incorrectly? This category covers fee structure queries, unexpected charges, VIP tier eligibility, rebate program questions, referral commission disputes, and billing-related concerns. Our fee schedule is published transparently in our documentation, but if you believe a fee was applied incorrectly or if you qualify for a reduced fee tier that has not been applied to your account, submit a ticket here with the specific transactions in question. Please include transaction IDs, the dates in question, and a calculation of what you believe you should have been charged. Our billing team will reconcile against our system records and provide a detailed breakdown. Legitimate fee discrepancies will be corrected and credited to your account.'
+  },
+  {
+    id: 'token_listing',
+    title: 'Token Listing Request',
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>`,
+    desc: 'Want to request the listing of a specific token or trading pair on AvicnKnov? We welcome listing requests from both community members and project teams. To increase the chances of your request being considered, please provide the token name, ticker symbol, smart contract address with blockchain network, current market capitalization, daily trading volume across existing venues, the project website and official social channels, a brief description of the project\'s utility and technology, and why you believe this asset would be valuable to the AvicnKnov trading community. Token listing decisions are made by our listing committee based on liquidity, security audit status, regulatory compliance, community demand, and technical compatibility with our exchange infrastructure. All listing requests receive a formal review, though listing approval is not guaranteed.'
+  },
+  {
+    id: 'other',
+    title: 'Other',
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
+    desc: 'Cannot find the right category for your issue? Use this option for any support request that does not fit the specific categories listed above. This includes general platform feedback, partnership inquiries, press and media requests, legal and compliance questions, accessibility accommodation requests, bulk account management for business users, educational resource requests, and anything else that does not have a dedicated channel. Our support team will review your submission and route it to the appropriate department within our organization. When using this category, please be as descriptive as possible about the nature of your request so we can direct it to the right team quickly. We aim to respond to all ticket types within 24 hours, with more complex organizational queries typically handled within 48-72 hours.'
+  }
+];
+
+// ===== STATE =====
+let selectedCategory = null;
+let screenshotWanted = false;
+let selectedScreenshotFile = null;
+let myTicketsLocal = JSON.parse(localStorage.getItem('avicnHelpTickets') || '[]');
+
+// ===== COUNTRIES =====
+const countryList = ["Afghanistan","Albania","Algeria","Andorra","Angola","Argentina","Armenia","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Belarus","Belgium","Belize","Benin","Bhutan","Bolivia","Bosnia","Botswana","Brazil","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Canada","Chad","Chile","China","Colombia","Congo","Costa Rica","Croatia","Cuba","Cyprus","Czech Republic","Denmark","Dominican Republic","Ecuador","Egypt","El Salvador","Estonia","Ethiopia","Fiji","Finland","France","Gabon","Gambia","Georgia","Germany","Ghana","Greece","Guatemala","Guinea","Haiti","Honduras","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Israel","Italy","Jamaica","Japan","Jordan","Kazakhstan","Kenya","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Liberia","Libya","Lithuania","Luxembourg","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Mauritania","Mauritius","Mexico","Moldova","Monaco","Mongolia","Montenegro","Morocco","Mozambique","Myanmar","Namibia","Nepal","Netherlands","New Zealand","Nicaragua","Niger","Nigeria","North Korea","Norway","Oman","Pakistan","Palestine","Panama","Paraguay","Peru","Philippines","Poland","Portugal","Qatar","Romania","Russia","Rwanda","Saudi Arabia","Senegal","Serbia","Sierra Leone","Singapore","Slovakia","Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka","Sudan","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Togo","Trinidad","Tunisia","Turkey","Turkmenistan","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States","Uruguay","Uzbekistan","Venezuela","Vietnam","Yemen","Zambia","Zimbabwe"];
+const csel = document.getElementById('fCountry');
+countryList.forEach(c=>{ const o=document.createElement('option'); o.value=c; o.textContent=c; csel.appendChild(o); });
+
+// ===== RENDER TICKET GRID =====
+function renderTicketGrid() {
+  const grid = document.getElementById('ticketGrid');
+  grid.innerHTML = ticketCategories.map(cat => `
+    <div class="ticket-box" id="tbox_${cat.id}" onclick="selectTicket('${cat.id}')">
+      <div class="ticket-box-icon">${cat.icon}</div>
+      <div class="ticket-box-title">${cat.title}</div>
+      <div class="ticket-box-desc">${cat.desc.substring(0,120)}...</div>
+      <div class="ticket-box-arrow">
+        Select Category
+        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ===== SELECT TICKET =====
+function selectTicket(catId) {
+  selectedCategory = ticketCategories.find(c => c.id === catId);
+  if(!selectedCategory) return;
+
+  // Update all boxes
+  document.querySelectorAll('.ticket-box').forEach(b => b.classList.remove('selected'));
+  document.getElementById('tbox_' + catId)?.classList.add('selected');
+
+  // Show selected bar
+  document.getElementById('selectedTicketIcon').innerHTML = selectedCategory.icon;
+  document.getElementById('selectedTicketName').textContent = selectedCategory.title;
+  document.getElementById('selectedTicketBar').classList.add('visible');
+
+  // Show form
+  document.getElementById('formSectionSub').textContent = selectedCategory.desc.substring(0,200) + '...';
+  document.getElementById('formSection').classList.add('visible');
+
+  // Scroll to form
+  setTimeout(() => {
+    document.getElementById('formSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 100);
+}
+
+// ===== CANCEL SELECTION =====
+function cancelTicketSelection() {
+  selectedCategory = null;
+  document.querySelectorAll('.ticket-box').forEach(b => b.classList.remove('selected'));
+  document.getElementById('selectedTicketBar').classList.remove('visible');
+  document.getElementById('formSection').classList.remove('visible');
+  document.getElementById('formAlert').innerHTML = '';
+  resetForm();
+  document.getElementById('ticketGridSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ===== SCREENSHOT TOGGLE =====
+function setScreenshot(val) {
+  screenshotWanted = val;
+  document.getElementById('toggleYes').classList.toggle('active', val);
+  document.getElementById('toggleNo').classList.toggle('active', !val);
+  const area = document.getElementById('screenshotUploadArea');
+  if(val) {
+    area.classList.add('visible');
+  } else {
+    area.classList.remove('visible');
+    document.getElementById('screenshotPreview').classList.remove('visible');
+    document.getElementById('screenshotFileName').textContent = '';
+    selectedScreenshotFile = null;
+  }
+}
+
+function handleScreenshotSelect(e) {
+  const file = e.target.files[0];
+  if(!file) return;
+  selectedScreenshotFile = file;
+  document.getElementById('screenshotFileName').textContent = file.name;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const img = document.getElementById('screenshotPreview');
+    img.src = ev.target.result;
+    img.classList.add('visible');
+  };
+  reader.readAsDataURL(file);
+}
+
+// ===== SUBMIT TICKET =====
+async function submitTicket() {
+  if(!selectedCategory) { showFormAlert('Please select a support category first.','error'); return; }
+  const fullName = document.getElementById('fFullName').value.trim();
+  const country = document.getElementById('fCountry').value;
+  const email = document.getElementById('fEmail').value.trim().toLowerCase();
+  const webId = document.getElementById('fWebId').value.trim();
+  const phone = document.getElementById('fPhone').value.trim();
+  const problemTitle = document.getElementById('fProblemTitle').value.trim();
+  const description = document.getElementById('fDescription').value.trim();
+
+  if(!fullName||!country||!email||!phone||!problemTitle||!description) {
+    showFormAlert('Please fill in all required fields.','error'); return;
+  }
+  if(!email.includes('@')) { showFormAlert('Please enter a valid email address.','error'); return; }
+
+  const btn = document.getElementById('submitTicketBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner-sm"></div> Submitting...';
+
+  try {
+    let screenshotUrl = null;
+
+    // Upload screenshot if provided
+    if(screenshotWanted && selectedScreenshotFile) {
+      const ext = selectedScreenshotFile.name.split('.').pop();
+      const fileName = `ticket_${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+      const { data: uploadData, error: uploadError } = await sb.storage
+        .from('help_image')
+        .upload(fileName, selectedScreenshotFile, { upsert: false });
+      if(uploadError) {
+        console.warn('Screenshot upload failed:', uploadError.message);
+      } else {
+        const { data: urlData } = sb.storage.from('help_image').getPublicUrl(fileName);
+        screenshotUrl = urlData?.publicUrl || null;
+      }
+    }
+
+    const ticketPayload = {
+      category_id: selectedCategory.id,
+      category_title: selectedCategory.title,
+      full_name: fullName,
+      country,
+      email,
+      web_id: webId,
+      phone,
+      problem_title: problemTitle,
+      description,
+      screenshot_url: screenshotUrl,
+      status: 'pending',
+      reply: null,
+      reply_image_url: null,
+      platforms: null,
+      created_at: new Date().toISOString()
+    };
+
+    const { data, error } = await sb.from('web_help').insert(ticketPayload).select().single();
+    if(error) throw error;
+
+    // Save locally
+    myTicketsLocal.push({ ...ticketPayload, id: data.id });
+    localStorage.setItem('avicnHelpTickets', JSON.stringify(myTicketsLocal));
+    updateTicketBadge();
+
+    showFormAlert('Your ticket has been submitted successfully! We will respond to your email within 24 hours.', 'success');
+    btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.5"><polyline points="20 6 9 17 4 12"/></svg> Ticket Submitted';
+    resetForm();
+    selectedCategory = null;
+    document.getElementById('selectedTicketBar').classList.remove('visible');
+    setTimeout(() => document.querySelectorAll('.ticket-box').forEach(b => b.classList.remove('selected')), 500);
+
+  } catch(e) {
+    console.error(e);
+    showFormAlert('Failed to submit ticket. Please try again or email us directly.','error');
+    btn.disabled = false;
+    btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Submit Ticket';
+  }
+}
+
+function resetForm() {
+  ['fFullName','fEmail','fWebId','fPhone','fProblemTitle','fDescription'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('fCountry').value = '';
+  setScreenshot(false);
+  document.getElementById('screenshotFileInput').value = '';
+  const btn = document.getElementById('submitTicketBtn');
+  btn.disabled = false;
+  btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Submit Ticket';
+}
+
+function showFormAlert(msg, type) {
+  document.getElementById('formAlert').innerHTML = `<div class="form-alert alert-${type}" style="margin-bottom:16px;">${msg}</div>`;
+  document.getElementById('formAlert').scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
+
+// ===== MY TICKETS =====
+function updateTicketBadge() {
+  document.getElementById('ticketCountBadge').textContent = myTicketsLocal.length;
+}
+
+async function openMyTickets() {
+  document.getElementById('myTicketsOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  await loadMyTickets();
+}
+
+function closeMyTickets(e, force) {
+  if(force || (e && e.target === document.getElementById('myTicketsOverlay'))) {
+    document.getElementById('myTicketsOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+}
+
+async function loadMyTickets() {
+  const list = document.getElementById('myTicketsList');
+  if(!myTicketsLocal.length) {
+    list.innerHTML = `<div class="no-tickets-msg">
+      <svg viewBox="0 0 24 24"><path d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 0 0-2 2v3a2 2 0 0 1 0 4v3a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-3a2 2 0 0 1 0-4V7a2 2 0 0 0-2-2H5z"/></svg>
+      No tickets submitted yet.
+    </div>`;
+    return;
+  }
+
+  // Fetch latest from DB
+  const ids = myTicketsLocal.map(t => t.id).filter(Boolean);
+  let dbTickets = {};
+  if(ids.length) {
+    const { data } = await sb.from('web_help').select('*').in('id', ids);
+    if(data) data.forEach(t => { dbTickets[t.id] = t; });
+  }
+
+  list.innerHTML = myTicketsLocal.map(lt => {
+    const t = dbTickets[lt.id] || lt;
+    const statusClass = t.status === 'replied' ? 'status-replied' : t.status === 'rejected' ? 'status-rejected' : 'status-pending';
+    const statusText = t.status === 'replied' ? 'Replied' : t.status === 'rejected' ? 'Rejected' : 'Pending';
+    const dateStr = t.created_at ? new Date(t.created_at).toLocaleString() : '—';
+
+    // Platforms
+    let platformsHtml = '';
+    if(t.platforms) {
+      try {
+        const plats = typeof t.platforms === 'string' ? JSON.parse(t.platforms) : t.platforms;
+        if(Array.isArray(plats) && plats.length) {
+          platformsHtml = `<div class="mti-platform-links">
+            ${plats.map(p => `
+              <a class="mti-platform-link" href="${p.url||'#'}" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                ${p.name||'Platform'}
+              </a>
+            `).join('')}
+          </div>`;
+        }
+      } catch(e) {}
+    }
+
+    // Reply image
+    let replyImgHtml = '';
+    if(t.reply_image_url) {
+      replyImgHtml = `<img class="mti-reply-img" src="${t.reply_image_url}" onclick="openLightbox('${t.reply_image_url}')" alt="Reply attachment" loading="lazy"/>`;
+    }
+
+    // Reply
+    let replyHtml = '';
+    if(t.reply) {
+      replyHtml = `<div class="mti-reply">
+        <div class="mti-reply-label">Team Response</div>
+        ${t.reply}
+        ${replyImgHtml}
+        ${platformsHtml}
+      </div>`;
+    } else if(platformsHtml) {
+      replyHtml = `<div class="mti-reply">${platformsHtml}</div>`;
+    }
+
+    return `<div class="my-ticket-item">
+      <div class="mti-top">
+        <div>
+          <div class="mti-type">${t.category_title || 'Support'}</div>
+          <div class="mti-title">${t.problem_title || '—'}</div>
+        </div>
+        <div class="mti-status ${statusClass}">${statusText}</div>
+      </div>
+      <div class="mti-meta">
+        <span>${dateStr}</span>
+        ${t.screenshot_url ? '<span>Screenshot attached</span>' : ''}
+      </div>
+      ${replyHtml}
+    </div>`;
+  }).join('');
+}
+
+// ===== LIGHTBOX =====
+function openLightbox(src) {
+  document.getElementById('lightboxImg').src = src;
+  document.getElementById('lightbox').classList.add('open');
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+}
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape') {
+    closeLightbox();
+    closeMyTickets(null, true);
+  }
+});
+
+// ===== INIT =====
+renderTicketGrid();
+updateTicketBadge();
+</script>
+</body>
+</html>
