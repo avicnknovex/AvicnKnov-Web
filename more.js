@@ -1,987 +1,1017 @@
-/**
- * AvicnKnov Web — more.js
- * Self-contained premium page builder
- * Just include: <script src="more.js"></script>
- * ─────────────────────────────────────────
- */
+// ============================================================
+//  AvicnKnov Web — more.js
+//  Premium Navigation & UI Module
+//  Black & White Glass Morphism | Treasure Map Live Animation
+// ============================================================
 
 (function () {
   "use strict";
 
-  /* ════════════════════════════════════════
-     1.  INJECT FONTS + STYLES
-  ════════════════════════════════════════ */
-  const fontLink = document.createElement("link");
-  fontLink.rel = "stylesheet";
-  fontLink.href =
-    "https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap";
-  document.head.appendChild(fontLink);
+  /* ──────────────────────────────────────────────
+     CONFIG
+  ────────────────────────────────────────────── */
+  const CONFIG = {
+    tradingURL: "trading.html",
+    futuresURL: "future.html",
+    siteName: "AvicnKnov Web",
+    liveTickerSymbols: ["BTC/USD", "ETH/USD", "SOL/USD", "BNB/USD", "AVAX/USD"],
+    graphPoints: 40,
+    animationFPS: 60,
+  };
 
-  const style = document.createElement("style");
-  style.textContent = `
-    /* ── RESET / BASE ── */
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-    html{scroll-behavior:smooth;}
-    body{
-      background:#000;color:#fff;
-      font-family:'Rajdhani',sans-serif;
-      min-height:100vh;overflow-x:hidden;cursor:none;
-    }
+  /* ──────────────────────────────────────────────
+     INJECT GOOGLE FONTS + STYLES
+  ────────────────────────────────────────────── */
+  function injectStyles() {
+    const fontLink = document.createElement("link");
+    fontLink.rel = "stylesheet";
+    fontLink.href =
+      "https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=Playfair+Display:wght@700;900&display=swap";
+    document.head.appendChild(fontLink);
 
-    /* ── CURSOR ── */
-    #avk-cursor{
-      width:10px;height:10px;background:#fff;border-radius:50%;
-      position:fixed;top:0;left:0;pointer-events:none;z-index:99999;
-      transform:translate(-50%,-50%);transition:transform .08s;
-      mix-blend-mode:difference;
-    }
-    #avk-cursor-ring{
-      width:38px;height:38px;border:1.5px solid rgba(255,255,255,.45);
-      border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;
-      z-index:99998;transform:translate(-50%,-50%);
-      transition:all .18s cubic-bezier(.23,1,.32,1);
-      mix-blend-mode:difference;
-    }
-    body:hover #avk-cursor-ring{opacity:1;}
+    const style = document.createElement("style");
+    style.textContent = `
+      /* ── RESET & BASE ── */
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* ── CANVAS BG ── */
-    #avk-canvas{
-      position:fixed;top:0;left:0;width:100%;height:100%;
-      z-index:0;pointer-events:none;opacity:.65;
-    }
+      :root {
+        --white:      #ffffff;
+        --off-white:  #f0ede8;
+        --glass-bg:   rgba(255,255,255,0.06);
+        --glass-border: rgba(255,255,255,0.18);
+        --glass-shine: rgba(255,255,255,0.35);
+        --dark:       #080808;
+        --dark-2:     #111111;
+        --dark-3:     #1a1a1a;
+        --ink:        rgba(255,255,255,0.75);
+        --ink-dim:    rgba(255,255,255,0.38);
+        --accent:     #ffffff;
+        --glow:       rgba(255,255,255,0.12);
+        --gold-trace: rgba(210,185,130,0.25);
+        --font-display: 'Bebas Neue', sans-serif;
+        --font-body:    'DM Mono', monospace;
+        --font-serif:   'Playfair Display', serif;
+        --radius:       14px;
+        --radius-lg:    22px;
+      }
 
-    /* ── NOISE GRAIN ── */
-    #avk-noise{
-      position:fixed;top:-50%;left:-50%;width:200%;height:200%;
-      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.038'/%3E%3C/svg%3E");
-      pointer-events:none;z-index:1;animation:avk-noise .4s steps(2) infinite;
-    }
-    @keyframes avk-noise{
-      0%{transform:translate(0,0);}
-      25%{transform:translate(-1%,-1%);}
-      50%{transform:translate(1%,.5%);}
-      75%{transform:translate(-.5%,1%);}
-      100%{transform:translate(1%,-1%);}
-    }
+      html { scroll-behavior: smooth; }
 
-    /* ── MAIN WRAPPER ── */
-    #avk-root{
-      position:relative;z-index:10;
-      max-width:1100px;margin:0 auto;padding:0 22px 90px;
-    }
+      body {
+        background: var(--dark);
+        color: var(--white);
+        font-family: var(--font-body);
+        overflow-x: hidden;
+        min-height: 100vh;
+      }
 
-    /* ── HEADER ── */
-    #avk-header{
-      padding:56px 0 36px;text-align:center;position:relative;
-      animation:avk-rise .9s ease both;
-    }
-    #avk-header::before{
-      content:'';position:absolute;top:0;left:50%;
-      transform:translateX(-50%);width:1px;height:56px;
-      background:linear-gradient(to bottom,transparent,rgba(255,255,255,.4));
-    }
-    .avk-label{
-      font-family:'Space Mono',monospace;font-size:10px;
-      letter-spacing:6px;color:rgba(255,255,255,.3);
-      text-transform:uppercase;margin-bottom:14px;
-    }
-    .avk-sitename{
-      font-family:'Cinzel',serif;font-size:clamp(28px,6vw,62px);
-      font-weight:900;letter-spacing:4px;
-      background:linear-gradient(120deg,#fff 0%,rgba(255,255,255,.45) 50%,#fff 100%);
-      background-size:200%;
-      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-      background-clip:text;
-      animation:avk-shimmer 5s ease infinite 1.2s;
-    }
-    @keyframes avk-shimmer{
-      0%,100%{background-position:0%;}50%{background-position:100%;}
-    }
-    .avk-tagline{
-      font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:300;
-      letter-spacing:4px;color:rgba(255,255,255,.28);margin-top:10px;
-    }
-    .avk-hline{
-      width:0;height:1px;margin:24px auto 0;
-      background:linear-gradient(to right,transparent,rgba(255,255,255,.5),transparent);
-      animation:avk-expand 1.4s ease .6s forwards;
-    }
-    @keyframes avk-expand{to{width:140px;}}
+      /* ── CANVAS BACKGROUND ── */
+      #avicn-map-canvas {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        opacity: 0.55;
+      }
 
-    /* ── TICKER ── */
-    #avk-ticker-wrap{
-      overflow:hidden;border-top:1px solid rgba(255,255,255,.07);
-      border-bottom:1px solid rgba(255,255,255,.07);
-      background:rgba(255,255,255,.025);padding:9px 0;
-      margin-bottom:52px;animation:avk-rise .9s ease .5s both;
-    }
-    #avk-ticker{
-      display:flex;gap:52px;white-space:nowrap;
-      animation:avk-tick 20s linear infinite;
-    }
-    .avk-tick-item{
-      font-family:'Space Mono',monospace;font-size:11px;
-      color:rgba(255,255,255,.4);display:flex;align-items:center;gap:8px;
-    }
-    .avk-tick-item b{color:rgba(255,255,255,.8);}
-    .avk-tick-dot{
-      width:5px;height:5px;border-radius:50%;background:#fff;
-      animation:avk-pulse 1.6s ease infinite;
-    }
-    @keyframes avk-tick{from{transform:translateX(0);}to{transform:translateX(-50%);}}
-    @keyframes avk-pulse{
-      0%,100%{opacity:1;transform:scale(1);}
-      50%{opacity:.25;transform:scale(.55);}
-    }
+      /* ── GRAIN OVERLAY ── */
+      body::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+        opacity: 0.35;
+      }
 
-    /* ── SECTION LABEL ── */
-    .avk-section-label{
-      font-family:'Space Mono',monospace;font-size:9.5px;letter-spacing:5px;
-      color:rgba(255,255,255,.22);text-transform:uppercase;
-      display:flex;align-items:center;gap:14px;margin-bottom:24px;
-    }
-    .avk-section-label::after{
-      content:'';flex:1;height:1px;
-      background:linear-gradient(to right,rgba(255,255,255,.14),transparent);
-    }
+      /* ── WRAPPER ── */
+      #avicn-more-root {
+        position: relative;
+        z-index: 2;
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 60px 24px 100px;
+      }
 
-    /* ── BUTTON GRID ── */
-    .avk-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-      gap:18px;margin-bottom:52px;
-    }
-    .avk-grid.avk-2col{grid-template-columns:repeat(2,1fr);}
-    @media(max-width:600px){
-      .avk-grid.avk-2col{grid-template-columns:1fr;}
-    }
+      /* ── HEADER ── */
+      .avicn-header {
+        text-align: center;
+        margin-bottom: 54px;
+        animation: fadeSlideDown 0.9s cubic-bezier(.16,1,.3,1) both;
+      }
 
-    /* ── CARD ── */
-    .avk-card{
-      position:relative;
-      background:rgba(255,255,255,.032);
-      border:1px solid rgba(255,255,255,.1);
-      border-radius:16px;padding:28px 24px;
-      cursor:none;overflow:hidden;
-      transition:all .38s cubic-bezier(.23,1,.32,1);
-      backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
-      animation:avk-rise .9s ease both;
-    }
-    /* shine sweep */
-    .avk-card::before{
-      content:'';position:absolute;top:0;left:-120%;
-      width:55%;height:100%;
-      background:linear-gradient(90deg,transparent,rgba(255,255,255,.045),transparent);
-      transition:left .55s ease;pointer-events:none;
-    }
-    /* glow border */
-    .avk-card::after{
-      content:'';position:absolute;inset:-1px;border-radius:17px;
-      background:linear-gradient(135deg,rgba(255,255,255,.14) 0%,transparent 55%,rgba(255,255,255,.07) 100%);
-      opacity:0;transition:opacity .38s;pointer-events:none;z-index:-1;
-    }
-    .avk-card:hover{
-      transform:translateY(-7px) scale(1.018);
-      border-color:rgba(255,255,255,.26);
-      box-shadow:
-        0 22px 55px rgba(0,0,0,.65),
-        0 0 0 1px rgba(255,255,255,.09),
-        inset 0 1px 0 rgba(255,255,255,.12);
-      background:rgba(255,255,255,.065);
-    }
-    .avk-card:hover::before{left:150%;}
-    .avk-card:hover::after{opacity:1;}
-    .avk-card:active{transform:translateY(-2px) scale(.985);transition:all .08s;}
+      .avicn-header__eyebrow {
+        font-family: var(--font-body);
+        font-size: 11px;
+        letter-spacing: 0.35em;
+        text-transform: uppercase;
+        color: var(--ink-dim);
+        margin-bottom: 10px;
+      }
 
-    /* card — corner markers */
-    .avk-c{position:absolute;width:9px;height:9px;}
-    .avk-c.tl{top:9px;left:9px;border-top:1px solid rgba(255,255,255,.2);border-left:1px solid rgba(255,255,255,.2);}
-    .avk-c.tr{top:9px;right:9px;border-top:1px solid rgba(255,255,255,.2);border-right:1px solid rgba(255,255,255,.2);}
-    .avk-c.bl{bottom:9px;left:9px;border-bottom:1px solid rgba(255,255,255,.2);border-left:1px solid rgba(255,255,255,.2);}
-    .avk-c.br{bottom:9px;right:9px;border-bottom:1px solid rgba(255,255,255,.2);border-right:1px solid rgba(255,255,255,.2);}
+      .avicn-header__title {
+        font-family: var(--font-display);
+        font-size: clamp(52px, 9vw, 96px);
+        line-height: 0.92;
+        letter-spacing: 0.02em;
+        color: var(--white);
+        text-shadow: 0 0 60px rgba(255,255,255,0.08);
+      }
 
-    /* card — top accent */
-    .avk-top-line{
-      position:absolute;top:0;left:24px;right:24px;height:1px;
-      background:linear-gradient(to right,transparent,rgba(255,255,255,.55),transparent);
-      opacity:0;transition:opacity .4s;
-    }
-    .avk-card:hover .avk-top-line{opacity:1;}
+      .avicn-header__title span {
+        color: transparent;
+        -webkit-text-stroke: 1px rgba(255,255,255,0.5);
+      }
 
-    /* card icon */
-    .avk-icon{
-      width:50px;height:50px;
-      border:1px solid rgba(255,255,255,.13);border-radius:13px;
-      display:flex;align-items:center;justify-content:center;
-      font-size:22px;background:rgba(255,255,255,.035);
-      position:relative;margin-bottom:18px;
-      transition:all .38s ease;
-    }
-    .avk-card:hover .avk-icon{
-      border-color:rgba(255,255,255,.35);background:rgba(255,255,255,.1);
-      box-shadow:0 0 22px rgba(255,255,255,.1);transform:scale(1.08);
-    }
-    .avk-live-dot{
-      position:absolute;top:-4px;right:-4px;width:10px;height:10px;
-      background:#fff;border-radius:50%;border:2px solid #000;
-      animation:avk-livepulse 1.8s ease infinite;
-    }
-    @keyframes avk-livepulse{
-      0%{box-shadow:0 0 0 0 rgba(255,255,255,.75);}
-      70%{box-shadow:0 0 0 9px rgba(255,255,255,0);}
-      100%{box-shadow:0 0 0 0 rgba(255,255,255,0);}
-    }
+      .avicn-header__sub {
+        margin-top: 14px;
+        font-size: 12px;
+        color: var(--ink-dim);
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
 
-    /* card text */
-    .avk-tag{
-      font-family:'Space Mono',monospace;font-size:9.5px;
-      letter-spacing:3px;color:rgba(255,255,255,.28);
-      text-transform:uppercase;margin-bottom:6px;
-    }
-    .avk-title{
-      font-family:'Cinzel',serif;font-size:21px;font-weight:700;
-      color:#fff;margin-bottom:9px;letter-spacing:.8px;
-    }
-    .avk-desc{
-      font-family:'Rajdhani',sans-serif;font-size:13.5px;font-weight:300;
-      color:rgba(255,255,255,.42);line-height:1.75;margin-bottom:22px;
-    }
+      /* ── LIVE TICKER STRIP ── */
+      .avicn-ticker {
+        position: relative;
+        overflow: hidden;
+        border-top: 1px solid var(--glass-border);
+        border-bottom: 1px solid var(--glass-border);
+        padding: 10px 0;
+        margin-bottom: 52px;
+        background: rgba(255,255,255,0.03);
+        animation: fadeIn 1.2s ease both;
+        animation-delay: 0.4s;
+      }
 
-    /* card CTA arrow */
-    .avk-cta{
-      display:inline-flex;align-items:center;gap:10px;
-      font-family:'Space Mono',monospace;font-size:10px;
-      letter-spacing:2px;color:rgba(255,255,255,.6);
-      text-transform:uppercase;text-decoration:none;
-      transition:all .3s ease;
-    }
-    .avk-card:hover .avk-cta{color:#fff;gap:18px;}
-    .avk-arrow{
-      width:26px;height:1px;background:rgba(255,255,255,.38);
-      position:relative;transition:width .3s,background .3s;
-    }
-    .avk-arrow::after{
-      content:'';position:absolute;right:0;top:-3px;
-      width:6px;height:6px;
-      border-right:1px solid rgba(255,255,255,.5);
-      border-top:1px solid rgba(255,255,255,.5);
-      transform:rotate(45deg);transition:border-color .3s;
-    }
-    .avk-card:hover .avk-arrow{width:38px;background:#fff;}
-    .avk-card:hover .avk-arrow::after{border-color:#fff;}
+      .avicn-ticker__track {
+        display: flex;
+        gap: 60px;
+        animation: tickerScroll 18s linear infinite;
+        white-space: nowrap;
+        width: max-content;
+      }
 
-    /* card stats row */
-    .avk-stats{
-      display:flex;gap:18px;margin-top:18px;padding-top:18px;
-      border-top:1px solid rgba(255,255,255,.055);
-    }
-    .avk-stat-val{
-      font-family:'Space Mono',monospace;font-size:13px;
-      color:#fff;font-weight:700;display:block;
-    }
-    .avk-stat-lbl{
-      font-family:'Rajdhani',sans-serif;font-size:11px;
-      color:rgba(255,255,255,.28);letter-spacing:1px;display:block;
-    }
+      .avicn-ticker__item {
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        color: var(--ink);
+      }
 
-    /* WIDE card */
-    .avk-card.avk-wide{
-      grid-column:1/-1;
-      display:grid;grid-template-columns:1fr 1fr;gap:38px;align-items:center;
-    }
-    .avk-wide-right{
-      border-left:1px solid rgba(255,255,255,.055);
-      padding-left:38px;
-    }
-    .avk-wide-right .avk-stats{
-      flex-direction:column;gap:14px;border-top:none;padding-top:0;
-    }
-    @media(max-width:580px){
-      .avk-card.avk-wide{grid-template-columns:1fr;}
-      .avk-wide-right{border-left:none;padding-left:0;
-        border-top:1px solid rgba(255,255,255,.055);padding-top:22px;}
-    }
+      .avicn-ticker__item .val { color: var(--white); font-weight: 500; }
+      .avicn-ticker__item .up  { color: #b5ffb5; }
+      .avicn-ticker__item .dn  { color: #ffb5b5; }
 
-    /* DISABLED card */
-    .avk-card.avk-dim{
-      opacity:.42;pointer-events:none;
-    }
-    .avk-card.avk-dim::before,.avk-card.avk-dim::after{display:none;}
-    .avk-soon-badge{
-      position:absolute;top:14px;right:14px;
-      font-family:'Space Mono',monospace;font-size:9px;
-      letter-spacing:2px;color:rgba(255,255,255,.3);
-      border:1px solid rgba(255,255,255,.12);border-radius:20px;
-      padding:3px 10px;text-transform:uppercase;
-    }
+      /* ── GRID ── */
+      .avicn-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+        margin-bottom: 40px;
+      }
 
-    /* ── GRAPH CARD ── */
-    #avk-graph-card{
-      background:rgba(255,255,255,.028);
-      border:1px solid rgba(255,255,255,.09);
-      border-radius:16px;padding:26px;
-      backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
-      margin-bottom:52px;
-      animation:avk-rise .9s ease 1.5s both;
-    }
-    #avk-graph-head{
-      display:flex;justify-content:space-between;align-items:center;
-      margin-bottom:18px;
-    }
-    #avk-graph-title{
-      font-family:'Cinzel',serif;font-size:15px;color:#fff;letter-spacing:1px;
-    }
-    #avk-graph-badge{
-      display:flex;align-items:center;gap:6px;
-      background:rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.09);border-radius:20px;
-      padding:4px 12px;
-      font-family:'Space Mono',monospace;font-size:9.5px;
-      color:rgba(255,255,255,.45);
-    }
-    .avk-lb{
-      width:6px;height:6px;border-radius:50%;background:#fff;
-      animation:avk-livepulse 1.6s ease infinite;
-    }
-    #avk-chart-canvas{width:100%;height:160px;display:block;}
+      /* ── GLASS CARD ── */
+      .avicn-card {
+        position: relative;
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-lg);
+        padding: 32px 28px 28px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: transform 0.35s cubic-bezier(.16,1,.3,1),
+                    box-shadow 0.35s ease,
+                    border-color 0.35s ease;
+        backdrop-filter: blur(18px) saturate(160%);
+        -webkit-backdrop-filter: blur(18px) saturate(160%);
+        animation: cardEntrance 0.7s cubic-bezier(.16,1,.3,1) both;
+      }
 
-    /* ── ABOUT GRID ── */
-    #avk-about{
-      margin-bottom:52px;animation:avk-rise .9s ease 1.8s both;
-    }
-    .avk-about-grid{
-      display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-      gap:1px;background:rgba(255,255,255,.055);
-      border-radius:16px;overflow:hidden;
-      border:1px solid rgba(255,255,255,.07);
-    }
-    .avk-about-cell{
-      background:#000;padding:26px 22px;
-      transition:background .3s;
-    }
-    .avk-about-cell:hover{background:rgba(255,255,255,.03);}
-    .avk-about-num{
-      font-family:'Cinzel',serif;font-size:34px;font-weight:900;
-      color:rgba(255,255,255,.1);line-height:1;margin-bottom:7px;
-      transition:color .3s;
-    }
-    .avk-about-cell:hover .avk-about-num{color:rgba(255,255,255,.28);}
-    .avk-about-ht{
-      font-family:'Space Mono',monospace;font-size:9.5px;
-      letter-spacing:2px;color:rgba(255,255,255,.55);
-      text-transform:uppercase;margin-bottom:5px;
-    }
-    .avk-about-txt{
-      font-family:'Rajdhani',sans-serif;font-size:13px;
-      color:rgba(255,255,255,.28);line-height:1.65;
-    }
+      .avicn-card:nth-child(1) { animation-delay: 0.15s; }
+      .avicn-card:nth-child(2) { animation-delay: 0.28s; }
+      .avicn-card:nth-child(3) { animation-delay: 0.40s; }
+      .avicn-card:nth-child(4) { animation-delay: 0.52s; }
 
-    /* ── FOOTER ── */
-    #avk-footer{
-      text-align:center;padding-top:38px;
-      border-top:1px solid rgba(255,255,255,.055);
-      animation:avk-rise .9s ease 2s both;
-    }
-    .avk-ft-name{
-      font-family:'Cinzel',serif;font-size:18px;
-      letter-spacing:5px;color:rgba(255,255,255,.18);
-    }
-    .avk-ft-copy{
-      font-family:'Space Mono',monospace;font-size:9.5px;
-      color:rgba(255,255,255,.1);margin-top:8px;letter-spacing:2px;
-    }
+      .avicn-card::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, var(--glass-shine) 0%, transparent 55%);
+        border-radius: inherit;
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        pointer-events: none;
+      }
 
-    /* ── SHARED ANIMATION ── */
-    @keyframes avk-rise{
-      from{opacity:0;transform:translateY(18px);}
-      to{opacity:1;transform:translateY(0);}
-    }
-  `;
-  document.head.appendChild(style);
+      .avicn-card::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -60%;
+        width: 220%;
+        height: 220%;
+        background: radial-gradient(ellipse at center, rgba(255,255,255,0.07) 0%, transparent 65%);
+        transform: rotate(-25deg);
+        pointer-events: none;
+        transition: transform 0.6s ease;
+      }
 
-  /* ════════════════════════════════════════
-     2.  TICKER DATA
-  ════════════════════════════════════════ */
-  const TICKERS = [
-    { sym: "BTC/USDT", val: "67,420.15", chg: "+2.34%" },
-    { sym: "ETH/USDT", val: "3,521.88",  chg: "+1.78%" },
-    { sym: "BNB/USDT", val: "584.30",    chg: "-0.55%" },
-    { sym: "SOL/USDT", val: "172.44",    chg: "+4.12%" },
-    { sym: "XRP/USDT", val: "0.5821",    chg: "+0.98%" },
-    { sym: "AVAX/USDT",val: "36.72",     chg: "-1.03%" },
-    { sym: "MATIC",    val: "0.8834",    chg: "+2.55%" },
-    { sym: "DOT/USDT", val: "7.310",     chg: "-0.22%" },
-    { sym: "DOGE/USDT",val: "0.1524",    chg: "+5.60%" },
-    { sym: "LINK/USDT",val: "14.980",    chg: "+1.45%" },
-  ];
+      .avicn-card:hover {
+        transform: translateY(-6px) scale(1.012);
+        box-shadow: 0 24px 60px rgba(0,0,0,0.55),
+                    0 0 0 1px rgba(255,255,255,0.22),
+                    inset 0 1px 0 rgba(255,255,255,0.2);
+        border-color: rgba(255,255,255,0.32);
+      }
 
-  /* ════════════════════════════════════════
-     3.  BUILD DOM
-  ════════════════════════════════════════ */
-  function buildDOM() {
-    /* Cursor */
-    const cur  = el("div", { id: "avk-cursor" });
-    const ring = el("div", { id: "avk-cursor-ring" });
-    document.body.prepend(ring, cur);
+      .avicn-card:hover::before { opacity: 1; }
 
-    /* Noise */
-    document.body.prepend(el("div", { id: "avk-noise" }));
+      .avicn-card:hover::after {
+        transform: rotate(-25deg) translate(10%, -5%);
+      }
 
-    /* Canvas */
-    const canvas = el("canvas", { id: "avk-canvas" });
+      /* ── CARD BADGE ── */
+      .avicn-card__badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 9px;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: var(--ink-dim);
+        border: 1px solid var(--glass-border);
+        border-radius: 99px;
+        padding: 4px 10px;
+        margin-bottom: 18px;
+        background: rgba(255,255,255,0.04);
+      }
+
+      .avicn-card__badge .dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: var(--white);
+        animation: pulse 2s infinite;
+      }
+
+      /* ── CARD TITLE ── */
+      .avicn-card__title {
+        font-family: var(--font-display);
+        font-size: 38px;
+        letter-spacing: 0.04em;
+        line-height: 1;
+        color: var(--white);
+        margin-bottom: 10px;
+      }
+
+      /* ── CARD DESC ── */
+      .avicn-card__desc {
+        font-size: 11.5px;
+        line-height: 1.7;
+        color: var(--ink-dim);
+        margin-bottom: 24px;
+        max-width: 260px;
+      }
+
+      /* ── CTA BUTTON ── */
+      .avicn-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-family: var(--font-body);
+        font-size: 10.5px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        text-decoration: none;
+        color: var(--dark);
+        background: var(--white);
+        border: none;
+        border-radius: 8px;
+        padding: 12px 22px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(.16,1,.3,1);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(255,255,255,0.12),
+                    inset 0 1px 0 rgba(255,255,255,0.9);
+      }
+
+      .avicn-btn::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.5) 50%, transparent 100%);
+        transform: translateX(-100%);
+        transition: transform 0.5s ease;
+      }
+
+      .avicn-btn:hover::before { transform: translateX(100%); }
+
+      .avicn-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 32px rgba(255,255,255,0.2),
+                    inset 0 1px 0 rgba(255,255,255,1);
+      }
+
+      .avicn-btn:active { transform: translateY(0); }
+
+      .avicn-btn--ghost {
+        background: transparent;
+        color: var(--white);
+        border: 1px solid var(--glass-border);
+        box-shadow: none;
+      }
+
+      .avicn-btn--ghost:hover {
+        background: rgba(255,255,255,0.08);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        border-color: rgba(255,255,255,0.4);
+      }
+
+      /* ── ARROW ── */
+      .avicn-btn .arrow {
+        display: inline-block;
+        transition: transform 0.3s ease;
+      }
+      .avicn-btn:hover .arrow { transform: translateX(4px); }
+
+      /* ── LIVE GRAPH MINI ── */
+      .avicn-graph-wrap {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 100px;
+        height: 50px;
+        opacity: 0.35;
+        pointer-events: none;
+      }
+
+      .avicn-graph-wrap canvas {
+        width: 100%;
+        height: 100%;
+      }
+
+      /* ── LARGE CHART SECTION ── */
+      .avicn-chart-section {
+        margin-bottom: 40px;
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-lg);
+        padding: 30px 28px 22px;
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        animation: fadeSlideUp 0.9s cubic-bezier(.16,1,.3,1) 0.6s both;
+      }
+
+      .avicn-chart-section__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+
+      .avicn-chart-section__label {
+        font-family: var(--font-display);
+        font-size: 22px;
+        letter-spacing: 0.06em;
+        color: var(--white);
+      }
+
+      .avicn-chart-section__live {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        color: var(--ink-dim);
+      }
+
+      .avicn-chart-section__live .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #ffffff;
+        animation: pulse 1.5s infinite;
+      }
+
+      #avicn-main-chart {
+        width: 100%;
+        height: 160px;
+        display: block;
+      }
+
+      /* ── INFO ROW ── */
+      .avicn-info-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+        margin-bottom: 40px;
+        animation: fadeSlideUp 0.9s cubic-bezier(.16,1,.3,1) 0.75s both;
+      }
+
+      .avicn-info-pill {
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius);
+        padding: 18px 20px;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+      }
+
+      .avicn-info-pill__label {
+        font-size: 9.5px;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: var(--ink-dim);
+        margin-bottom: 8px;
+      }
+
+      .avicn-info-pill__value {
+        font-family: var(--font-display);
+        font-size: 28px;
+        letter-spacing: 0.04em;
+        color: var(--white);
+      }
+
+      .avicn-info-pill__value small {
+        font-family: var(--font-body);
+        font-size: 10px;
+        color: var(--ink-dim);
+        letter-spacing: 0.12em;
+        margin-left: 6px;
+      }
+
+      /* ── FOOTER NOTE ── */
+      .avicn-footer-note {
+        text-align: center;
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        color: var(--ink-dim);
+        text-transform: uppercase;
+        border-top: 1px solid var(--glass-border);
+        padding-top: 30px;
+        margin-top: 20px;
+        animation: fadeIn 1.5s ease 1s both;
+      }
+
+      .avicn-footer-note a {
+        color: var(--ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--glass-border);
+        padding-bottom: 1px;
+        transition: color 0.2s, border-color 0.2s;
+      }
+      .avicn-footer-note a:hover { color: var(--white); border-color: var(--white); }
+
+      /* ── KEYFRAMES ── */
+      @keyframes fadeSlideDown {
+        from { opacity: 0; transform: translateY(-28px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+
+      @keyframes fadeSlideUp {
+        from { opacity: 0; transform: translateY(28px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+      }
+
+      @keyframes cardEntrance {
+        from { opacity: 0; transform: translateY(36px) scale(0.97); }
+        to   { opacity: 1; transform: translateY(0) scale(1); }
+      }
+
+      @keyframes tickerScroll {
+        from { transform: translateX(0); }
+        to   { transform: translateX(-50%); }
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50%       { opacity: 0.4; transform: scale(0.75); }
+      }
+
+      /* ── RESPONSIVE ── */
+      @media (max-width: 600px) {
+        .avicn-grid { grid-template-columns: 1fr; }
+        .avicn-info-row { grid-template-columns: 1fr 1fr; }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  /* ──────────────────────────────────────────────
+     TREASURE MAP BACKGROUND CANVAS
+  ────────────────────────────────────────────── */
+  function createMapCanvas() {
+    const canvas = document.createElement("canvas");
+    canvas.id = "avicn-map-canvas";
     document.body.prepend(canvas);
 
-    /* Root wrapper */
-    const root = el("div", { id: "avk-root" });
-    document.body.appendChild(root);
-
-    /* ── Header ── */
-    root.appendChild(htmlToNode(`
-      <header id="avk-header">
-        <div class="avk-label">Navigate · Trade · Grow</div>
-        <h1 class="avk-sitename">AvicnKnov Web</h1>
-        <p class="avk-tagline">YOUR FINANCIAL INTELLIGENCE PLATFORM</p>
-        <div class="avk-hline"></div>
-      </header>
-    `));
-
-    /* ── Ticker ── */
-    const tw = el("div", { id: "avk-ticker-wrap" });
-    const ticker = el("div", { id: "avk-ticker" });
-    const items = [...TICKERS, ...TICKERS]; // double for seamless loop
-    items.forEach(t => {
-      const up = !t.chg.startsWith("-");
-      ticker.insertAdjacentHTML("beforeend", `
-        <span class="avk-tick-item">
-          <span class="avk-tick-dot"></span>
-          ${t.sym} <b>${t.val}</b>
-          <span style="color:rgba(255,255,255,${up ? ".75" : ".28"})">${t.chg}</span>
-        </span>
-      `);
-    });
-    tw.appendChild(ticker);
-    root.appendChild(tw);
-
-    /* ── Buttons Section ── */
-    root.appendChild(htmlToNode(`<div class="avk-section-label">Primary Actions</div>`));
-    const grid = el("div", { class: "avk-grid" });
-
-    /* ─ Trading Card ─ */
-    grid.appendChild(makeCard({
-      delay: "1.1s",
-      icon: "📈",
-      live: true,
-      tag: "Live Market",
-      title: "Trading",
-      desc: "Access real-time markets with advanced order types — buy, sell and manage positions across crypto, equities and commodities instantly on AvicnKnov Web.",
-      cta: "Open Trading Desk",
-      href: "trading.html",
-      stats: [
-        { val: "24/7",   lbl: "Access" },
-        { val: "Live",   lbl: "Data" },
-        { val: "0.01%",  lbl: "Fee" },
-      ],
-    }));
-
-    /* ─ Practice Card ─ */
-    grid.appendChild(makeCard({
-      delay: "1.3s",
-      icon: "🎯",
-      live: false,
-      tag: "Paper Trading",
-      title: "Practice",
-      desc: "Master every strategy risk-free on our live exchange simulator. Real market prices, virtual capital. Click Practice and go straight to our exchange — no deposit needed.",
-      cta: "Start Practice Mode",
-      href: "trading.html?mode=practice",
-      stats: [
-        { val: "$100K",  lbl: "Virtual" },
-        { val: "Real",   lbl: "Prices" },
-        { val: "Free",   lbl: "Always" },
-      ],
-    }));
-
-    root.appendChild(grid);
-
-    /* ─ Futures Wide Card ─ */
-    root.appendChild(htmlToNode(`<div class="avk-section-label">Derivatives</div>`));
-    const grid2 = el("div", { class: "avk-grid avk-2col" });
-    grid2.appendChild(makeWideCard());
-    root.appendChild(grid2);
-
-    /* ─ Coming Soon Cards ─ */
-    root.appendChild(htmlToNode(`<div class="avk-section-label" style="margin-top:52px">More Coming Soon</div>`));
-    const grid3 = el("div", { class: "avk-grid" });
-    const soon = [
-      { icon: "💼", tag: "Portfolio",  title: "Portfolio",  desc: "Unified P&L tracking, risk metrics and performance analytics across all your positions." },
-      { icon: "📡", tag: "AI Signals", title: "Signals",    desc: "AI-powered trade signals and real-time market sentiment from our intelligence engine." },
-      { icon: "📰", tag: "Insights",   title: "Research",   desc: "Deep-dive market research, on-chain data and macro analysis curated by experts." },
-      { icon: "🔐", tag: "Vault",      title: "Wallet",     desc: "Non-custodial multi-chain wallet with DeFi integrations and staking support." },
-    ];
-    soon.forEach((s, i) => {
-      grid3.appendChild(makeCard({
-        delay: `${1.1 + i * 0.15}s`,
-        icon: s.icon,
-        live: false,
-        tag: s.tag,
-        title: s.title,
-        desc: s.desc,
-        cta: "In Development",
-        href: null,
-        stats: [],
-        disabled: true,
-      }));
-    });
-    root.appendChild(grid3);
-
-    /* ── Graph ── */
-    root.appendChild(htmlToNode(`<div class="avk-section-label" style="margin-top:52px">Platform Activity</div>`));
-    root.appendChild(htmlToNode(`
-      <div id="avk-graph-card">
-        <div id="avk-graph-head">
-          <span id="avk-graph-title">Live Market Pulse — AvicnKnov Web</span>
-          <span id="avk-graph-badge"><span class="avk-lb"></span>&nbsp;LIVE</span>
-        </div>
-        <canvas id="avk-chart-canvas"></canvas>
-      </div>
-    `));
-
-    /* ── About ── */
-    root.appendChild(htmlToNode(`<div class="avk-section-label">About the Platform</div>`));
-    root.appendChild(htmlToNode(`
-      <div id="avk-about">
-        <div class="avk-about-grid">
-          <div class="avk-about-cell">
-            <div class="avk-about-num">01</div>
-            <div class="avk-about-ht">Mission</div>
-            <div class="avk-about-txt">AvicnKnov Web brings institutional-grade trading tools to every trader — from beginners to professionals.</div>
-          </div>
-          <div class="avk-about-cell">
-            <div class="avk-about-num">02</div>
-            <div class="avk-about-ht">Technology</div>
-            <div class="avk-about-txt">Built on a high-frequency matching engine with sub-millisecond latency and 99.99% platform uptime.</div>
-          </div>
-          <div class="avk-about-cell">
-            <div class="avk-about-num">03</div>
-            <div class="avk-about-ht">Security</div>
-            <div class="avk-about-txt">Multi-layer encryption, cold storage, 2FA and real-time fraud detection keep your assets safe at all times.</div>
-          </div>
-          <div class="avk-about-cell">
-            <div class="avk-about-num">04</div>
-            <div class="avk-about-ht">Community</div>
-            <div class="avk-about-txt">Join thousands of traders already building wealth on AvicnKnov Web. More features rolling out every week.</div>
-          </div>
-        </div>
-      </div>
-    `));
-
-    /* ── Footer ── */
-    root.appendChild(htmlToNode(`
-      <footer id="avk-footer">
-        <div class="avk-ft-name">AvicnKnov Web</div>
-        <div class="avk-ft-copy">© ${new Date().getFullYear()} AvicnKnov Web · All Rights Reserved</div>
-      </footer>
-    `));
-  }
-
-  /* ════════════════════════════════════════
-     4.  CARD BUILDERS
-  ════════════════════════════════════════ */
-  function makeCard({ delay, icon, live, tag, title, desc, cta, href, stats, disabled }) {
-    const d = el("div", {
-      class: "avk-card" + (disabled ? " avk-dim" : ""),
-      style: `animation-delay:${delay}`,
-    });
-    if (!disabled && href) d.onclick = () => location.href = href;
-
-    d.innerHTML = `
-      <div class="avk-top-line"></div>
-      <div class="avk-c tl"></div><div class="avk-c tr"></div>
-      <div class="avk-c bl"></div><div class="avk-c br"></div>
-      ${disabled ? '<span class="avk-soon-badge">Soon</span>' : ""}
-      <div class="avk-icon">
-        ${icon}
-        ${live ? '<span class="avk-live-dot"></span>' : ""}
-      </div>
-      <div class="avk-tag">${tag}</div>
-      <div class="avk-title">${title}</div>
-      <div class="avk-desc">${desc}</div>
-      <span class="avk-cta">${cta}<span class="avk-arrow"></span></span>
-      ${stats.length ? `
-        <div class="avk-stats">
-          ${stats.map(s => `<div><span class="avk-stat-val">${s.val}</span><span class="avk-stat-lbl">${s.lbl}</span></div>`).join("")}
-        </div>` : ""}
-    `;
-    return d;
-  }
-
-  function makeWideCard() {
-    const d = el("div", {
-      class: "avk-card avk-wide",
-      style: "animation-delay:1.5s",
-    });
-    d.onclick = () => location.href = "future.html";
-    d.innerHTML = `
-      <div class="avk-top-line"></div>
-      <div class="avk-c tl"></div><div class="avk-c tr"></div>
-      <div class="avk-c bl"></div><div class="avk-c br"></div>
-      <div>
-        <div class="avk-icon" style="font-size:26px">🔮<span class="avk-live-dot"></span></div>
-        <div class="avk-tag">Derivatives · Perpetuals · Leverage</div>
-        <div class="avk-title">Futures</div>
-        <div class="avk-desc">
-          Trade the future — not just the present. Access perpetual contracts, commodity futures and index derivatives with precision execution and deep liquidity across all major markets on AvicnKnov Web.
-        </div>
-        <span class="avk-cta">Explore Futures Plans<span class="avk-arrow"></span></span>
-      </div>
-      <div class="avk-wide-right">
-        <div class="avk-stats">
-          <div><span class="avk-stat-val">125x</span><span class="avk-stat-lbl">Max Leverage</span></div>
-          <div><span class="avk-stat-val">0.01%</span><span class="avk-stat-lbl">Maker Fee</span></div>
-          <div><span class="avk-stat-val">Instant</span><span class="avk-stat-lbl">Settlement</span></div>
-          <div><span class="avk-stat-val">50+</span><span class="avk-stat-lbl">Contracts</span></div>
-          <div><span class="avk-stat-val">24/7</span><span class="avk-stat-lbl">Live Markets</span></div>
-        </div>
-      </div>
-    `;
-    return d;
-  }
-
-  /* ════════════════════════════════════════
-     5.  CANVAS — TREASURE MAP ANIMATION
-  ════════════════════════════════════════ */
-  function initCanvas() {
-    const canvas = document.getElementById("avk-canvas");
     const ctx = canvas.getContext("2d");
-    let W, H, nodes, paths, particles;
+    let W, H;
+    const nodes = [];
+    const paths = [];
+    const particles = [];
+    let tick = 0;
 
     function resize() {
-      W = canvas.width  = window.innerWidth;
+      W = canvas.width = window.innerWidth;
       H = canvas.height = window.innerHeight;
-      buildMap();
     }
 
-    /* Build a random node network (like a treasure map / circuit / river) */
     function buildMap() {
-      const count = Math.floor((W * H) / 26000);
-      nodes = Array.from({ length: count }, () => ({
-        x: Math.random() * W,
-        y: Math.random() * H,
-        vx: (Math.random() - .5) * .18,
-        vy: (Math.random() - .5) * .18,
-        r: Math.random() * 2.5 + .8,
-        alpha: Math.random() * .5 + .2,
-      }));
+      nodes.length = 0;
+      paths.length = 0;
+      particles.length = 0;
 
-      /* Connect nearby nodes into path segments */
-      paths = [];
-      nodes.forEach((n, i) => {
-        nodes.forEach((m, j) => {
-          if (j <= i) return;
-          const dx = n.x - m.x, dy = n.y - m.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 160) paths.push({ a: i, b: j, dist });
+      const count = Math.floor((W * H) / 22000);
+      for (let i = 0; i < count; i++) {
+        nodes.push({
+          x: Math.random() * W,
+          y: Math.random() * H,
+          r: Math.random() * 3.5 + 1.2,
+          pulse: Math.random() * Math.PI * 2,
+          speed: Math.random() * 0.018 + 0.008,
         });
+      }
+
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const dx = nodes[i].x - nodes[j].x;
+          const dy = nodes[i].y - nodes[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 180) {
+            paths.push({ a: i, b: j, dist });
+          }
+        }
+      }
+
+      for (let k = 0; k < 18; k++) {
+        const pathIdx = Math.floor(Math.random() * paths.length);
+        particles.push({
+          pathIdx,
+          t: Math.random(),
+          speed: Math.random() * 0.004 + 0.001,
+        });
+      }
+    }
+
+    function drawCross(x, y, size, alpha) {
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.strokeStyle = "rgba(255,255,255,0.7)";
+      ctx.lineWidth = 0.8;
+      ctx.beginPath();
+      ctx.moveTo(x - size, y);
+      ctx.lineTo(x + size, y);
+      ctx.moveTo(x, y - size);
+      ctx.lineTo(x, y + size);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function frame() {
+      ctx.clearRect(0, 0, W, H);
+      tick++;
+
+      // Draw paths
+      paths.forEach((p) => {
+        const na = nodes[p.a];
+        const nb = nodes[p.b];
+        const alpha = 0.06 + 0.04 * Math.sin(tick * 0.01 + p.dist * 0.01);
+        ctx.beginPath();
+        ctx.strokeStyle = `rgba(255,255,255,${alpha})`;
+        ctx.lineWidth = 0.5;
+        // Dashed treasure-map style
+        ctx.setLineDash([4, 8]);
+        ctx.moveTo(na.x, na.y);
+        ctx.lineTo(nb.x, nb.y);
+        ctx.stroke();
+        ctx.setLineDash([]);
       });
 
-      /* Flowing particles along paths */
-      particles = paths.slice(0, Math.min(paths.length, 60)).map(p => ({
-        path: p,
-        t: Math.random(),
-        speed: Math.random() * .003 + .001,
-        size: Math.random() * 2 + 1,
-      }));
+      // Draw nodes
+      nodes.forEach((n) => {
+        n.pulse += n.speed;
+        const pAlpha = 0.15 + 0.12 * Math.abs(Math.sin(n.pulse));
+        const pSize = n.r + 1.5 * Math.abs(Math.sin(n.pulse));
+
+        // Glow
+        const grd = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, pSize * 4);
+        grd.addColorStop(0, `rgba(255,255,255,${pAlpha * 0.6})`);
+        grd.addColorStop(1, "rgba(255,255,255,0)");
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, pSize * 4, 0, Math.PI * 2);
+        ctx.fillStyle = grd;
+        ctx.fill();
+
+        // Core dot
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, pSize, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${pAlpha + 0.1})`;
+        ctx.fill();
+      });
+
+      // Traveling particles (caravans along map paths)
+      particles.forEach((pt) => {
+        pt.t += pt.speed;
+        if (pt.t > 1) pt.t = 0;
+        const p = paths[pt.pathIdx];
+        if (!p) return;
+        const na = nodes[p.a];
+        const nb = nodes[p.b];
+        const px = na.x + (nb.x - na.x) * pt.t;
+        const py = na.y + (nb.y - na.y) * pt.t;
+
+        ctx.beginPath();
+        ctx.arc(px, py, 2.2, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(255,255,255,0.85)";
+        ctx.fill();
+      });
+
+      // Scatter crosses
+      if (tick % 90 === 0) {
+        for (let c = 0; c < 3; c++) {
+          drawCross(
+            Math.random() * W,
+            Math.random() * H,
+            6,
+            0.15
+          );
+        }
+      }
+
+      requestAnimationFrame(frame);
+    }
+
+    resize();
+    buildMap();
+    frame();
+    window.addEventListener("resize", () => { resize(); buildMap(); });
+  }
+
+  /* ──────────────────────────────────────────────
+     LIVE TICKER
+  ────────────────────────────────────────────── */
+  function createTicker() {
+    function randomPrice(base) {
+      return (base + (Math.random() - 0.5) * base * 0.04).toFixed(2);
+    }
+    const bases = { "BTC/USD": 67400, "ETH/USD": 3540, "SOL/USD": 182, "BNB/USD": 594, "AVAX/USD": 38 };
+
+    function buildItems() {
+      return CONFIG.liveTickerSymbols.map((sym) => {
+        const price = randomPrice(bases[sym]);
+        const change = ((Math.random() - 0.48) * 3.5).toFixed(2);
+        const cls = parseFloat(change) >= 0 ? "up" : "dn";
+        const sign = parseFloat(change) >= 0 ? "+" : "";
+        return `<span class="avicn-ticker__item">
+          ${sym} &nbsp;<span class="val">$${parseFloat(price).toLocaleString()}</span>&nbsp;
+          <span class="${cls}">${sign}${change}%</span>
+        </span>`;
+      }).join("");
+    }
+
+    const ticker = document.createElement("div");
+    ticker.className = "avicn-ticker";
+    const track = document.createElement("div");
+    track.className = "avicn-ticker__track";
+    track.innerHTML = buildItems() + buildItems(); // duplicate for seamless loop
+    ticker.appendChild(track);
+
+    // Refresh prices every 3s
+    setInterval(() => {
+      track.innerHTML = buildItems() + buildItems();
+    }, 3000);
+
+    return ticker;
+  }
+
+  /* ──────────────────────────────────────────────
+     MINI SPARKLINE
+  ────────────────────────────────────────────── */
+  function createSparkline(container) {
+    const canvas = document.createElement("canvas");
+    canvas.width = 100;
+    canvas.height = 50;
+    container.appendChild(canvas);
+    const ctx = canvas.getContext("2d");
+
+    let data = Array.from({ length: CONFIG.graphPoints }, () => Math.random());
+
+    function normalize(arr) {
+      const min = Math.min(...arr);
+      const max = Math.max(...arr);
+      return arr.map((v) => (v - min) / (max - min + 0.001));
     }
 
     function draw() {
-      ctx.clearRect(0, 0, W, H);
-
-      /* Move nodes */
-      nodes.forEach(n => {
-        n.x += n.vx; n.y += n.vy;
-        if (n.x < 0 || n.x > W) n.vx *= -1;
-        if (n.y < 0 || n.y > H) n.vy *= -1;
-      });
-
-      /* Recalculate path connections lazily (every 90 frames) */
-      draw._f = (draw._f || 0) + 1;
-      if (draw._f % 90 === 0) {
-        paths = [];
-        nodes.forEach((n, i) => {
-          nodes.forEach((m, j) => {
-            if (j <= i) return;
-            const dx = n.x - m.x, dy = n.y - m.y;
-            const d = Math.sqrt(dx * dx + dy * dy);
-            if (d < 160) paths.push({ a: i, b: j, dist: d });
-          });
-        });
-      }
-
-      /* Draw paths (map lines) */
-      paths.forEach(p => {
-        const a = nodes[p.a], b = nodes[p.b];
-        const alpha = (1 - p.dist / 160) * .18;
-        ctx.beginPath();
-        ctx.moveTo(a.x, a.y);
-        /* Slight curve for river feel */
-        const mx = (a.x + b.x) / 2 + (Math.random() - .5) * 4;
-        const my = (a.y + b.y) / 2 + (Math.random() - .5) * 4;
-        ctx.quadraticCurveTo(mx, my, b.x, b.y);
-        ctx.strokeStyle = `rgba(255,255,255,${alpha})`;
-        ctx.lineWidth = .6;
-        ctx.stroke();
-      });
-
-      /* Draw nodes */
-      nodes.forEach(n => {
-        ctx.beginPath();
-        ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255,255,255,${n.alpha * .6})`;
-        ctx.fill();
-      });
-
-      /* Draw flowing particles */
-      particles.forEach(p => {
-        p.t += p.speed;
-        if (p.t > 1) p.t = 0;
-        const a = nodes[p.path.a], b = nodes[p.path.b];
-        if (!a || !b) return;
-        const x = a.x + (b.x - a.x) * p.t;
-        const y = a.y + (b.y - a.y) * p.t;
-        ctx.beginPath();
-        ctx.arc(x, y, p.size, 0, Math.PI * 2);
-        const grad = ctx.createRadialGradient(x, y, 0, x, y, p.size * 3);
-        grad.addColorStop(0, "rgba(255,255,255,.85)");
-        grad.addColorStop(1, "rgba(255,255,255,0)");
-        ctx.fillStyle = grad;
-        ctx.fill();
-      });
-
-      /* Occasional big glow points (X marks on map) */
-      if (draw._f % 180 === 0) {
-        draw._glows = nodes
-          .filter(() => Math.random() < .06)
-          .slice(0, 3)
-          .map(n => ({ x: n.x, y: n.y, life: 80 }));
-      }
-      (draw._glows || []).forEach(g => {
-        g.life--;
-        if (g.life <= 0) return;
-        const a = (g.life / 80) * .35;
-        const r = (1 - g.life / 80) * 30 + 4;
-        const gr = ctx.createRadialGradient(g.x, g.y, 0, g.x, g.y, r);
-        gr.addColorStop(0, `rgba(255,255,255,${a})`);
-        gr.addColorStop(1, "rgba(255,255,255,0)");
-        ctx.beginPath();
-        ctx.arc(g.x, g.y, r, 0, Math.PI * 2);
-        ctx.fillStyle = gr;
-        ctx.fill();
-      });
-
-      requestAnimationFrame(draw);
-    }
-
-    window.addEventListener("resize", resize);
-    resize();
-    draw();
-  }
-
-  /* ════════════════════════════════════════
-     6.  LIVE CHART
-  ════════════════════════════════════════ */
-  function initChart() {
-    const canvas = document.getElementById("avk-chart-canvas");
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-
-    let W, H;
-    const POINTS = 80;
-    let data = Array.from({ length: POINTS }, (_, i) => 50 + Math.sin(i * .3) * 12 + Math.random() * 8);
-
-    function resize() {
-      W = canvas.width  = canvas.offsetWidth;
-      H = canvas.height = canvas.offsetHeight || 160;
-    }
-
-    function pushPoint() {
-      const last = data[data.length - 1];
-      data.push(last + (Math.random() - .48) * 3.2);
-      if (data.length > POINTS) data.shift();
-    }
-
-    function drawChart() {
-      resize();
-      ctx.clearRect(0, 0, W, H);
-
-      const min = Math.min(...data) - 4;
-      const max = Math.max(...data) + 4;
-      const range = max - min || 1;
-      const px = (v) => W * (v / (POINTS - 1));
-      const py = (v) => H - ((v - min) / range) * (H * .88) - H * .06;
-
-      /* Grid lines */
-      for (let i = 0; i <= 4; i++) {
-        const y = H * .06 + (H * .88) * (i / 4);
-        ctx.beginPath();
-        ctx.moveTo(0, y); ctx.lineTo(W, y);
-        ctx.strokeStyle = "rgba(255,255,255,.04)";
-        ctx.lineWidth = 1;
-        ctx.stroke();
-      }
-
-      /* Fill area */
-      const grad = ctx.createLinearGradient(0, 0, 0, H);
-      grad.addColorStop(0, "rgba(255,255,255,.12)");
-      grad.addColorStop(1, "rgba(255,255,255,0)");
-
+      ctx.clearRect(0, 0, 100, 50);
+      const norm = normalize(data);
       ctx.beginPath();
-      ctx.moveTo(px(0), py(data[0]));
-      data.forEach((v, i) => {
-        if (i === 0) return;
-        const cpx = (px(i - 1) + px(i)) / 2;
-        ctx.bezierCurveTo(cpx, py(data[i - 1]), cpx, py(v), px(i), py(v));
+      norm.forEach((v, i) => {
+        const x = (i / (norm.length - 1)) * 100;
+        const y = 48 - v * 44;
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
       });
-      ctx.lineTo(W, H);
-      ctx.lineTo(0, H);
-      ctx.closePath();
-      ctx.fillStyle = grad;
-      ctx.fill();
-
-      /* Line */
-      ctx.beginPath();
-      ctx.moveTo(px(0), py(data[0]));
-      data.forEach((v, i) => {
-        if (i === 0) return;
-        const cpx = (px(i - 1) + px(i)) / 2;
-        ctx.bezierCurveTo(cpx, py(data[i - 1]), cpx, py(v), px(i), py(v));
-      });
-      ctx.strokeStyle = "rgba(255,255,255,.7)";
+      const grad = ctx.createLinearGradient(0, 0, 100, 0);
+      grad.addColorStop(0, "rgba(255,255,255,0.2)");
+      grad.addColorStop(1, "rgba(255,255,255,0.9)");
+      ctx.strokeStyle = grad;
       ctx.lineWidth = 1.5;
-      ctx.shadowColor = "rgba(255,255,255,.5)";
-      ctx.shadowBlur = 6;
       ctx.stroke();
-      ctx.shadowBlur = 0;
 
-      /* Live dot at end */
-      const lx = px(data.length - 1);
-      const ly = py(data[data.length - 1]);
+      // Latest point
+      const lx = 98;
+      const ly = 48 - norm[norm.length - 1] * 44;
       ctx.beginPath();
-      ctx.arc(lx, ly, 4, 0, Math.PI * 2);
+      ctx.arc(lx, ly, 2.5, 0, Math.PI * 2);
       ctx.fillStyle = "#fff";
       ctx.fill();
-
-      const t = Date.now() % 1200 / 1200;
-      const pulse = Math.sin(t * Math.PI * 2) * .5 + .5;
-      ctx.beginPath();
-      ctx.arc(lx, ly, 4 + pulse * 10, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(255,255,255,${.35 * (1 - pulse)})`;
-      ctx.lineWidth = 1;
-      ctx.stroke();
     }
 
-    let lastPush = 0;
-    function loop(ts) {
-      if (ts - lastPush > 420) { pushPoint(); lastPush = ts; }
-      drawChart();
-      requestAnimationFrame(loop);
-    }
-    requestAnimationFrame(loop);
-  }
-
-  /* ════════════════════════════════════════
-     7.  CURSOR TRACKING
-  ════════════════════════════════════════ */
-  function initCursor() {
-    const cursor = document.getElementById("avk-cursor");
-    const ring   = document.getElementById("avk-cursor-ring");
-    let rx = 0, ry = 0, mx = 0, my = 0;
-
-    document.addEventListener("mousemove", e => { mx = e.clientX; my = e.clientY; });
-    document.addEventListener("mouseenter", () => { cursor.style.opacity = 1; ring.style.opacity = 1; });
-    document.addEventListener("mouseleave", () => { cursor.style.opacity = 0; ring.style.opacity = 0; });
-
-    document.querySelectorAll(".avk-card").forEach(c => {
-      c.addEventListener("mouseenter", () => {
-        ring.style.width = "60px";
-        ring.style.height = "60px";
-        ring.style.borderColor = "rgba(255,255,255,.7)";
-      });
-      c.addEventListener("mouseleave", () => {
-        ring.style.width = "38px";
-        ring.style.height = "38px";
-        ring.style.borderColor = "rgba(255,255,255,.45)";
-      });
-    });
-
-    function animCursor() {
-      rx += (mx - rx) * .12;
-      ry += (my - ry) * .12;
-      cursor.style.left = mx + "px";
-      cursor.style.top  = my + "px";
-      ring.style.left   = rx + "px";
-      ring.style.top    = ry + "px";
-      requestAnimationFrame(animCursor);
-    }
-    animCursor();
-  }
-
-  /* ════════════════════════════════════════
-     8.  LIVE TICKER PRICE UPDATES
-  ════════════════════════════════════════ */
-  function initTickerUpdates() {
+    draw();
     setInterval(() => {
-      const items = document.querySelectorAll(".avk-tick-item");
-      items.forEach((item, i) => {
-        const t = TICKERS[i % TICKERS.length];
-        const base = parseFloat(t.val.replace(/,/g, ""));
-        const wobble = (Math.random() - .5) * base * .002;
-        const newVal = (base + wobble).toFixed(base < 10 ? 4 : 2);
-        const bEl = item.querySelector("b");
-        const sEl = item.querySelectorAll("span")[1];
-        if (bEl) bEl.textContent = parseFloat(newVal).toLocaleString("en-US", { minimumFractionDigits: newVal < 10 ? 4 : 2 });
-        if (sEl) {
-          const chg = ((wobble / base) * 100).toFixed(2);
-          const up  = chg >= 0;
-          sEl.textContent = (up ? "+" : "") + chg + "%";
-          sEl.style.color = `rgba(255,255,255,${up ? ".75" : ".3"})`;
-        }
+      data.push(Math.random());
+      data.shift();
+      draw();
+    }, 800);
+  }
+
+  /* ──────────────────────────────────────────────
+     MAIN CHART
+  ────────────────────────────────────────────── */
+  function createMainChart(canvas) {
+    const ctx = canvas.getContext("2d");
+    const W = canvas.clientWidth || 600;
+    const H = 160;
+    canvas.width = W;
+    canvas.height = H;
+
+    let series = Array.from({ length: 80 }, (_, i) => ({
+      x: i,
+      y: 50 + Math.sin(i * 0.18) * 20 + Math.random() * 14,
+    }));
+
+    function draw() {
+      const w = canvas.parentElement.offsetWidth - 56 || W;
+      canvas.width = w;
+      ctx.clearRect(0, 0, w, H);
+
+      // Grid lines
+      ctx.strokeStyle = "rgba(255,255,255,0.05)";
+      ctx.lineWidth = 1;
+      [0.25, 0.5, 0.75].forEach((f) => {
+        ctx.beginPath();
+        ctx.moveTo(0, H * f);
+        ctx.lineTo(w, H * f);
+        ctx.stroke();
       });
-    }, 2200);
+
+      // Area fill
+      const pts = series.slice(-60);
+      const minY = Math.min(...pts.map((p) => p.y));
+      const maxY = Math.max(...pts.map((p) => p.y));
+      const scaleX = w / (pts.length - 1);
+      const scaleY = (H - 20) / (maxY - minY + 0.001);
+
+      const toX = (i) => i * scaleX;
+      const toY = (v) => H - 10 - (v - minY) * scaleY;
+
+      const areaGrad = ctx.createLinearGradient(0, 0, 0, H);
+      areaGrad.addColorStop(0, "rgba(255,255,255,0.14)");
+      areaGrad.addColorStop(1, "rgba(255,255,255,0)");
+
+      ctx.beginPath();
+      pts.forEach((p, i) => {
+        i === 0 ? ctx.moveTo(toX(i), toY(p.y)) : ctx.lineTo(toX(i), toY(p.y));
+      });
+      ctx.lineTo(toX(pts.length - 1), H);
+      ctx.lineTo(0, H);
+      ctx.closePath();
+      ctx.fillStyle = areaGrad;
+      ctx.fill();
+
+      // Line
+      const lineGrad = ctx.createLinearGradient(0, 0, w, 0);
+      lineGrad.addColorStop(0, "rgba(255,255,255,0.3)");
+      lineGrad.addColorStop(1, "rgba(255,255,255,1)");
+
+      ctx.beginPath();
+      pts.forEach((p, i) => {
+        i === 0 ? ctx.moveTo(toX(i), toY(p.y)) : ctx.lineTo(toX(i), toY(p.y));
+      });
+      ctx.strokeStyle = lineGrad;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Last point glow
+      const lastX = toX(pts.length - 1);
+      const lastY = toY(pts[pts.length - 1].y);
+      const grd = ctx.createRadialGradient(lastX, lastY, 0, lastX, lastY, 10);
+      grd.addColorStop(0, "rgba(255,255,255,0.5)");
+      grd.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.beginPath();
+      ctx.arc(lastX, lastY, 10, 0, Math.PI * 2);
+      ctx.fillStyle = grd;
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(lastX, lastY, 3, 0, Math.PI * 2);
+      ctx.fillStyle = "#fff";
+      ctx.fill();
+    }
+
+    draw();
+
+    setInterval(() => {
+      const last = series[series.length - 1];
+      series.push({ x: last.x + 1, y: last.y + (Math.random() - 0.49) * 5 });
+      if (series.length > 200) series.shift();
+      draw();
+    }, 700);
+
+    window.addEventListener("resize", draw);
   }
 
-  /* ════════════════════════════════════════
-     9.  HELPERS
-  ════════════════════════════════════════ */
-  function el(tag, attrs = {}) {
-    const e = document.createElement(tag);
-    Object.entries(attrs).forEach(([k, v]) => {
-      if (k === "class") e.className = v;
-      else e.setAttribute(k, v);
-    });
-    return e;
-  }
-  function htmlToNode(html) {
-    const t = document.createElement("template");
-    t.innerHTML = html.trim();
-    return t.content.firstChild;
+  /* ──────────────────────────────────────────────
+     LIVE STATS UPDATER
+  ────────────────────────────────────────────── */
+  function startLiveStats(pills) {
+    const data = [
+      { base: 1284733, format: (v) => "$" + Math.round(v).toLocaleString() },
+      { base: 47382, format: (v) => Math.round(v).toLocaleString() },
+      { base: 98.72, format: (v) => v.toFixed(2) + "%" },
+    ];
+    function update() {
+      pills.forEach((pill, i) => {
+        const d = data[i];
+        const noise = 1 + (Math.random() - 0.5) * 0.002;
+        d.base *= noise;
+        const el = pill.querySelector(".avicn-info-pill__value");
+        if (el) el.firstChild.textContent = d.format(d.base);
+      });
+    }
+    setInterval(update, 1800);
   }
 
-  /* ════════════════════════════════════════
-     10. BOOT
-  ════════════════════════════════════════ */
-  function boot() {
-    buildDOM();
-    initCanvas();
-    requestAnimationFrame(() => {
-      initChart();
-      initCursor();
-      initTickerUpdates();
+  /* ──────────────────────────────────────────────
+     BUILD DOM
+  ────────────────────────────────────────────── */
+  function buildUI() {
+    const root = document.createElement("div");
+    root.id = "avicn-more-root";
+
+    // Header
+    root.innerHTML = `
+      <header class="avicn-header">
+        <p class="avicn-header__eyebrow">AvicnKnov Web — Premium Trading Platform</p>
+        <h1 class="avicn-header__title">AVICN<span>KNOV</span></h1>
+        <p class="avicn-header__sub">Professional Exchange &nbsp;|&nbsp; Real-Time Markets &nbsp;|&nbsp; Advanced Charts</p>
+      </header>
+    `;
+
+    // Ticker
+    root.appendChild(createTicker());
+
+    // Cards
+    const grid = document.createElement("div");
+    grid.className = "avicn-grid";
+
+    const cards = [
+      {
+        badge: "Live",
+        title: "TRADING",
+        desc: "Access real-time spot markets with professional-grade tools. Execute trades instantly on our secure exchange.",
+        ctaText: "Open Trading Desk",
+        ctaGhost: "Practice Mode",
+        url: CONFIG.tradingURL,
+        sparkline: true,
+      },
+      {
+        badge: "Active",
+        title: "FUTURES",
+        desc: "Trade perpetual and dated futures contracts with up to 125x leverage. Advanced order types included.",
+        ctaText: "Explore Futures",
+        ctaGhost: "View Plans",
+        url: CONFIG.futuresURL,
+        sparkline: true,
+      },
+      {
+        badge: "New",
+        title: "ANALYTICS",
+        desc: "Deep-dive market intelligence, on-chain data feeds, and AI-powered pattern recognition across all pairs.",
+        ctaText: "Open Analytics",
+        ctaGhost: "Learn More",
+        url: "#analytics",
+        sparkline: false,
+      },
+      {
+        badge: "Beta",
+        title: "API ACCESS",
+        desc: "Integrate AvicnKnov data directly into your systems. REST & WebSocket. Rate limits up to 10k req/min.",
+        ctaText: "Get API Keys",
+        ctaGhost: "Documentation",
+        url: "#api",
+        sparkline: false,
+      },
+    ];
+
+    cards.forEach((c) => {
+      const card = document.createElement("div");
+      card.className = "avicn-card";
+      card.innerHTML = `
+        <div class="avicn-card__badge"><span class="dot"></span>${c.badge}</div>
+        <div class="avicn-card__title">${c.title}</div>
+        <p class="avicn-card__desc">${c.desc}</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <a href="${c.url}" class="avicn-btn">
+            ${c.ctaText} <span class="arrow">&#8594;</span>
+          </a>
+          <a href="${c.url}" class="avicn-btn avicn-btn--ghost">
+            ${c.ctaGhost}
+          </a>
+        </div>
+        ${c.sparkline ? '<div class="avicn-graph-wrap"></div>' : ""}
+      `;
+      if (c.sparkline) {
+        const wrap = card.querySelector(".avicn-graph-wrap");
+        createSparkline(wrap);
+      }
+      grid.appendChild(card);
     });
+
+    root.appendChild(grid);
+
+    // Main chart section
+    const chartSection = document.createElement("div");
+    chartSection.className = "avicn-chart-section";
+    chartSection.innerHTML = `
+      <div class="avicn-chart-section__header">
+        <span class="avicn-chart-section__label">BTC / USD — Live Chart</span>
+        <span class="avicn-chart-section__live"><span class="dot"></span>LIVE FEED</span>
+      </div>
+      <canvas id="avicn-main-chart"></canvas>
+    `;
+    root.appendChild(chartSection);
+
+    // Info pills
+    const infoRow = document.createElement("div");
+    infoRow.className = "avicn-info-row";
+    const pillData = [
+      { label: "24H Volume", value: "$1,284,733", small: "USD" },
+      { label: "Active Traders", value: "47,382", small: "online" },
+      { label: "Uptime", value: "98.72%", small: "30d avg" },
+    ];
+    pillData.forEach((p) => {
+      const pill = document.createElement("div");
+      pill.className = "avicn-info-pill";
+      pill.innerHTML = `
+        <div class="avicn-info-pill__label">${p.label}</div>
+        <div class="avicn-info-pill__value">${p.value}<small>${p.small}</small></div>
+      `;
+      infoRow.appendChild(pill);
+    });
+    root.appendChild(infoRow);
+
+    // Footer note
+    root.insertAdjacentHTML(
+      "beforeend",
+      `<div class="avicn-footer-note">
+        &copy; ${new Date().getFullYear()} AvicnKnov Web &mdash; All rights reserved. &nbsp;|&nbsp;
+        <a href="${CONFIG.tradingURL}">Trade Now</a> &nbsp;|&nbsp;
+        <a href="${CONFIG.futuresURL}">Futures</a> &nbsp;|&nbsp;
+        <a href="#terms">Terms</a>
+      </div>`
+    );
+
+    document.body.appendChild(root);
+
+    // Kick off live chart
+    const mainCanvas = document.getElementById("avicn-main-chart");
+    if (mainCanvas) createMainChart(mainCanvas);
+
+    // Kick off live stats
+    const pills = Array.from(infoRow.querySelectorAll(".avicn-info-pill"));
+    startLiveStats(pills);
+  }
+
+  /* ──────────────────────────────────────────────
+     INIT
+  ────────────────────────────────────────────── */
+  function init() {
+    injectStyles();
+    createMapCanvas();
+    buildUI();
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", boot);
+    document.addEventListener("DOMContentLoaded", init);
   } else {
-    boot();
+    init();
   }
-
 })();
