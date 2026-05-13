@@ -40,107 +40,72 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(circle
 /* Card */
 .card{background:rgba(255,255,255,.04);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.1);border-radius:22px;padding:30px;margin-bottom:24px;opacity:0;transform:translateY(40px);transition:all .8s cubic-bezier(.25,.46,.45,.94);position:relative;overflow:hidden}
 .card.visible{opacity:1;transform:translateY(0)}
-.card::before{content:"";position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.05),transparent);transition:left .8s}
-.card:hover::before{left:100%}
 .card:hover{border-color:rgba(255,255,255,.22);transform:translateY(-3px);box-shadow:0 20px 50px rgba(0,0,0,.5)}
 .card-head{display:flex;align-items:center;gap:16px;margin-bottom:20px}
 .card-icon{width:50px;height:50px;border-radius:14px;background:linear-gradient(135deg,#fff,#bbb);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 25px rgba(255,255,255,.3);animation:glow 3s ease-in-out infinite}
 @keyframes glow{0%,100%{box-shadow:0 0 25px rgba(255,255,255,.3)}50%{box-shadow:0 0 40px rgba(255,255,255,.6)}}
 .card-icon svg{width:26px;height:26px;color:#000}
 .card-title{font-size:1.3rem;font-weight:700}
-.card-sub{font-size:.85rem;color:#888;margin-top:2px}
+.card-sub{font-size:.85rem;color:#888}
 
 /* Language */
 .lang-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
 .lang-option{padding:18px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:14px;cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:space-between}
-.lang-option.active{background:#fff;color:#000;border-color:#fff;box-shadow:0 0 25px rgba(255,255,255,.3)}
-.lang-option.disabled{opacity:.4;cursor:not-allowed;position:relative}
-.lang-option:not(.disabled):not(.active):hover{border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.06)}
-.lang-name{font-weight:600;font-size:.95rem}
-.lang-tag{font-size:.7rem;padding:3px 8px;border-radius:20px;background:rgba(255,255,255,.1);color:#aaa;letter-spacing:1px}
+.lang-option.active{background:#fff;color:#000;border-color:#fff}
+.lang-option.disabled{opacity:.4;cursor:not-allowed}
+.lang-tag{font-size:.7rem;padding:3px 8px;border-radius:20px;background:rgba(255,255,255,.1);color:#aaa}
 .lang-option.active .lang-tag{background:#000;color:#fff}
-.lang-tick{width:18px;height:18px;display:none}
-.lang-option.active .lang-tick{display:block}
 
-/* Reset Layout */
-.reset-info-text {color: #aaa; font-size: 0.95rem; margin-bottom: 25px; text-align: center;}
-
-.btn{width:100%;padding:16px;background:#fff;color:#000;border:none;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;transition:all .3s;letter-spacing:1px;position:relative;overflow:hidden}
+/* Button & Messages */
+.btn{width:100%;padding:16px;background:#fff;color:#000;border:none;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;transition:all .3s;letter-spacing:1px;position:relative}
 .btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 12px 30px rgba(255,255,255,.3)}
 .btn:disabled{opacity:.5;cursor:not-allowed}
 .btn.loading{color:transparent}
 .btn.loading::after{content:"";position:absolute;width:20px;height:20px;border:2px solid #000;border-top-color:transparent;border-radius:50%;top:50%;left:50%;margin:-10px 0 0 -10px;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-.message{margin-top:14px;padding:12px 16px;border-radius:10px;font-size:.9rem;display:none;animation:slideIn .3s ease}
-.message.show{display:block}
+.message{margin-top:14px;padding:12px 16px;border-radius:10px;font-size:.9rem;display:none}
+.message.show{display:block;animation:slideIn .3s ease}
 .message.success{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.3);color:#fff}
 .message.error{background:rgba(255,80,80,.1);border:1px solid rgba(255,80,80,.3);color:#ff8888}
 @keyframes slideIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
 
-.limit-info{font-size:.78rem;color:#666;text-align:center;margin-top:10px;letter-spacing:1px}
-
-/* Web Settings Toggles */
+/* Toggle Rows */
 .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:18px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:14px;margin-bottom:12px;transition:all .3s}
-.toggle-row:hover{border-color:rgba(255,255,255,.18);background:rgba(255,255,255,.05)}
-.toggle-info{display:flex;align-items:center;gap:14px;flex:1;min-width:0}
-.toggle-ico{width:42px;height:42px;border-radius:11px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.toggle-info{display:flex;align-items:center;gap:14px}
+.toggle-ico{width:42px;height:42px;border-radius:11px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center}
 .toggle-ico svg{width:22px;height:22px;color:#fff}
-.toggle-text{flex:1;min-width:0}
-.toggle-name{font-weight:600;font-size:.98rem}
-.toggle-desc{font-size:.78rem;color:#888;margin-top:2px}
-.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.toggle-name{font-weight:600}
+.toggle-desc{font-size:.78rem;color:#888}
+
+.switch{position:relative;width:52px;height:28px}
 .switch input{opacity:0;width:0;height:0}
 .slider{position:absolute;cursor:pointer;inset:0;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:50px;transition:.4s}
 .slider::before{content:"";position:absolute;height:20px;width:20px;left:3px;top:3px;background:#888;border-radius:50%;transition:.4s}
 .switch input:checked+.slider{background:#fff}
 .switch input:checked+.slider::before{transform:translateX(24px);background:#000}
-.switch input:checked+.slider{box-shadow:0 0 15px rgba(255,255,255,.4)}
 
-.super-row{background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.02));border-color:rgba(255,255,255,.2);position:relative;overflow:hidden}
-.super-row::before{content:"";position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent);animation:sweep 4s linear infinite}
-@keyframes sweep{0%{left:-100%}100%{left:100%}}
-.super-badge{font-size:.65rem;padding:3px 8px;background:#fff;color:#000;border-radius:20px;font-weight:700;letter-spacing:1px;margin-left:8px}
-
-.nav-link{display:flex;align-items:center;gap:14px;padding:18px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:14px;margin-bottom:12px;text-decoration:none;color:#fff;transition:all .3s;cursor:pointer}
-.nav-link:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.25);transform:translateX(5px)}
-.nav-link .toggle-ico{background:rgba(255,255,255,.08)}
-.nav-link .arrow{margin-left:auto;width:20px;height:20px;color:#666;transition:all .3s}
-.nav-link:hover .arrow{color:#fff;transform:translateX(3px)}
-
-.logout-link{background:rgba(255,255,255,.04);border-color:rgba(255,80,80,.2)}
-.logout-link:hover{background:rgba(255,80,80,.08);border-color:rgba(255,80,80,.4)}
-.logout-link .toggle-ico{background:rgba(255,80,80,.1)}
-.logout-link .toggle-ico svg{color:#ff8888}
-
-.footer{text-align:center;margin-top:50px;padding:24px;color:#666;font-size:.85rem;border-top:1px solid rgba(255,255,255,.08)}
-.footer a{color:#fff;text-decoration:none}
-
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;z-index:2000;padding:20px;animation:fadeBg .3s ease}
+/* Modal */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;z-index:2000;padding:20px}
 .modal.show{display:flex}
-@keyframes fadeBg{from{opacity:0}to{opacity:1}}
-.modal-box{background:#0a0a0a;border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:30px;max-width:400px;width:100%;text-align:center;animation:popIn .4s cubic-bezier(.34,1.56,.64,1)}
-@keyframes popIn{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
-.modal-icon{width:60px;height:60px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;box-shadow:0 0 30px rgba(255,255,255,.4)}
-.modal-icon svg{width:32px;height:32px;color:#000}
-.modal-title{font-size:1.3rem;font-weight:700;margin-bottom:8px}
-.modal-text{color:#aaa;margin-bottom:22px;font-size:.95rem}
-.modal-btns{display:flex;gap:10px}
-.modal-btn{flex:1;padding:13px;border-radius:10px;border:none;font-weight:600;cursor:pointer;transition:all .3s;font-size:.95rem}
-.modal-btn.cancel{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.15)}
-.modal-btn.cancel:hover{background:rgba(255,255,255,.15)}
+.modal-box{background:#0a0a0a;border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:30px;max-width:400px;width:100%;text-align:center}
+.modal-btn{padding:13px;border-radius:10px;border:none;font-weight:600;cursor:pointer;flex:1}
 .modal-btn.confirm{background:#fff;color:#000}
-.modal-btn.confirm:hover{box-shadow:0 8px 20px rgba(255,255,255,.3)}
+.modal-btn.cancel{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.15)}
 
-@media(max-width:600px){.container{padding:85px 14px 40px}.card{padding:22px 18px}.live-status{padding:8px 12px;font-size:.7rem}.live-status span{display:none}.toggle-row{padding:14px}.toggle-name{font-size:.9rem}.toggle-desc{font-size:.72rem}}
+.nav-link{display:flex;align-items:center;gap:14px;padding:18px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:14px;margin-bottom:12px;text-decoration:none;color:#fff;transition:all .3s}
+.nav-link:hover{background:rgba(255,255,255,.07);transform:translateX(5px)}
+
+.logout-link{border-color:rgba(255,80,80,.2)}
+.logout-link:hover{background:rgba(255,80,80,.08)}
+
+.footer{text-align:center;margin-top:50px;color:#666;font-size:.85rem;padding-bottom:20px}
 </style>
 </head>
 <body>
 <div class="grid-bg"></div>
 
-<a href="index.html" class="back-btn" aria-label="Back">
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-</a>
+<a href="index.html" class="back-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></a>
 
 <div class="live-status" id="liveStatus">
 <div class="live-dot"></div>
@@ -148,292 +113,149 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(circle
 </div>
 
 <div class="container">
+    <div class="hero">
+        <h1>Settings</h1>
+        <div class="divider"></div>
+        <p>Personalize your experience</p>
+    </div>
 
-<div class="hero">
-<h1>Settings</h1>
-<div class="divider"></div>
-<p>Personalize your AvicnKnov Web experience</p>
-</div>
+    <!-- LANGUAGE -->
+    <div class="card">
+        <div class="card-head">
+            <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20 15.3 15.3 0 010-20z"/></svg></div>
+            <div><div class="card-title">Language</div><div class="card-sub">Choose your preferred language</div></div>
+        </div>
+        <div class="lang-options">
+            <div class="lang-option active"><div>English <span class="lang-tag">ACTIVE</span></div></div>
+            <div class="lang-option disabled"><div>Hindi <span class="lang-tag">SOON</span></div></div>
+        </div>
+    </div>
 
-<!-- LANGUAGE -->
-<div class="card">
-<div class="card-head">
-<div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20 15.3 15.3 0 010-20z"/></svg></div>
-<div><div class="card-title">Language</div><div class="card-sub">Choose your preferred language</div></div>
-</div>
-<div class="lang-options">
-<div class="lang-option active" data-lang="en">
-<div><div class="lang-name">English</div><div class="lang-tag">ACTIVE</div></div>
-<svg class="lang-tick" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-</div>
-<div class="lang-option disabled">
-<div><div class="lang-name">More Languages</div><div class="lang-tag">SOON</div></div>
-</div>
-</div>
-</div>
+    <!-- RESET PASSWORD -->
+    <div class="card">
+        <div class="card-head">
+            <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+            <div><div class="card-title">Reset Password</div><div class="card-sub">Link will be sent to your Gmail</div></div>
+        </div>
+        <p style="color:#aaa; font-size:0.9rem; margin-bottom:15px;">A password reset link will be sent to your registered email address.</p>
+        <button class="btn" id="resetBtn">Send Reset Link to Gmail</button>
+        <div class="message" id="pwdMsg"></div>
+    </div>
 
-<!-- RESET PASSWORD SECTION (UPDATED) -->
-<div class="card">
-<div class="card-head">
-<div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
-<div><div class="card-title">Reset Password</div><div class="card-sub">Get a secure reset link on your Gmail</div></div>
-</div>
+    <!-- WEB SETTINGS -->
+    <div class="card">
+        <div class="card-head">
+            <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+            <div><div class="card-title">Web Settings</div><div class="card-sub">Security & Performance</div></div>
+        </div>
+        <div class="toggle-row">
+            <div class="toggle-info"><div class="toggle-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div><div><div class="toggle-name">Super Mode</div><div class="toggle-desc">Boost site speed</div></div></div>
+            <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+        </div>
+        <div class="toggle-row">
+            <div class="toggle-info"><div class="toggle-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div><div class="toggle-name">Enhanced Security</div><div class="toggle-desc">Extra protection</div></div></div>
+            <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+        </div>
+    </div>
 
-<div class="reset-info-text">
-    Forgot your password? Click below and we will send a password reset link to the email registered with this account.
-</div>
+    <!-- ACCOUNT -->
+    <div class="card">
+        <div class="card-head">
+            <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+            <div><div class="card-title">Account</div><div class="card-sub">Manage session</div></div>
+        </div>
+        <div class="nav-link logout-link" id="logoutBtn" style="cursor:pointer">
+            <div class="toggle-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg></div>
+            <div><div class="toggle-name">Logout</div><div class="toggle-desc">Sign out of account</div></div>
+        </div>
+    </div>
 
-<button class="btn" id="resetBtn">Send Reset Link to Gmail</button>
-<div class="message" id="pwdMsg"></div>
-<div class="limit-info" id="limitInfo">Linked to your user_verify security records</div>
-</div>
-
-<!-- WEB SETTINGS -->
-<div class="card">
-<div class="card-head">
-<div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></div>
-<div><div class="card-title">Web Settings</div><div class="card-sub">Advanced platform controls</div></div>
-</div>
-
-<div class="toggle-row super-row">
-<div class="toggle-info">
-<div class="toggle-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
-<div class="toggle-text"><div class="toggle-name">Super Web Mode <span class="super-badge">PRO</span></div><div class="toggle-desc">Boost site speed by millions of times</div></div>
-</div>
-<label class="switch"><input type="checkbox" id="superMode" checked><span class="slider"></span></label>
-</div>
-
-<div class="toggle-row">
-<div class="toggle-info">
-<div class="toggle-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
-<div class="toggle-text"><div class="toggle-name">Fast Site</div><div class="toggle-desc">Enable accelerated page loading</div></div>
-</div>
-<label class="switch"><input type="checkbox" id="fastSite" checked><span class="slider"></span></label>
-</div>
-
-<div class="toggle-row">
-<div class="toggle-info">
-<div class="toggle-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></div>
-<div class="toggle-text"><div class="toggle-name">Smooth Animations</div><div class="toggle-desc">Premium motion effects across UI</div></div>
-</div>
-<label class="switch"><input type="checkbox" id="smoothAnim" checked><span class="slider"></span></label>
-</div>
-
-<div class="toggle-row">
-<div class="toggle-info">
-<div class="toggle-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg></div>
-<div class="toggle-text"><div class="toggle-name">Dark Mode</div><div class="toggle-desc">Premium black theme (default)</div></div>
-</div>
-<label class="switch"><input type="checkbox" id="darkMode" checked disabled><span class="slider"></span></label>
-</div>
-
-<div class="toggle-row">
-<div class="toggle-info">
-<div class="toggle-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg></div>
-<div class="toggle-text"><div class="toggle-name">Auto Sync</div><div class="toggle-desc">Sync data across all devices</div></div>
-</div>
-<label class="switch"><input type="checkbox" id="autoSync" checked><span class="slider"></span></label>
-</div>
-
-<div class="toggle-row">
-<div class="toggle-info">
-<div class="toggle-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/></svg></div>
-<div class="toggle-text"><div class="toggle-name">Smart Cache</div><div class="toggle-desc">Intelligent resource caching</div></div>
-</div>
-<label class="switch"><input type="checkbox" id="smartCache" checked><span class="slider"></span></label>
-</div>
-
-<div class="toggle-row">
-<div class="toggle-info">
-<div class="toggle-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-<div class="toggle-text"><div class="toggle-name">Enhanced Security</div><div class="toggle-desc">Extra protection layer active</div></div>
-</div>
-<label class="switch"><input type="checkbox" id="security" checked><span class="slider"></span></label>
-</div>
-
-<div class="toggle-row">
-<div class="toggle-info">
-<div class="toggle-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
-<div class="toggle-text"><div class="toggle-name">Notifications</div><div class="toggle-desc">Receive important updates</div></div>
-</div>
-<label class="switch"><input type="checkbox" id="notif" checked><span class="slider"></span></label>
-</div>
-
-<div class="toggle-row">
-<div class="toggle-info">
-<div class="toggle-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/></svg></div>
-<div class="toggle-text"><div class="toggle-name">Global CDN</div><div class="toggle-desc">Use nearest data center</div></div>
-</div>
-<label class="switch"><input type="checkbox" id="cdn" checked><span class="slider"></span></label>
-</div>
-
-<div class="toggle-row">
-<div class="toggle-info">
-<div class="toggle-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2h-4M9 11V7a3 3 0 116 0v4"/></svg></div>
-<div class="toggle-text"><div class="toggle-name">Privacy Mode</div><div class="toggle-desc">Minimize data tracking</div></div>
-</div>
-<label class="switch"><input type="checkbox" id="privacy"><span class="slider"></span></label>
-</div>
-</div>
-
-<!-- PROFILE -->
-<div class="card">
-<div class="card-head">
-<div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-<div><div class="card-title">Account</div><div class="card-sub">Manage your profile and access</div></div>
-</div>
-
-<a href="profile.html" class="nav-link">
-<div class="toggle-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-<div class="toggle-text"><div class="toggle-name">Profile Settings</div><div class="toggle-desc">View and edit your profile</div></div>
-<svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-</a>
-
-<a href="help.html" class="nav-link">
-<div class="toggle-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/></svg></div>
-<div class="toggle-text"><div class="toggle-name">Help & Support</div><div class="toggle-desc">Get assistance anytime</div></div>
-<svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-</a>
-
-<div class="nav-link logout-link" id="logoutBtn">
-<div class="toggle-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg></div>
-<div class="toggle-text"><div class="toggle-name">Logout</div><div class="toggle-desc">Sign out from your account</div></div>
-<svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-</div>
-</div>
-
-<div class="footer">Need help? Contact <a href="mailto:help.avicnkvonteam@gmail.com">help.avicnkvonteam@gmail.com</a><br>&copy; AvicnKnov Web. All rights reserved.</div>
+    <div class="footer">&copy; AvicnKnov Web. Contact: help.avicnkvonteam@gmail.com</div>
 </div>
 
 <!-- Logout Modal -->
 <div class="modal" id="logoutModal">
-<div class="modal-box">
-<div class="modal-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg></div>
-<div class="modal-title">Confirm Logout</div>
-<div class="modal-text">Are you sure you want to sign out from your account?</div>
-<div class="modal-btns">
-<button class="modal-btn cancel" id="cancelLogout">Cancel</button>
-<button class="modal-btn confirm" id="confirmLogout">Logout</button>
-</div>
-</div>
+    <div class="modal-box">
+        <div class="modal-title" style="font-size:1.4rem; margin-bottom:10px;">Logout?</div>
+        <div class="modal-text" style="color:#aaa; margin-bottom:20px;">Are you sure you want to sign out?</div>
+        <div style="display:flex; gap:10px;">
+            <button class="modal-btn cancel" id="cancelLogout">Cancel</button>
+            <button class="modal-btn confirm" id="confirmLogout">Logout</button>
+        </div>
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// ========= REVEAL ANIMATIONS =========
+// SUPABASE CONFIG
+const SUPABASE_URL='https://kjxnbofpwfvheuzmeynd.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqeG5ib2Zwd2Z2aGV1em1leW5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxODUxMTEsImV4cCI6MjA5Mjc2MTExMX0.OBVQFJCWUJh5gTx0Nk8E7EMZEprRNq1L-jCTRFJRbOo';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// REVEAL ANIMATION
 const obs=new IntersectionObserver((e)=>{e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('visible');obs.unobserve(x.target)}})},{threshold:.1});
 document.querySelectorAll('.card').forEach(c=>obs.observe(c));
 
-// ========= LIVE CONNECTION =========
-const liveStatus=document.getElementById('liveStatus');
-const connText=document.getElementById('connText');
-function updateConn(){
-  if(navigator.onLine){liveStatus.classList.remove('offline');connText.textContent='CONNECTED'}
-  else{liveStatus.classList.add('offline');connText.textContent='OFFLINE'}
-}
-window.addEventListener('online',updateConn);
-window.addEventListener('offline',updateConn);
-updateConn();
+// RESET PASSWORD LOGIC
+const resetBtn = document.getElementById('resetBtn');
+const pwdMsg = document.getElementById('pwdMsg');
 
-// ========= LANGUAGE =========
-document.querySelectorAll('.lang-option').forEach(o=>{
-  o.addEventListener('click',()=>{
-    if(o.classList.contains('disabled'))return;
-    document.querySelectorAll('.lang-option').forEach(x=>x.classList.remove('active'));
-    o.classList.add('active');
-    const lang=o.dataset.lang;
-    localStorage.setItem('akw_lang',lang);
-  });
-});
-
-// ========= SUPABASE =========
-const SUPABASE_URL='https://kjxnbofpwfvheuzmeynd.supabase.co';
-const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqeG5ib2Zwd2Z2aGV1em1leW5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxODUxMTEsImV4cCI6MjA5Mjc2MTExMX0.OBVQFJCWUJh5gTx0Nk8E7EMZEprRNq1L-jCTRFJRbOo';
-const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-
-// ========= RESET PASSWORD (NEW LOGIC) =========
-const resetBtn=document.getElementById('resetBtn');
-const pwdMsg=document.getElementById('pwdMsg');
-
-function showMsg(text,type){
-  pwdMsg.textContent=text;
-  pwdMsg.className='message show '+type;
-  setTimeout(()=>{pwdMsg.classList.remove('show')},5000);
+function showMsg(text, type) {
+    pwdMsg.textContent = text;
+    pwdMsg.className = 'message show ' + type;
+    setTimeout(() => pwdMsg.classList.remove('show'), 5000);
 }
 
-resetBtn.addEventListener('click',async()=>{
-  resetBtn.classList.add('loading');
-  resetBtn.disabled=true;
+resetBtn.addEventListener('click', async () => {
+    resetBtn.classList.add('loading');
+    resetBtn.disabled = true;
 
-  try{
-    // 1. Get current user identity from localStorage
-    const rawUser = localStorage.getItem('akw_user');
-    if(!rawUser) {
-        showMsg('No active session. Please login again.','error');
-        resetBtn.classList.remove('loading');resetBtn.disabled=false;return;
-    }
-    
-    let identity = "";
     try {
-        const parsed = JSON.parse(rawUser);
-        identity = parsed.username || parsed.email || parsed.id;
-    } catch(e) { identity = rawUser; }
+        // Supabase se active user mangiye
+        const { data: { user }, error: authError } = await sb.auth.getUser();
 
-    // 2. Connect to user_verify table to fetch the email
-    let {data:users, error:findErr} = await sb
-        .from('user_verify')
-        .select('email')
-        .or(`username.eq.${identity},email.eq.${identity}`)
-        .single();
-    
-    if(findErr || !users || !users.email){
-      showMsg('Could not find a registered email for this account.','error');
-      resetBtn.classList.remove('loading');resetBtn.disabled=false;return;
+        if (authError || !user) {
+            showMsg('No active session. Please login again.', 'error');
+            return;
+        }
+
+        // Reset email bhejiye
+        const { error: resetErr } = await sb.auth.resetPasswordForEmail(user.email, {
+            redirectTo: window.location.origin + '/update-password.html',
+        });
+
+        if (resetErr) {
+            showMsg(resetErr.message, 'error');
+        } else {
+            showMsg('Reset link sent to ' + user.email, 'success');
+        }
+    } catch (e) {
+        showMsg('System error. Try later.', 'error');
+    } finally {
+        resetBtn.classList.remove('loading');
+        resetBtn.disabled = false;
     }
-    
-    const userEmail = users.email;
-
-    // 3. Trigger Supabase Auth Reset Password Email
-    const { error: resetErr } = await sb.auth.resetPasswordForEmail(userEmail, {
-        redirectTo: window.location.origin + '/update-password.html',
-    });
-
-    if(resetErr){
-      showMsg(resetErr.message, 'error');
-    } else {
-      showMsg('Success! A reset link has been sent to ' + userEmail, 'success');
-    }
-
-  } catch(e) {
-    showMsg('Internal system error. Please try again later.', 'error');
-  } finally {
-    resetBtn.classList.remove('loading');
-    resetBtn.disabled=false;
-  }
 });
 
-// ========= TOGGLE PERSISTENCE =========
-const toggles=['superMode','fastSite','smoothAnim','autoSync','smartCache','security','notif','cdn','privacy'];
-toggles.forEach(id=>{
-  const el=document.getElementById(id);
-  const saved=localStorage.getItem('akw_'+id);
-  if(saved!==null)el.checked=saved==='1';
-  el.addEventListener('change',()=>{
-    localStorage.setItem('akw_'+id,el.checked?'1':'0');
-  });
-});
+// LOGOUT LOGIC
+const logoutBtn = document.getElementById('logoutBtn');
+const logoutModal = document.getElementById('logoutModal');
+const confirmLogout = document.getElementById('confirmLogout');
+const cancelLogout = document.getElementById('cancelLogout');
 
-// ========= LOGOUT =========
-const logoutModal=document.getElementById('logoutModal');
-document.getElementById('logoutBtn').addEventListener('click',()=>logoutModal.classList.add('show'));
-document.getElementById('cancelLogout').addEventListener('click',()=>logoutModal.classList.remove('show'));
-document.getElementById('confirmLogout').addEventListener('click',()=>{
-  localStorage.removeItem('akw_user');
-  localStorage.removeItem('akw_session');
-  sessionStorage.clear();
-  window.location.href='index.html';
-});
-logoutModal.addEventListener('click',(e)=>{if(e.target===logoutModal)logoutModal.classList.remove('show')});
+logoutBtn.onclick = () => logoutModal.classList.add('show');
+cancelLogout.onclick = () => logoutModal.classList.remove('show');
+
+confirmLogout.onclick = async () => {
+    await sb.auth.signOut();
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.href = 'index.html';
+};
+
+// CONNECTION STATUS
+window.addEventListener('online', () => { document.getElementById('connText').textContent='CONNECTED'; document.getElementById('liveStatus').classList.remove('offline'); });
+window.addEventListener('offline', () => { document.getElementById('connText').textContent='OFFLINE'; document.getElementById('liveStatus').classList.add('offline'); });
 </script>
 </body>
 </html>
