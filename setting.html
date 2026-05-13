@@ -62,19 +62,8 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(circle
 .lang-tick{width:18px;height:18px;display:none}
 .lang-option.active .lang-tick{display:block}
 
-/* Form */
-.form-group{margin-bottom:18px;position:relative}
-.form-label{display:block;font-size:.85rem;color:#aaa;margin-bottom:8px;letter-spacing:1px;text-transform:uppercase}
-.input-wrap{position:relative}
-.form-input{width:100%;padding:16px 50px 16px 18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);border-radius:12px;color:#fff;font-size:1rem;transition:all .3s;outline:none}
-.form-input:focus{border-color:#fff;background:rgba(255,255,255,.08);box-shadow:0 0 0 3px rgba(255,255,255,.1)}
-.form-input::placeholder{color:#555}
-.toggle-eye{position:absolute;right:14px;top:50%;transform:translateY(-50%);width:32px;height:32px;border:none;background:transparent;cursor:pointer;color:#888;display:flex;align-items:center;justify-content:center;transition:color .3s}
-.toggle-eye:hover{color:#fff}
-.toggle-eye svg{width:20px;height:20px}
-.strength-bar{height:4px;background:rgba(255,255,255,.08);border-radius:4px;margin-top:8px;overflow:hidden}
-.strength-fill{height:100%;width:0;background:#fff;border-radius:4px;transition:width .4s;box-shadow:0 0 10px rgba(255,255,255,.5)}
-.strength-text{font-size:.75rem;color:#666;margin-top:4px;letter-spacing:1px}
+/* Reset Layout */
+.reset-info-text {color: #aaa; font-size: 0.95rem; margin-bottom: 25px; text-align: center;}
 
 .btn{width:100%;padding:16px;background:#fff;color:#000;border:none;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;transition:all .3s;letter-spacing:1px;position:relative;overflow:hidden}
 .btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 12px 30px rgba(255,255,255,.3)}
@@ -91,7 +80,7 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(circle
 
 .limit-info{font-size:.78rem;color:#666;text-align:center;margin-top:10px;letter-spacing:1px}
 
-/* Toggle Switch */
+/* Web Settings Toggles */
 .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:18px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:14px;margin-bottom:12px;transition:all .3s}
 .toggle-row:hover{border-color:rgba(255,255,255,.18);background:rgba(255,255,255,.05)}
 .toggle-info{display:flex;align-items:center;gap:14px;flex:1;min-width:0}
@@ -113,7 +102,6 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(circle
 @keyframes sweep{0%{left:-100%}100%{left:100%}}
 .super-badge{font-size:.65rem;padding:3px 8px;background:#fff;color:#000;border-radius:20px;font-weight:700;letter-spacing:1px;margin-left:8px}
 
-/* Nav Links */
 .nav-link{display:flex;align-items:center;gap:14px;padding:18px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:14px;margin-bottom:12px;text-decoration:none;color:#fff;transition:all .3s;cursor:pointer}
 .nav-link:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.25);transform:translateX(5px)}
 .nav-link .toggle-ico{background:rgba(255,255,255,.08)}
@@ -128,7 +116,6 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(circle
 .footer{text-align:center;margin-top:50px;padding:24px;color:#666;font-size:.85rem;border-top:1px solid rgba(255,255,255,.08)}
 .footer a{color:#fff;text-decoration:none}
 
-/* Modal */
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;z-index:2000;padding:20px;animation:fadeBg .3s ease}
 .modal.show{display:flex}
 @keyframes fadeBg{from{opacity:0}to{opacity:1}}
@@ -185,42 +172,20 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(circle
 </div>
 </div>
 
-<!-- PASSWORD CHANGE -->
+<!-- RESET PASSWORD SECTION (UPDATED) -->
 <div class="card">
 <div class="card-head">
 <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
-<div><div class="card-title">Change Password</div><div class="card-sub">Update your account password securely</div></div>
+<div><div class="card-title">Reset Password</div><div class="card-sub">Get a secure reset link on your Gmail</div></div>
 </div>
 
-<div class="form-group">
-<label class="form-label">Old Password</label>
-<div class="input-wrap">
-<input type="password" class="form-input" id="oldPass" placeholder="Enter current password" autocomplete="current-password">
-<button type="button" class="toggle-eye" data-target="oldPass"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
-</div>
+<div class="reset-info-text">
+    Forgot your password? Click below and we will send a password reset link to the email registered with this account.
 </div>
 
-<div class="form-group">
-<label class="form-label">New Password</label>
-<div class="input-wrap">
-<input type="password" class="form-input" id="newPass" placeholder="Minimum 8 characters" autocomplete="new-password">
-<button type="button" class="toggle-eye" data-target="newPass"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
-</div>
-<div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
-<div class="strength-text" id="strengthText">PASSWORD STRENGTH</div>
-</div>
-
-<div class="form-group">
-<label class="form-label">Confirm New Password</label>
-<div class="input-wrap">
-<input type="password" class="form-input" id="confirmPass" placeholder="Re-enter new password" autocomplete="new-password">
-<button type="button" class="toggle-eye" data-target="confirmPass"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
-</div>
-</div>
-
-<button class="btn" id="changeBtn">Update Password</button>
+<button class="btn" id="resetBtn">Send Reset Link to Gmail</button>
 <div class="message" id="pwdMsg"></div>
-<div class="limit-info" id="limitInfo">You can change your password 5 times per 24 hours</div>
+<div class="limit-info" id="limitInfo">Linked to your user_verify security records</div>
 </div>
 
 <!-- WEB SETTINGS -->
@@ -381,45 +346,14 @@ document.querySelectorAll('.lang-option').forEach(o=>{
   });
 });
 
-// ========= TOGGLE EYE =========
-document.querySelectorAll('.toggle-eye').forEach(b=>{
-  b.addEventListener('click',()=>{
-    const t=document.getElementById(b.dataset.target);
-    if(t.type==='password'){t.type='text';b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>'}
-    else{t.type='password';b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>'}
-  });
-});
-
-// ========= PASSWORD STRENGTH =========
-const newPass=document.getElementById('newPass');
-const strengthFill=document.getElementById('strengthFill');
-const strengthText=document.getElementById('strengthText');
-newPass.addEventListener('input',()=>{
-  const v=newPass.value;let s=0;
-  if(v.length>=8)s+=25;
-  if(v.length>=12)s+=15;
-  if(/[A-Z]/.test(v))s+=20;
-  if(/[0-9]/.test(v))s+=20;
-  if(/[^A-Za-z0-9]/.test(v))s+=20;
-  if(s>100)s=100;
-  strengthFill.style.width=s+'%';
-  let txt='TOO WEAK';
-  if(s>=30)txt='WEAK';
-  if(s>=55)txt='MEDIUM';
-  if(s>=75)txt='STRONG';
-  if(s>=95)txt='EXCELLENT';
-  strengthText.textContent='PASSWORD STRENGTH: '+txt;
-});
-
 // ========= SUPABASE =========
 const SUPABASE_URL='https://kjxnbofpwfvheuzmeynd.supabase.co';
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqeG5ib2Zwd2Z2aGV1em1leW5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxODUxMTEsImV4cCI6MjA5Mjc2MTExMX0.OBVQFJCWUJh5gTx0Nk8E7EMZEprRNq1L-jCTRFJRbOo';
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-// ========= PASSWORD CHANGE =========
-const changeBtn=document.getElementById('changeBtn');
+// ========= RESET PASSWORD (NEW LOGIC) =========
+const resetBtn=document.getElementById('resetBtn');
 const pwdMsg=document.getElementById('pwdMsg');
-const limitInfo=document.getElementById('limitInfo');
 
 function showMsg(text,type){
   pwdMsg.textContent=text;
@@ -427,95 +361,55 @@ function showMsg(text,type){
   setTimeout(()=>{pwdMsg.classList.remove('show')},5000);
 }
 
-function getAttempts(){
-  const raw=localStorage.getItem('akw_pwd_attempts');
-  if(!raw)return [];
-  try{
-    const arr=JSON.parse(raw);
-    const now=Date.now();
-    return arr.filter(t=>now-t<24*60*60*1000);
-  }catch(e){return []}
-}
-function addAttempt(){
-  const a=getAttempts();a.push(Date.now());
-  localStorage.setItem('akw_pwd_attempts',JSON.stringify(a));
-}
-function updateLimitDisplay(){
-  const a=getAttempts();const left=5-a.length;
-  if(left<=0)limitInfo.textContent='LIMIT REACHED — Try again after 24 hours';
-  else limitInfo.textContent=`You can change your password ${left} more time(s) in the next 24 hours`;
-}
-updateLimitDisplay();
-
-changeBtn.addEventListener('click',async()=>{
-  const oldPass=document.getElementById('oldPass').value;
-  const newPassV=newPass.value;
-  const confirmPass=document.getElementById('confirmPass').value;
-
-  if(!oldPass){showMsg('Please enter your old password','error');return}
-  if(newPassV.length<8){showMsg('New password must be at least 8 characters','error');return}
-  if(newPassV!==confirmPass){showMsg('New password and confirm password do not match','error');return}
-  if(oldPass===newPassV){showMsg('New password must be different from old password','error');return}
-
-  const attempts=getAttempts();
-  if(attempts.length>=5){showMsg('Daily limit reached. You can change password 5 times per 24 hours.','error');return}
-
-  changeBtn.classList.add('loading');
-  changeBtn.disabled=true;
+resetBtn.addEventListener('click',async()=>{
+  resetBtn.classList.add('loading');
+  resetBtn.disabled=true;
 
   try{
-    // Automatically get the logged in user from local storage
+    // 1. Get current user identity from localStorage
     const rawUser = localStorage.getItem('akw_user');
     if(!rawUser) {
-        showMsg('Session expired or not logged in. Please login again.','error');
-        changeBtn.classList.remove('loading');changeBtn.disabled=false;return;
+        showMsg('No active session. Please login again.','error');
+        resetBtn.classList.remove('loading');resetBtn.disabled=false;return;
     }
     
-    let activeUser = rawUser;
+    let identity = "";
     try {
         const parsed = JSON.parse(rawUser);
-        // Extracts whatever identifier is available in the stored session object
-        activeUser = parsed.username || parsed.email || parsed.id;
-    } catch(e) {
-        // If it's stored as a raw string
+        identity = parsed.username || parsed.email || parsed.id;
+    } catch(e) { identity = rawUser; }
+
+    // 2. Connect to user_verify table to fetch the email
+    let {data:users, error:findErr} = await sb
+        .from('user_verify')
+        .select('email')
+        .or(`username.eq.${identity},email.eq.${identity}`)
+        .single();
+    
+    if(findErr || !users || !users.email){
+      showMsg('Could not find a registered email for this account.','error');
+      resetBtn.classList.remove('loading');resetBtn.disabled=false;return;
+    }
+    
+    const userEmail = users.email;
+
+    // 3. Trigger Supabase Auth Reset Password Email
+    const { error: resetErr } = await sb.auth.resetPasswordForEmail(userEmail, {
+        redirectTo: window.location.origin + '/update-password.html',
+    });
+
+    if(resetErr){
+      showMsg(resetErr.message, 'error');
+    } else {
+      showMsg('Success! A reset link has been sent to ' + userEmail, 'success');
     }
 
-    // Find the logged-in user dynamically
-    let {data:users,error:findErr}=await sb.from('user_verify').select('*').or(`username.eq.${activeUser},email.eq.${activeUser}`).limit(1);
-    
-    if(findErr||!users||users.length===0){
-      showMsg('User account not found. Please log in again.','error');
-      changeBtn.classList.remove('loading');changeBtn.disabled=false;return;
-    }
-    
-    const user=users[0];
-    
-    if(user.password!==oldPass){
-      showMsg('Old password is incorrect','error');
-      changeBtn.classList.remove('loading');changeBtn.disabled=false;return;
-    }
-
-    // Update password
-    const {error:updErr}=await sb.from('user_verify').update({password:newPassV}).eq('id',user.id);
-    
-    if(updErr){
-      showMsg('Failed to update password. Please try again.','error');
-      changeBtn.classList.remove('loading');changeBtn.disabled=false;return;
-    }
-
-    addAttempt();
-    updateLimitDisplay();
-    showMsg('Password successfully changed!','success');
-    document.getElementById('oldPass').value='';
-    newPass.value='';
-    document.getElementById('confirmPass').value='';
-    strengthFill.style.width='0%';
-    strengthText.textContent='PASSWORD STRENGTH';
-  }catch(e){
-    showMsg('Something went wrong. Please try again.','error');
+  } catch(e) {
+    showMsg('Internal system error. Please try again later.', 'error');
+  } finally {
+    resetBtn.classList.remove('loading');
+    resetBtn.disabled=false;
   }
-  changeBtn.classList.remove('loading');
-  changeBtn.disabled=false;
 });
 
 // ========= TOGGLE PERSISTENCE =========
