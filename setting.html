@@ -193,13 +193,6 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(circle
 </div>
 
 <div class="form-group">
-<label class="form-label">Username / Email</label>
-<div class="input-wrap">
-<input type="text" class="form-input" id="userId" placeholder="Enter your username or email" autocomplete="username" style="padding-right:18px">
-</div>
-</div>
-
-<div class="form-group">
 <label class="form-label">Old Password</label>
 <div class="input-wrap">
 <input type="password" class="form-input" id="oldPass" placeholder="Enter current password" autocomplete="current-password">
@@ -455,12 +448,10 @@ function updateLimitDisplay(){
 updateLimitDisplay();
 
 changeBtn.addEventListener('click',async()=>{
-  const userId=document.getElementById('userId').value.trim();
   const oldPass=document.getElementById('oldPass').value;
   const newPassV=newPass.value;
   const confirmPass=document.getElementById('confirmPass').value;
 
-  if(!userId){showMsg('Please enter your username or email','error');return}
   if(!oldPass){showMsg('Please enter your old password','error');return}
   if(newPassV.length<8){showMsg('New password must be at least 8 characters','error');return}
   if(newPassV!==confirmPass){showMsg('New password and confirm password do not match','error');return}
@@ -473,11 +464,27 @@ changeBtn.addEventListener('click',async()=>{
   changeBtn.disabled=true;
 
   try{
-    // Find user by username or email
-    let {data:users,error:findErr}=await sb.from('user_verify').select('*').or(`username.eq.${userId},email.eq.${userId}`).limit(1);
+    // Automatically get the logged in user from local storage
+    const rawUser = localStorage.getItem('akw_user');
+    if(!rawUser) {
+        showMsg('Session expired or not logged in. Please login again.','error');
+        changeBtn.classList.remove('loading');changeBtn.disabled=false;return;
+    }
+    
+    let activeUser = rawUser;
+    try {
+        const parsed = JSON.parse(rawUser);
+        // Extracts whatever identifier is available in the stored session object
+        activeUser = parsed.username || parsed.email || parsed.id;
+    } catch(e) {
+        // If it's stored as a raw string
+    }
+
+    // Find the logged-in user dynamically
+    let {data:users,error:findErr}=await sb.from('user_verify').select('*').or(`username.eq.${activeUser},email.eq.${activeUser}`).limit(1);
     
     if(findErr||!users||users.length===0){
-      showMsg('User not found. Please check your username/email.','error');
+      showMsg('User account not found. Please log in again.','error');
       changeBtn.classList.remove('loading');changeBtn.disabled=false;return;
     }
     
