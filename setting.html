@@ -1,201 +1,538 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>AvicnKnov — Settings</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Settings | AvicnKnov Web</title>
 <style>
-:root{--bg:#0a0a0a;--surface:#111;--surface2:#1a1a1a;--border:#222;--border2:#333;--white:#fff;--gray:#888;--gray2:#555;--green:#00e676;--red:#ff3b3b;}
-*{margin:0;padding:0;box-sizing:border-box;}
-html,body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;min-height:100%;}
-::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-thumb{background:#333;border-radius:2px;}
-header{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:64px;background:rgba(10,10,10,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
-.logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
-.logo-icon{width:36px;height:36px;object-fit:contain;filter:brightness(0) invert(1);}
-.logo-text{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:var(--white);}
-.btn-back{background:none;border:1px solid var(--border2);color:var(--white);padding:8px 18px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;transition:all .2s;text-decoration:none;display:flex;align-items:center;gap:6px;}
-.btn-back:hover{background:#1a1a1a;}
-main{padding-top:64px;display:flex;min-height:100vh;}
-.settings-nav{width:240px;border-right:1px solid var(--border);padding:32px 0;flex-shrink:0;position:sticky;top:64px;height:calc(100vh - 64px);overflow-y:auto;}
-.nav-section{margin-bottom:8px;}
-.nav-label{font-family:'Space Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--gray2);padding:0 20px;margin-bottom:8px;display:block;}
-.nav-item{display:flex;align-items:center;gap:10px;padding:10px 20px;cursor:pointer;transition:background .15s;color:var(--gray);font-size:14px;border-left:2px solid transparent;}
-.nav-item:hover{background:var(--surface2);color:var(--white);}
-.nav-item.active{background:var(--surface2);color:var(--white);border-left-color:var(--white);}
-.nav-item svg{width:16px;height:16px;}
-.settings-content{flex:1;padding:40px;max-width:700px;}
-.settings-section{display:none;}
-.settings-section.active{display:block;}
-.page-title{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:3px;margin-bottom:8px;}
-.page-sub{font-size:14px;color:var(--gray);margin-bottom:36px;}
-.setting-group{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:20px;overflow:hidden;}
-.setting-row{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid var(--border);}
-.setting-row:last-child{border-bottom:none;}
-.setting-info{flex:1;}
-.setting-label{font-size:14px;font-weight:500;margin-bottom:3px;}
-.setting-desc{font-size:12px;color:var(--gray);}
-/* TOGGLE */
-.toggle{width:44px;height:24px;background:#333;border-radius:12px;position:relative;cursor:pointer;transition:background .25s;flex-shrink:0;}
-.toggle.on{background:var(--white);}
-.toggle::after{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:#666;top:3px;left:3px;transition:transform .25s,background .25s;}
-.toggle.on::after{transform:translateX(20px);background:#000;}
-/* SELECT */
-.setting-select{background:var(--surface2);border:1px solid var(--border2);color:var(--white);padding:8px 12px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;cursor:pointer;}
-.setting-select option{background:#1a1a1a;}
-/* DANGER ZONE */
-.danger-zone{background:rgba(255,59,59,.06);border:1px solid rgba(255,59,59,.2);border-radius:12px;padding:22px;}
-.danger-title{font-size:13px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;}
-.danger-desc{font-size:13px;color:var(--gray);margin-bottom:16px;line-height:1.6;}
-.btn-danger{background:var(--red);color:#fff;border:none;padding:10px 20px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:opacity .2s;}
-.btn-danger:hover{opacity:.85;}
-@media(max-width:768px){main{flex-direction:column;}.settings-nav{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--border);display:flex;flex-wrap:wrap;padding:12px;gap:4px;}.nav-label{display:none;}.settings-content{padding:20px;}}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,sans-serif}
+html,body{overflow-x:hidden;scroll-behavior:smooth}
+body{background:#000;color:#fff;min-height:100vh;line-height:1.6;position:relative}
+body::before{content:"";position:fixed;inset:0;background:radial-gradient(circle at 20% 20%,rgba(255,255,255,.08) 0,transparent 50%),radial-gradient(circle at 80% 80%,rgba(255,255,255,.05) 0,transparent 50%);pointer-events:none;z-index:0;animation:bgShift 18s ease-in-out infinite}
+@keyframes bgShift{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+.grid-bg{position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:50px 50px;z-index:0;animation:gridMove 25s linear infinite}
+@keyframes gridMove{0%{transform:translate(0,0)}100%{transform:translate(50px,50px)}}
+
+/* Back Button */
+.back-btn{position:fixed;top:20px;left:20px;width:50px;height:50px;border-radius:50%;background:rgba(255,255,255,.08);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:1000;transition:all .4s cubic-bezier(.4,0,.2,1);text-decoration:none;color:#fff}
+.back-btn:hover{background:#fff;color:#000;transform:translateX(-3px) scale(1.05);box-shadow:0 0 30px rgba(255,255,255,.4)}
+.back-btn svg{width:22px;height:22px;transition:transform .3s}
+.back-btn:hover svg{transform:translateX(-2px)}
+
+/* Live Connection */
+.live-status{position:fixed;top:20px;right:20px;display:flex;align-items:center;gap:8px;padding:10px 16px;background:rgba(255,255,255,.06);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.15);border-radius:50px;font-size:.8rem;z-index:1000;letter-spacing:1px}
+.live-dot{width:8px;height:8px;border-radius:50%;background:#fff;box-shadow:0 0 10px #fff;animation:blink 1.5s ease-in-out infinite}
+.live-status.offline .live-dot{background:#666;box-shadow:none;animation:none}
+.live-status.offline{color:#888}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+.container{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:90px 20px 60px}
+
+/* Hero */
+.hero{text-align:center;margin-bottom:50px;animation:fadeUp 1s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+.hero h1{font-size:clamp(2rem,6vw,3.8rem);font-weight:800;letter-spacing:-2px;background:linear-gradient(135deg,#fff 0%,#888 50%,#fff 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;background-size:200% 200%;animation:shine 4s ease infinite}
+@keyframes shine{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.hero p{margin-top:14px;color:#aaa;font-size:clamp(.95rem,2vw,1.1rem)}
+.divider{width:80px;height:3px;background:linear-gradient(90deg,transparent,#fff,transparent);margin:24px auto;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.5;width:80px}50%{opacity:1;width:120px}}
+
+/* Card */
+.card{background:rgba(255,255,255,.04);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.1);border-radius:22px;padding:30px;margin-bottom:24px;opacity:0;transform:translateY(40px);transition:all .8s cubic-bezier(.25,.46,.45,.94);position:relative;overflow:hidden}
+.card.visible{opacity:1;transform:translateY(0)}
+.card::before{content:"";position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.05),transparent);transition:left .8s}
+.card:hover::before{left:100%}
+.card:hover{border-color:rgba(255,255,255,.22);transform:translateY(-3px);box-shadow:0 20px 50px rgba(0,0,0,.5)}
+.card-head{display:flex;align-items:center;gap:16px;margin-bottom:20px}
+.card-icon{width:50px;height:50px;border-radius:14px;background:linear-gradient(135deg,#fff,#bbb);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 25px rgba(255,255,255,.3);animation:glow 3s ease-in-out infinite}
+@keyframes glow{0%,100%{box-shadow:0 0 25px rgba(255,255,255,.3)}50%{box-shadow:0 0 40px rgba(255,255,255,.6)}}
+.card-icon svg{width:26px;height:26px;color:#000}
+.card-title{font-size:1.3rem;font-weight:700}
+.card-sub{font-size:.85rem;color:#888;margin-top:2px}
+
+/* Language */
+.lang-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.lang-option{padding:18px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:14px;cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:space-between}
+.lang-option.active{background:#fff;color:#000;border-color:#fff;box-shadow:0 0 25px rgba(255,255,255,.3)}
+.lang-option.disabled{opacity:.4;cursor:not-allowed;position:relative}
+.lang-option:not(.disabled):not(.active):hover{border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.06)}
+.lang-name{font-weight:600;font-size:.95rem}
+.lang-tag{font-size:.7rem;padding:3px 8px;border-radius:20px;background:rgba(255,255,255,.1);color:#aaa;letter-spacing:1px}
+.lang-option.active .lang-tag{background:#000;color:#fff}
+.lang-tick{width:18px;height:18px;display:none}
+.lang-option.active .lang-tick{display:block}
+
+/* Form */
+.form-group{margin-bottom:18px;position:relative}
+.form-label{display:block;font-size:.85rem;color:#aaa;margin-bottom:8px;letter-spacing:1px;text-transform:uppercase}
+.input-wrap{position:relative}
+.form-input{width:100%;padding:16px 50px 16px 18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);border-radius:12px;color:#fff;font-size:1rem;transition:all .3s;outline:none}
+.form-input:focus{border-color:#fff;background:rgba(255,255,255,.08);box-shadow:0 0 0 3px rgba(255,255,255,.1)}
+.form-input::placeholder{color:#555}
+.toggle-eye{position:absolute;right:14px;top:50%;transform:translateY(-50%);width:32px;height:32px;border:none;background:transparent;cursor:pointer;color:#888;display:flex;align-items:center;justify-content:center;transition:color .3s}
+.toggle-eye:hover{color:#fff}
+.toggle-eye svg{width:20px;height:20px}
+.strength-bar{height:4px;background:rgba(255,255,255,.08);border-radius:4px;margin-top:8px;overflow:hidden}
+.strength-fill{height:100%;width:0;background:#fff;border-radius:4px;transition:width .4s;box-shadow:0 0 10px rgba(255,255,255,.5)}
+.strength-text{font-size:.75rem;color:#666;margin-top:4px;letter-spacing:1px}
+
+.btn{width:100%;padding:16px;background:#fff;color:#000;border:none;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;transition:all .3s;letter-spacing:1px;position:relative;overflow:hidden}
+.btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 12px 30px rgba(255,255,255,.3)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.loading{color:transparent}
+.btn.loading::after{content:"";position:absolute;width:20px;height:20px;border:2px solid #000;border-top-color:transparent;border-radius:50%;top:50%;left:50%;margin:-10px 0 0 -10px;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.message{margin-top:14px;padding:12px 16px;border-radius:10px;font-size:.9rem;display:none;animation:slideIn .3s ease}
+.message.show{display:block}
+.message.success{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.3);color:#fff}
+.message.error{background:rgba(255,80,80,.1);border:1px solid rgba(255,80,80,.3);color:#ff8888}
+@keyframes slideIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+
+.limit-info{font-size:.78rem;color:#666;text-align:center;margin-top:10px;letter-spacing:1px}
+
+/* Toggle Switch */
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:18px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:14px;margin-bottom:12px;transition:all .3s}
+.toggle-row:hover{border-color:rgba(255,255,255,.18);background:rgba(255,255,255,.05)}
+.toggle-info{display:flex;align-items:center;gap:14px;flex:1;min-width:0}
+.toggle-ico{width:42px;height:42px;border-radius:11px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.toggle-ico svg{width:22px;height:22px;color:#fff}
+.toggle-text{flex:1;min-width:0}
+.toggle-name{font-weight:600;font-size:.98rem}
+.toggle-desc{font-size:.78rem;color:#888;margin-top:2px}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;cursor:pointer;inset:0;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:50px;transition:.4s}
+.slider::before{content:"";position:absolute;height:20px;width:20px;left:3px;top:3px;background:#888;border-radius:50%;transition:.4s}
+.switch input:checked+.slider{background:#fff}
+.switch input:checked+.slider::before{transform:translateX(24px);background:#000}
+.switch input:checked+.slider{box-shadow:0 0 15px rgba(255,255,255,.4)}
+
+.super-row{background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.02));border-color:rgba(255,255,255,.2);position:relative;overflow:hidden}
+.super-row::before{content:"";position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent);animation:sweep 4s linear infinite}
+@keyframes sweep{0%{left:-100%}100%{left:100%}}
+.super-badge{font-size:.65rem;padding:3px 8px;background:#fff;color:#000;border-radius:20px;font-weight:700;letter-spacing:1px;margin-left:8px}
+
+/* Nav Links */
+.nav-link{display:flex;align-items:center;gap:14px;padding:18px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:14px;margin-bottom:12px;text-decoration:none;color:#fff;transition:all .3s;cursor:pointer}
+.nav-link:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.25);transform:translateX(5px)}
+.nav-link .toggle-ico{background:rgba(255,255,255,.08)}
+.nav-link .arrow{margin-left:auto;width:20px;height:20px;color:#666;transition:all .3s}
+.nav-link:hover .arrow{color:#fff;transform:translateX(3px)}
+
+.logout-link{background:rgba(255,255,255,.04);border-color:rgba(255,80,80,.2)}
+.logout-link:hover{background:rgba(255,80,80,.08);border-color:rgba(255,80,80,.4)}
+.logout-link .toggle-ico{background:rgba(255,80,80,.1)}
+.logout-link .toggle-ico svg{color:#ff8888}
+
+.footer{text-align:center;margin-top:50px;padding:24px;color:#666;font-size:.85rem;border-top:1px solid rgba(255,255,255,.08)}
+.footer a{color:#fff;text-decoration:none}
+
+/* Modal */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;z-index:2000;padding:20px;animation:fadeBg .3s ease}
+.modal.show{display:flex}
+@keyframes fadeBg{from{opacity:0}to{opacity:1}}
+.modal-box{background:#0a0a0a;border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:30px;max-width:400px;width:100%;text-align:center;animation:popIn .4s cubic-bezier(.34,1.56,.64,1)}
+@keyframes popIn{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
+.modal-icon{width:60px;height:60px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;box-shadow:0 0 30px rgba(255,255,255,.4)}
+.modal-icon svg{width:32px;height:32px;color:#000}
+.modal-title{font-size:1.3rem;font-weight:700;margin-bottom:8px}
+.modal-text{color:#aaa;margin-bottom:22px;font-size:.95rem}
+.modal-btns{display:flex;gap:10px}
+.modal-btn{flex:1;padding:13px;border-radius:10px;border:none;font-weight:600;cursor:pointer;transition:all .3s;font-size:.95rem}
+.modal-btn.cancel{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.15)}
+.modal-btn.cancel:hover{background:rgba(255,255,255,.15)}
+.modal-btn.confirm{background:#fff;color:#000}
+.modal-btn.confirm:hover{box-shadow:0 8px 20px rgba(255,255,255,.3)}
+
+@media(max-width:600px){.container{padding:85px 14px 40px}.card{padding:22px 18px}.live-status{padding:8px 12px;font-size:.7rem}.live-status span{display:none}.toggle-row{padding:14px}.toggle-name{font-size:.9rem}.toggle-desc{font-size:.72rem}}
 </style>
 </head>
 <body>
-<header>
-  <a class="logo" href="index.html">
-    <img class="logo-icon" src="1000006970.png" onerror="this.style.display='none'" alt=""/>
-    <span class="logo-text">AvicnKnov</span>
-  </a>
-  <a class="btn-back" href="javascript:history.back()">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
-    Back
-  </a>
-</header>
-<main>
-  <nav class="settings-nav">
-    <div class="nav-section">
-      <span class="nav-label">Account</span>
-      <div class="nav-item active" onclick="showSection('general')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-        General
-      </div>
-      <div class="nav-item" onclick="showSection('security')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        Security
-      </div>
-      <div class="nav-item" onclick="showSection('notifications')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-        Notifications
-      </div>
-    </div>
-    <div class="nav-section">
-      <span class="nav-label">Preferences</span>
-      <div class="nav-item" onclick="showSection('display')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-        Display
-      </div>
-      <div class="nav-item" onclick="showSection('danger')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#ff3b3b" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
-        <span style="color:var(--red)">Danger Zone</span>
-      </div>
-    </div>
-  </nav>
+<div class="grid-bg"></div>
 
-  <div class="settings-content">
-    <!-- GENERAL -->
-    <div class="settings-section active" id="section-general">
-      <div class="page-title">General</div>
-      <p class="page-sub">Manage your basic account preferences.</p>
-      <div class="setting-group">
-        <div class="setting-row">
-          <div class="setting-info"><div class="setting-label">Language</div><div class="setting-desc">Choose your preferred display language</div></div>
-          <select class="setting-select"><option>English</option><option>Hindi</option><option>Arabic</option><option>Chinese</option></select>
-        </div>
-        <div class="setting-row">
-          <div class="setting-info"><div class="setting-label">Currency Display</div><div class="setting-desc">Default fiat currency for price display</div></div>
-          <select class="setting-select"><option>USD</option><option>EUR</option><option>GBP</option><option>INR</option></select>
-        </div>
-        <div class="setting-row">
-          <div class="setting-info"><div class="setting-label">Time Zone</div><div class="setting-desc">Timestamps displayed in your local time</div></div>
-          <select class="setting-select"><option>Auto (System)</option><option>UTC+0</option><option>UTC+5:30</option></select>
-        </div>
-      </div>
-    </div>
+<a href="index.html" class="back-btn" aria-label="Back">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+</a>
 
-    <!-- SECURITY -->
-    <div class="settings-section" id="section-security">
-      <div class="page-title">Security</div>
-      <p class="page-sub">Keep your account safe and secure.</p>
-      <div class="setting-group">
-        <div class="setting-row">
-          <div class="setting-info"><div class="setting-label">Two-Factor Authentication</div><div class="setting-desc">Add an extra layer of security to your account</div></div>
-          <div class="toggle" onclick="this.classList.toggle('on')"></div>
-        </div>
-        <div class="setting-row">
-          <div class="setting-info"><div class="setting-label">Login Notifications</div><div class="setting-desc">Get notified when your account is accessed from a new device</div></div>
-          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
-        </div>
-        <div class="setting-row">
-          <div class="setting-info"><div class="setting-label">Withdrawal Confirmation</div><div class="setting-desc">Require email confirmation for all withdrawals</div></div>
-          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
-        </div>
-      </div>
-    </div>
+<div class="live-status" id="liveStatus">
+<div class="live-dot"></div>
+<span id="connText">CONNECTED</span>
+</div>
 
-    <!-- NOTIFICATIONS -->
-    <div class="settings-section" id="section-notifications">
-      <div class="page-title">Notifications</div>
-      <p class="page-sub">Control what alerts you receive.</p>
-      <div class="setting-group">
-        <div class="setting-row">
-          <div class="setting-info"><div class="setting-label">Price Alerts</div><div class="setting-desc">Notify when tokens hit your target price</div></div>
-          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
-        </div>
-        <div class="setting-row">
-          <div class="setting-info"><div class="setting-label">Trade Confirmations</div><div class="setting-desc">Email confirmation after every trade</div></div>
-          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
-        </div>
-        <div class="setting-row">
-          <div class="setting-info"><div class="setting-label">Promotional Emails</div><div class="setting-desc">News, updates, and special offers from AvicnKnov</div></div>
-          <div class="toggle" onclick="this.classList.toggle('on')"></div>
-        </div>
-        <div class="setting-row">
-          <div class="setting-info"><div class="setting-label">Market Digest</div><div class="setting-desc">Daily summary of market movements</div></div>
-          <div class="toggle" onclick="this.classList.toggle('on')"></div>
-        </div>
-      </div>
-    </div>
+<div class="container">
 
-    <!-- DISPLAY -->
-    <div class="settings-section" id="section-display">
-      <div class="page-title">Display</div>
-      <p class="page-sub">Customize your visual experience.</p>
-      <div class="setting-group">
-        <div class="setting-row">
-          <div class="setting-info"><div class="setting-label">Price Animation</div><div class="setting-desc">Animate price changes with color highlights</div></div>
-          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
-        </div>
-        <div class="setting-row">
-          <div class="setting-info"><div class="setting-label">Show Volume</div><div class="setting-desc">Display 24h volume in market list</div></div>
-          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
-        </div>
-        <div class="setting-row">
-          <div class="setting-info"><div class="setting-label">Compact Mode</div><div class="setting-desc">Denser layout for token tables</div></div>
-          <div class="toggle" onclick="this.classList.toggle('on')"></div>
-        </div>
-      </div>
-    </div>
+<div class="hero">
+<h1>Settings</h1>
+<div class="divider"></div>
+<p>Personalize your AvicnKnov Web experience</p>
+</div>
 
-    <!-- DANGER -->
-    <div class="settings-section" id="section-danger">
-      <div class="page-title">Danger Zone</div>
-      <p class="page-sub">Irreversible account actions. Proceed with caution.</p>
-      <div class="danger-zone">
-        <div class="danger-title">Delete Account</div>
-        <p class="danger-desc">Permanently delete your AvicnKnov account and all associated data. This action cannot be undone. Ensure you have withdrawn all funds before proceeding.</p>
-        <button class="btn-danger">Delete My Account</button>
-      </div>
-    </div>
-  </div>
-</main>
+<!-- LANGUAGE -->
+<div class="card">
+<div class="card-head">
+<div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20 15.3 15.3 0 010-20z"/></svg></div>
+<div><div class="card-title">Language</div><div class="card-sub">Choose your preferred language</div></div>
+</div>
+<div class="lang-options">
+<div class="lang-option active" data-lang="en">
+<div><div class="lang-name">English</div><div class="lang-tag">ACTIVE</div></div>
+<svg class="lang-tick" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+</div>
+<div class="lang-option disabled">
+<div><div class="lang-name">More Languages</div><div class="lang-tag">SOON</div></div>
+</div>
+</div>
+</div>
+
+<!-- PASSWORD CHANGE -->
+<div class="card">
+<div class="card-head">
+<div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+<div><div class="card-title">Change Password</div><div class="card-sub">Update your account password securely</div></div>
+</div>
+
+<div class="form-group">
+<label class="form-label">Username / Email</label>
+<div class="input-wrap">
+<input type="text" class="form-input" id="userId" placeholder="Enter your username or email" autocomplete="username" style="padding-right:18px">
+</div>
+</div>
+
+<div class="form-group">
+<label class="form-label">Old Password</label>
+<div class="input-wrap">
+<input type="password" class="form-input" id="oldPass" placeholder="Enter current password" autocomplete="current-password">
+<button type="button" class="toggle-eye" data-target="oldPass"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+</div>
+</div>
+
+<div class="form-group">
+<label class="form-label">New Password</label>
+<div class="input-wrap">
+<input type="password" class="form-input" id="newPass" placeholder="Minimum 8 characters" autocomplete="new-password">
+<button type="button" class="toggle-eye" data-target="newPass"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+</div>
+<div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+<div class="strength-text" id="strengthText">PASSWORD STRENGTH</div>
+</div>
+
+<div class="form-group">
+<label class="form-label">Confirm New Password</label>
+<div class="input-wrap">
+<input type="password" class="form-input" id="confirmPass" placeholder="Re-enter new password" autocomplete="new-password">
+<button type="button" class="toggle-eye" data-target="confirmPass"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+</div>
+</div>
+
+<button class="btn" id="changeBtn">Update Password</button>
+<div class="message" id="pwdMsg"></div>
+<div class="limit-info" id="limitInfo">You can change your password 5 times per 24 hours</div>
+</div>
+
+<!-- WEB SETTINGS -->
+<div class="card">
+<div class="card-head">
+<div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></div>
+<div><div class="card-title">Web Settings</div><div class="card-sub">Advanced platform controls</div></div>
+</div>
+
+<div class="toggle-row super-row">
+<div class="toggle-info">
+<div class="toggle-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+<div class="toggle-text"><div class="toggle-name">Super Web Mode <span class="super-badge">PRO</span></div><div class="toggle-desc">Boost site speed by millions of times</div></div>
+</div>
+<label class="switch"><input type="checkbox" id="superMode" checked><span class="slider"></span></label>
+</div>
+
+<div class="toggle-row">
+<div class="toggle-info">
+<div class="toggle-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+<div class="toggle-text"><div class="toggle-name">Fast Site</div><div class="toggle-desc">Enable accelerated page loading</div></div>
+</div>
+<label class="switch"><input type="checkbox" id="fastSite" checked><span class="slider"></span></label>
+</div>
+
+<div class="toggle-row">
+<div class="toggle-info">
+<div class="toggle-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></div>
+<div class="toggle-text"><div class="toggle-name">Smooth Animations</div><div class="toggle-desc">Premium motion effects across UI</div></div>
+</div>
+<label class="switch"><input type="checkbox" id="smoothAnim" checked><span class="slider"></span></label>
+</div>
+
+<div class="toggle-row">
+<div class="toggle-info">
+<div class="toggle-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg></div>
+<div class="toggle-text"><div class="toggle-name">Dark Mode</div><div class="toggle-desc">Premium black theme (default)</div></div>
+</div>
+<label class="switch"><input type="checkbox" id="darkMode" checked disabled><span class="slider"></span></label>
+</div>
+
+<div class="toggle-row">
+<div class="toggle-info">
+<div class="toggle-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg></div>
+<div class="toggle-text"><div class="toggle-name">Auto Sync</div><div class="toggle-desc">Sync data across all devices</div></div>
+</div>
+<label class="switch"><input type="checkbox" id="autoSync" checked><span class="slider"></span></label>
+</div>
+
+<div class="toggle-row">
+<div class="toggle-info">
+<div class="toggle-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/></svg></div>
+<div class="toggle-text"><div class="toggle-name">Smart Cache</div><div class="toggle-desc">Intelligent resource caching</div></div>
+</div>
+<label class="switch"><input type="checkbox" id="smartCache" checked><span class="slider"></span></label>
+</div>
+
+<div class="toggle-row">
+<div class="toggle-info">
+<div class="toggle-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+<div class="toggle-text"><div class="toggle-name">Enhanced Security</div><div class="toggle-desc">Extra protection layer active</div></div>
+</div>
+<label class="switch"><input type="checkbox" id="security" checked><span class="slider"></span></label>
+</div>
+
+<div class="toggle-row">
+<div class="toggle-info">
+<div class="toggle-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+<div class="toggle-text"><div class="toggle-name">Notifications</div><div class="toggle-desc">Receive important updates</div></div>
+</div>
+<label class="switch"><input type="checkbox" id="notif" checked><span class="slider"></span></label>
+</div>
+
+<div class="toggle-row">
+<div class="toggle-info">
+<div class="toggle-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/></svg></div>
+<div class="toggle-text"><div class="toggle-name">Global CDN</div><div class="toggle-desc">Use nearest data center</div></div>
+</div>
+<label class="switch"><input type="checkbox" id="cdn" checked><span class="slider"></span></label>
+</div>
+
+<div class="toggle-row">
+<div class="toggle-info">
+<div class="toggle-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2h-4M9 11V7a3 3 0 116 0v4"/></svg></div>
+<div class="toggle-text"><div class="toggle-name">Privacy Mode</div><div class="toggle-desc">Minimize data tracking</div></div>
+</div>
+<label class="switch"><input type="checkbox" id="privacy"><span class="slider"></span></label>
+</div>
+</div>
+
+<!-- PROFILE -->
+<div class="card">
+<div class="card-head">
+<div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+<div><div class="card-title">Account</div><div class="card-sub">Manage your profile and access</div></div>
+</div>
+
+<a href="profile.html" class="nav-link">
+<div class="toggle-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+<div class="toggle-text"><div class="toggle-name">Profile Settings</div><div class="toggle-desc">View and edit your profile</div></div>
+<svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+</a>
+
+<a href="help.html" class="nav-link">
+<div class="toggle-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/></svg></div>
+<div class="toggle-text"><div class="toggle-name">Help & Support</div><div class="toggle-desc">Get assistance anytime</div></div>
+<svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+</a>
+
+<div class="nav-link logout-link" id="logoutBtn">
+<div class="toggle-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg></div>
+<div class="toggle-text"><div class="toggle-name">Logout</div><div class="toggle-desc">Sign out from your account</div></div>
+<svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+</div>
+</div>
+
+<div class="footer">Need help? Contact <a href="mailto:help.avicnkvonteam@gmail.com">help.avicnkvonteam@gmail.com</a><br>&copy; AvicnKnov Web. All rights reserved.</div>
+</div>
+
+<!-- Logout Modal -->
+<div class="modal" id="logoutModal">
+<div class="modal-box">
+<div class="modal-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg></div>
+<div class="modal-title">Confirm Logout</div>
+<div class="modal-text">Are you sure you want to sign out from your account?</div>
+<div class="modal-btns">
+<button class="modal-btn cancel" id="cancelLogout">Cancel</button>
+<button class="modal-btn confirm" id="confirmLogout">Logout</button>
+</div>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-function showSection(id){
-  document.querySelectorAll('.settings-section').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  document.getElementById('section-'+id).classList.add('active');
-  event.currentTarget.classList.add('active');
+// ========= REVEAL ANIMATIONS =========
+const obs=new IntersectionObserver((e)=>{e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('visible');obs.unobserve(x.target)}})},{threshold:.1});
+document.querySelectorAll('.card').forEach(c=>obs.observe(c));
+
+// ========= LIVE CONNECTION =========
+const liveStatus=document.getElementById('liveStatus');
+const connText=document.getElementById('connText');
+function updateConn(){
+  if(navigator.onLine){liveStatus.classList.remove('offline');connText.textContent='CONNECTED'}
+  else{liveStatus.classList.add('offline');connText.textContent='OFFLINE'}
 }
+window.addEventListener('online',updateConn);
+window.addEventListener('offline',updateConn);
+updateConn();
+
+// ========= LANGUAGE =========
+document.querySelectorAll('.lang-option').forEach(o=>{
+  o.addEventListener('click',()=>{
+    if(o.classList.contains('disabled'))return;
+    document.querySelectorAll('.lang-option').forEach(x=>x.classList.remove('active'));
+    o.classList.add('active');
+    const lang=o.dataset.lang;
+    localStorage.setItem('akw_lang',lang);
+  });
+});
+
+// ========= TOGGLE EYE =========
+document.querySelectorAll('.toggle-eye').forEach(b=>{
+  b.addEventListener('click',()=>{
+    const t=document.getElementById(b.dataset.target);
+    if(t.type==='password'){t.type='text';b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>'}
+    else{t.type='password';b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>'}
+  });
+});
+
+// ========= PASSWORD STRENGTH =========
+const newPass=document.getElementById('newPass');
+const strengthFill=document.getElementById('strengthFill');
+const strengthText=document.getElementById('strengthText');
+newPass.addEventListener('input',()=>{
+  const v=newPass.value;let s=0;
+  if(v.length>=8)s+=25;
+  if(v.length>=12)s+=15;
+  if(/[A-Z]/.test(v))s+=20;
+  if(/[0-9]/.test(v))s+=20;
+  if(/[^A-Za-z0-9]/.test(v))s+=20;
+  if(s>100)s=100;
+  strengthFill.style.width=s+'%';
+  let txt='TOO WEAK';
+  if(s>=30)txt='WEAK';
+  if(s>=55)txt='MEDIUM';
+  if(s>=75)txt='STRONG';
+  if(s>=95)txt='EXCELLENT';
+  strengthText.textContent='PASSWORD STRENGTH: '+txt;
+});
+
+// ========= SUPABASE =========
+const SUPABASE_URL='https://kjxnbofpwfvheuzmeynd.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqeG5ib2Zwd2Z2aGV1em1leW5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxODUxMTEsImV4cCI6MjA5Mjc2MTExMX0.OBVQFJCWUJh5gTx0Nk8E7EMZEprRNq1L-jCTRFJRbOo';
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+// ========= PASSWORD CHANGE =========
+const changeBtn=document.getElementById('changeBtn');
+const pwdMsg=document.getElementById('pwdMsg');
+const limitInfo=document.getElementById('limitInfo');
+
+function showMsg(text,type){
+  pwdMsg.textContent=text;
+  pwdMsg.className='message show '+type;
+  setTimeout(()=>{pwdMsg.classList.remove('show')},5000);
+}
+
+function getAttempts(){
+  const raw=localStorage.getItem('akw_pwd_attempts');
+  if(!raw)return [];
+  try{
+    const arr=JSON.parse(raw);
+    const now=Date.now();
+    return arr.filter(t=>now-t<24*60*60*1000);
+  }catch(e){return []}
+}
+function addAttempt(){
+  const a=getAttempts();a.push(Date.now());
+  localStorage.setItem('akw_pwd_attempts',JSON.stringify(a));
+}
+function updateLimitDisplay(){
+  const a=getAttempts();const left=5-a.length;
+  if(left<=0)limitInfo.textContent='LIMIT REACHED — Try again after 24 hours';
+  else limitInfo.textContent=`You can change your password ${left} more time(s) in the next 24 hours`;
+}
+updateLimitDisplay();
+
+changeBtn.addEventListener('click',async()=>{
+  const userId=document.getElementById('userId').value.trim();
+  const oldPass=document.getElementById('oldPass').value;
+  const newPassV=newPass.value;
+  const confirmPass=document.getElementById('confirmPass').value;
+
+  if(!userId){showMsg('Please enter your username or email','error');return}
+  if(!oldPass){showMsg('Please enter your old password','error');return}
+  if(newPassV.length<8){showMsg('New password must be at least 8 characters','error');return}
+  if(newPassV!==confirmPass){showMsg('New password and confirm password do not match','error');return}
+  if(oldPass===newPassV){showMsg('New password must be different from old password','error');return}
+
+  const attempts=getAttempts();
+  if(attempts.length>=5){showMsg('Daily limit reached. You can change password 5 times per 24 hours.','error');return}
+
+  changeBtn.classList.add('loading');
+  changeBtn.disabled=true;
+
+  try{
+    // Find user by username or email
+    let {data:users,error:findErr}=await sb.from('user_verify').select('*').or(`username.eq.${userId},email.eq.${userId}`).limit(1);
+    
+    if(findErr||!users||users.length===0){
+      showMsg('User not found. Please check your username/email.','error');
+      changeBtn.classList.remove('loading');changeBtn.disabled=false;return;
+    }
+    
+    const user=users[0];
+    
+    if(user.password!==oldPass){
+      showMsg('Old password is incorrect','error');
+      changeBtn.classList.remove('loading');changeBtn.disabled=false;return;
+    }
+
+    // Update password
+    const {error:updErr}=await sb.from('user_verify').update({password:newPassV}).eq('id',user.id);
+    
+    if(updErr){
+      showMsg('Failed to update password. Please try again.','error');
+      changeBtn.classList.remove('loading');changeBtn.disabled=false;return;
+    }
+
+    addAttempt();
+    updateLimitDisplay();
+    showMsg('Password successfully changed!','success');
+    document.getElementById('oldPass').value='';
+    newPass.value='';
+    document.getElementById('confirmPass').value='';
+    strengthFill.style.width='0%';
+    strengthText.textContent='PASSWORD STRENGTH';
+  }catch(e){
+    showMsg('Something went wrong. Please try again.','error');
+  }
+  changeBtn.classList.remove('loading');
+  changeBtn.disabled=false;
+});
+
+// ========= TOGGLE PERSISTENCE =========
+const toggles=['superMode','fastSite','smoothAnim','autoSync','smartCache','security','notif','cdn','privacy'];
+toggles.forEach(id=>{
+  const el=document.getElementById(id);
+  const saved=localStorage.getItem('akw_'+id);
+  if(saved!==null)el.checked=saved==='1';
+  el.addEventListener('change',()=>{
+    localStorage.setItem('akw_'+id,el.checked?'1':'0');
+  });
+});
+
+// ========= LOGOUT =========
+const logoutModal=document.getElementById('logoutModal');
+document.getElementById('logoutBtn').addEventListener('click',()=>logoutModal.classList.add('show'));
+document.getElementById('cancelLogout').addEventListener('click',()=>logoutModal.classList.remove('show'));
+document.getElementById('confirmLogout').addEventListener('click',()=>{
+  localStorage.removeItem('akw_user');
+  localStorage.removeItem('akw_session');
+  sessionStorage.clear();
+  window.location.href='index.html';
+});
+logoutModal.addEventListener('click',(e)=>{if(e.target===logoutModal)logoutModal.classList.remove('show')});
 </script>
 </body>
 </html>
