@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Future Plans | AvicnKnov Web</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{overflow-x:hidden;scroll-behavior:smooth}
+body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,sans-serif;background:#000;color:#fff;min-height:100vh;line-height:1.7;position:relative}
+body::before{content:"";position:fixed;inset:0;background:radial-gradient(circle at 30% 40%,rgba(255,255,255,.08) 0,transparent 50%),radial-gradient(circle at 70% 60%,rgba(255,255,255,.05) 0,transparent 50%);pointer-events:none;z-index:0;animation:bgShift 20s ease-in-out infinite}
+@keyframes bgShift{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+.grid-bg{position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:50px 50px;z-index:0;animation:gridMove 20s linear infinite}
+@keyframes gridMove{0%{transform:translate(0,0)}100%{transform:translate(50px,50px)}}
+.back-btn{position:fixed;top:20px;left:20px;width:50px;height:50px;border-radius:50%;background:rgba(255,255,255,.08);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:1000;transition:all .4s cubic-bezier(.4,0,.2,1);text-decoration:none;color:#fff}
+.back-btn:hover{background:#fff;color:#000;transform:translateX(-3px) scale(1.05);box-shadow:0 0 30px rgba(255,255,255,.4)}
+.back-btn svg{width:22px;height:22px}
+.container{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:100px 24px 60px}
+.hero{text-align:center;margin-bottom:80px;animation:fadeUp 1s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+.hero h1{font-size:clamp(2.2rem,6vw,4.5rem);font-weight:800;letter-spacing:-2px;background:linear-gradient(135deg,#fff 0%,#888 50%,#fff 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;background-size:200% 200%;animation:shine 4s ease infinite}
+@keyframes shine{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.hero p{margin-top:20px;font-size:clamp(1rem,2vw,1.2rem);color:#aaa;max-width:700px;margin-left:auto;margin-right:auto}
+.divider{width:80px;height:3px;background:linear-gradient(90deg,transparent,#fff,transparent);margin:30px auto;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.5;width:80px}50%{opacity:1;width:120px}}
+.roadmap{position:relative;padding:40px 0}
+.roadmap::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,transparent,rgba(255,255,255,.5) 10%,rgba(255,255,255,.5) 90%,transparent);transform:translateX(-50%);box-shadow:0 0 20px rgba(255,255,255,.3)}
+.roadmap::after{content:"";position:absolute;left:50%;top:0;width:5px;height:60px;background:linear-gradient(to bottom,#fff,transparent);transform:translateX(-50%);animation:flow 3s linear infinite;border-radius:50%;filter:blur(2px)}
+@keyframes flow{0%{top:0;opacity:1}100%{top:100%;opacity:0}}
+.milestone{position:relative;margin-bottom:60px;width:50%;padding:0 50px;opacity:0;transform:translateY(50px);transition:all .8s cubic-bezier(.25,.46,.45,.94)}
+.milestone.visible{opacity:1;transform:translateY(0)}
+.milestone:nth-child(odd){left:0;text-align:right;padding-right:60px}
+.milestone:nth-child(even){left:50%;text-align:left;padding-left:60px}
+.milestone-dot{position:absolute;top:25px;width:24px;height:24px;border-radius:50%;background:#fff;border:4px solid #000;box-shadow:0 0 0 3px #fff,0 0 30px rgba(255,255,255,.7);animation:dotPulse 2s ease-in-out infinite}
+.milestone:nth-child(odd) .milestone-dot{right:-12px}
+.milestone:nth-child(even) .milestone-dot{left:-12px}
+@keyframes dotPulse{0%,100%{box-shadow:0 0 0 3px #fff,0 0 30px rgba(255,255,255,.7);transform:scale(1)}50%{box-shadow:0 0 0 5px #fff,0 0 50px rgba(255,255,255,1);transform:scale(1.15)}}
+.milestone-card{padding:30px;background:rgba(255,255,255,.04);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.1);border-radius:20px;transition:all .4s;position:relative;overflow:hidden}
+.milestone-card::before{content:"";position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);transition:left .8s}
+.milestone-card:hover::before{left:100%}
+.milestone-card:hover{border-color:rgba(255,255,255,.3);transform:scale(1.02);box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.m-head{display:flex;align-items:center;gap:14px;margin-bottom:15px}
+.milestone:nth-child(odd) .m-head{flex-direction:row-reverse}
+.m-icon{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#fff,#bbb);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 20px rgba(255,255,255,.3);animation:glow 3s ease-in-out infinite}
+@keyframes glow{0%,100%{box-shadow:0 0 20px rgba(255,255,255,.3)}50%{box-shadow:0 0 35px rgba(255,255,255,.6)}}
+.m-icon svg{width:24px;height:24px;color:#000}
+.m-num{font-size:.75rem;color:#666;font-weight:600;letter-spacing:2px}
+.m-title{font-size:1.15rem;font-weight:700;color:#fff;margin-top:2px}
+.m-body{color:#bbb;font-size:.95rem;text-align:justify}
+.m-body p{margin-bottom:8px}
+.highlight{color:#fff;font-weight:600}
+@media(max-width:768px){.roadmap::before{left:30px}.roadmap::after{left:30px}.milestone{width:100%;left:0!important;text-align:left!important;padding:0 0 0 70px!important}.milestone:nth-child(odd) .milestone-dot,.milestone:nth-child(even) .milestone-dot{left:18px;right:auto}.milestone:nth-child(odd) .m-head{flex-direction:row}}
+.footer{text-align:center;margin-top:80px;padding:30px;color:#666;font-size:.9rem;border-top:1px solid rgba(255,255,255,.08)}
+.footer a{color:#fff;text-decoration:none}
+.help-link{display:inline-block;margin-top:20px;padding:14px 30px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.2);border-radius:50px;color:#fff;text-decoration:none;font-weight:600;transition:all .4s}
+.help-link:hover{background:#fff;color:#000;transform:translateY(-3px);box-shadow:0 15px 40px rgba(255,255,255,.3)}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<a href="index.html" class="back-btn" aria-label="Back">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+</a>
+<div class="container">
+<div class="hero">
+<h1>Future Plans</h1>
+<div class="divider"></div>
+<p>The roadmap to tomorrow — bold ambitions, breakthrough innovations, and the future being built today at AvicnKnov Web.</p>
+</div>
+
+<div class="roadmap">
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><div><div class="m-num">MILESTONE 01</div><div class="m-title">Next-Gen Trading Engine</div></div></div><div class="m-body"><p>We are engineering a brand-new trading core capable of processing millions of transactions per second with <span class="highlight">near-zero latency</span>. This engine will redefine speed standards across the industry.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div><div class="m-num">MILESTONE 02</div><div class="m-title">Stronger Community</div></div></div><div class="m-body"><p>Building a tightly knit, highly engaged community where every member contributes, grows, and benefits from a culture of mutual support and shared ambition.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div><div class="m-num">MILESTONE 03</div><div class="m-title">Impenetrable Data Zone</div></div></div><div class="m-body"><p>A revolutionary <span class="highlight">Security Data Zone</span> where hacker intrusion is mathematically impossible. Multi-layer encryption, zero-trust architecture, and quantum-resistant cryptography combined.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></div><div><div class="m-num">MILESTONE 04</div><div class="m-title">AI Trading Assistant</div></div></div><div class="m-body"><p>Deploying advanced AI specifically designed for <span class="highlight">beginner traders</span> — a true gift that simplifies complex decisions, identifies opportunities, and educates in real time.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div><div class="m-num">MILESTONE 05</div><div class="m-title">Live Events</div></div></div><div class="m-body"><p>Hosting major in-person and virtual events where the community can connect, learn, and celebrate milestones together.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/></svg></div><div><div class="m-num">MILESTONE 06</div><div class="m-title">Global Tournaments</div></div></div><div class="m-body"><p>Organizing high-stakes tournaments with significant rewards, recognition, and the chance to compete with the best minds across the globe.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div><div><div class="m-num">MILESTONE 07</div><div class="m-title">Exclusive Giveaways</div></div></div><div class="m-body"><p>Regular giveaways featuring premium prizes, designed to <span class="highlight">reward loyalty</span> and celebrate active community members.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h.01M10 12h.01M14 12h.01M18 12h.01"/></svg></div><div><div class="m-num">MILESTONE 08</div><div class="m-title">Original Games</div></div></div><div class="m-body"><p>Launching our own in-house developed games — entertaining, rewarding, and seamlessly integrated into the AvicnKnov ecosystem.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div><div><div class="m-num">MILESTONE 09</div><div class="m-title">Original Movies & Music</div></div></div><div class="m-body"><p>Producing original films and music exclusively for the AvicnKnov community — creative content that resonates with our audience.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg></div><div><div class="m-num">MILESTONE 10</div><div class="m-title">Sealed Server Architecture</div></div></div><div class="m-body"><p>Re-engineering server infrastructure so that <span class="highlight">no data ever leaks</span> from one server to another. Total isolation. Total security.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div><div><div class="m-num">MILESTONE 11</div><div class="m-title">Ultra-Fast Trading</div></div></div><div class="m-body"><p>Engineering the fastest trading system the digital world has ever seen — designed to give every user a competitive advantage.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div><div class="m-num">MILESTONE 12</div><div class="m-title">Structured Learning System</div></div></div><div class="m-body"><p>A complete educational framework where users learn directly from our platforms, take tests, and earn certifications upon mastery.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg></div><div><div class="m-num">MILESTONE 13</div><div class="m-title">Course Certifications</div></div></div><div class="m-body"><p>Verified <span class="highlight">cards of recognition</span> awarded upon successful course completion — proof of skill that holds real value.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><div><div class="m-num">MILESTONE 14</div><div class="m-title">Reward-Based Learning</div></div></div><div class="m-body"><p>Students who pass tests unlock rewards, exclusive content, and progressive advantages — turning education into adventure.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div><div><div class="m-num">MILESTONE 15</div><div class="m-title">Specialized Teams</div></div></div><div class="m-body"><p>Forming dedicated teams for every product vertical — each one a deep expert in its domain, accountable for excellence.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></div><div><div class="m-num">MILESTONE 16</div><div class="m-title">Major Collaborations</div></div></div><div class="m-body"><p>Forging partnerships with <span class="highlight">global industry leaders</span> to expand capabilities and unlock new opportunities for our users.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4M21 12c0 5-3.5 9-9 9s-9-4-9-9 3.5-9 9-9 9 4 9 9z"/></svg></div><div><div class="m-num">MILESTONE 17</div><div class="m-title">User Achievements</div></div></div><div class="m-body"><p>Every user earns achievements that reflect their efforts and growth — tangible markers of progress and recognition.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 6-6"/></svg></div><div><div class="m-num">MILESTONE 18</div><div class="m-title">Advanced Analytics Dashboard</div></div></div><div class="m-body"><p>Building a powerful analytics suite that provides deep insights into user behavior, performance, and growth opportunities.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20 15.3 15.3 0 010-20z"/></svg></div><div><div class="m-num">MILESTONE 19</div><div class="m-title">Multi-Language Support</div></div></div><div class="m-body"><p>Expanding AvicnKnov Web to support multiple languages, making our ecosystem truly <span class="highlight">accessible worldwide</span>.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/></svg></div><div><div class="m-num">MILESTONE 20</div><div class="m-title">Native Mobile Apps</div></div></div><div class="m-body"><p>Launching premium native applications for iOS and Android, optimized for performance and a flawless mobile experience.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div><div><div class="m-num">MILESTONE 21</div><div class="m-title">Community Chat Network</div></div></div><div class="m-body"><p>An integrated, encrypted communication network where users connect, collaborate, and build relationships within the platform.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div><div class="m-num">MILESTONE 22</div><div class="m-title">Real-Time Notifications</div></div></div><div class="m-body"><p>An intelligent notification system that delivers only what matters, when it matters — never spam, always signal.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div><div><div class="m-num">MILESTONE 23</div><div class="m-title">Decentralized Storage</div></div></div><div class="m-body"><p>Migrating critical data to decentralized storage networks for <span class="highlight">unmatched resilience</span> and user-owned sovereignty.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><div><div class="m-num">MILESTONE 24</div><div class="m-title">Instant Settlement</div></div></div><div class="m-body"><p>Reducing transaction settlement times to near-zero, giving users immediate access to their value at all times.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></div><div><div class="m-num">MILESTONE 25</div><div class="m-title">Transparent Operations</div></div></div><div class="m-body"><p>Publishing regular reports and live operational data so users see exactly how AvicnKnov Web performs — no opacity, ever.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4"/></svg></div><div><div class="m-num">MILESTONE 26</div><div class="m-title">Innovation Lab</div></div></div><div class="m-body"><p>Establishing a dedicated lab where bold ideas are explored, prototyped, and transformed into <span class="highlight">production-ready innovations</span>.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/></svg></div><div><div class="m-num">MILESTONE 27</div><div class="m-title">Open Knowledge Hub</div></div></div><div class="m-body"><p>A vast, free-to-access knowledge base covering every aspect of our ecosystem — designed to empower curious minds.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg></div><div><div class="m-num">MILESTONE 28</div><div class="m-title">Bug Bounty Program</div></div></div><div class="m-body"><p>Rewarding ethical hackers and security researchers who help us identify and resolve vulnerabilities before anyone else.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></div><div><div class="m-num">MILESTONE 29</div><div class="m-title">Customizable Workspaces</div></div></div><div class="m-body"><p>Personal workspaces fully tailored to each user — flexible layouts, custom modules, and saved configurations.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6M23 11h-6"/></svg></div><div><div class="m-num">MILESTONE 30</div><div class="m-title">Lifelong User Loyalty</div></div></div><div class="m-body"><p>Building features and experiences so meaningful that users <span class="highlight">stay connected to AvicnKnov Web forever</span>.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l4 4-4 4M8 18l-4-4 4-4M22 12H6"/></svg></div><div><div class="m-num">MILESTONE 31</div><div class="m-title">Seamless Integrations</div></div></div><div class="m-body"><p>Connecting AvicnKnov Web with leading external platforms to unlock workflows and capabilities far beyond our walls.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2zM22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></div><div><div class="m-num">MILESTONE 32</div><div class="m-title">Premium Educational Content</div></div></div><div class="m-body"><p>Producing top-tier video lessons, interactive guides, and immersive learning experiences crafted by industry experts.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div><div><div class="m-num">MILESTONE 33</div><div class="m-title">User Empowerment Programs</div></div></div><div class="m-body"><p>Programs specifically designed to help <span class="highlight">small users grow into power users</span> with mentorship, resources, and guidance.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></div><div><div class="m-num">MILESTONE 34</div><div class="m-title">Strategic Acquisitions</div></div></div><div class="m-body"><p>Acquiring complementary technologies and talent to accelerate our roadmap and deliver value faster to our users.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div><div class="m-num">MILESTONE 35</div><div class="m-title">Hall of Fame</div></div></div><div class="m-body"><p>A permanent recognition system honoring users who shape the AvicnKnov community through exceptional contributions.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div><div><div class="m-num">MILESTONE 36</div><div class="m-title">Live Market Streaming</div></div></div><div class="m-body"><p>Round-the-clock live broadcasts of market events, expert commentary, and on-demand replays for our community.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg></div><div><div class="m-num">MILESTONE 37</div><div class="m-title">Smart Contracts</div></div></div><div class="m-body"><p>Deploying self-executing smart contracts to automate trust, enforce agreements, and eliminate intermediaries.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div><div class="m-num">MILESTONE 38</div><div class="m-title">Quantum-Ready Infrastructure</div></div></div><div class="m-body"><p>Preparing every layer of AvicnKnov Web for the <span class="highlight">quantum computing era</span> — future-proofing today.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg></div><div><div class="m-num">MILESTONE 39</div><div class="m-title">User Happiness Index</div></div></div><div class="m-body"><p>Measuring not just engagement, but actual user happiness — and continuously optimizing for what truly matters to people.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 6-6"/></svg></div><div><div class="m-num">MILESTONE 40</div><div class="m-title">Global Expansion</div></div></div><div class="m-body"><p>Bringing AvicnKnov Web to every corner of the world with localized infrastructure, content, and community presence.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><div><div class="m-num">MILESTONE 41</div><div class="m-title">Ultra-Low Fees</div></div></div><div class="m-body"><p>Driving operational costs down through innovation so we can offer the <span class="highlight">most competitive fees</span> in the industry.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2h-4M9 11V7a3 3 0 116 0v4"/></svg></div><div><div class="m-num">MILESTONE 42</div><div class="m-title">Privacy-First Mode</div></div></div><div class="m-body"><p>A dedicated mode where users can interact with absolutely minimal data exposure — anonymity by design.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7v10l10 5 10-5V7z"/></svg></div><div><div class="m-num">MILESTONE 43</div><div class="m-title">Cold Vault Storage</div></div></div><div class="m-body"><p>Offline cold storage solutions to safeguard valuable digital assets against any online threat vector.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div><div class="m-num">MILESTONE 44</div><div class="m-title">Mentorship Network</div></div></div><div class="m-body"><p>Connecting beginners with experienced mentors to <span class="highlight">accelerate growth</span> through real human guidance.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div><div class="m-num">MILESTONE 45</div><div class="m-title">Predictive Intelligence</div></div></div><div class="m-body"><p>Using AI to anticipate user needs and surface the right tools, content, and opportunities at the perfect moment.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div><div class="m-num">MILESTONE 46</div><div class="m-title">Premium Membership Tiers</div></div></div><div class="m-body"><p>Introducing meaningful tiers with genuine benefits — designed to reward commitment without creating artificial barriers.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div><div><div class="m-num">MILESTONE 47</div><div class="m-title">Community Voice</div></div></div><div class="m-body"><p>Formal channels for users to vote on features, propose improvements, and directly shape the future of the platform.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/></svg></div><div><div class="m-num">MILESTONE 48</div><div class="m-title">Zero-Downtime Updates</div></div></div><div class="m-body"><p>Deploying updates without ever interrupting user access — <span class="highlight">always live, always improving</span>.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/></svg></div><div><div class="m-num">MILESTONE 49</div><div class="m-title">Sustainable Infrastructure</div></div></div><div class="m-body"><p>Transitioning to renewable energy sources for our data centers — building a future that respects our planet.</p></div></div></div>
+
+<div class="milestone"><div class="milestone-dot"></div><div class="milestone-card"><div class="m-head"><div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div><div><div class="m-num">MILESTONE 50</div><div class="m-title">The Limitless Horizon</div></div></div><div class="m-body"><p>This roadmap is just the beginning. AvicnKnov Web will keep pushing boundaries until <span class="highlight">there are no boundaries left to push</span>.</p></div></div></div>
+
+</div>
+
+<div class="footer">
+Need help understanding our vision? Visit our <a href="help.html">Help & Support</a> section.<br>
+Or email us at <a href="mailto:help.avicnkvonteam@gmail.com">help.avicnkvonteam@gmail.com</a><br><br>
+<a href="help.html" class="help-link">Help & Support</a><br><br>
+&copy; AvicnKnov Web. The future is being written.
+</div>
+</div>
+<script>
+const obs=new IntersectionObserver((e)=>{e.forEach(x=>{if(x.isIntersecting){setTimeout(()=>x.target.classList.add('visible'),100);obs.unobserve(x.target)}})},{threshold:.15});
+document.querySelectorAll('.milestone').forEach(s=>obs.observe(s));
+</script>
+</body>
+</html>
