@@ -567,22 +567,6 @@ function init_tabContentMore(){
               <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
             </radialGradient>
           </defs>
-          <path class="map-path" d="M50,400 Q200,200 400,350 T800,300 Q1000,250 1150,450"/>
-          <path class="map-path" d="M100,600 Q300,500 500,650 T900,550 Q1050,500 1180,600" style="animation-delay:-3s"/>
-          <path class="map-path" d="M80,150 Q280,80 480,180 T880,150 Q1040,120 1170,200" style="animation-delay:-6s"/>
-          <circle class="map-node" cx="200" cy="280" r="3"/>
-          <circle class="map-node" cx="500" cy="350" r="3" style="animation-delay:-0.5s"/>
-          <circle class="map-node" cx="800" cy="300" r="3" style="animation-delay:-1s"/>
-          <circle class="map-node" cx="350" cy="600" r="3" style="animation-delay:-1.5s"/>
-          <circle class="map-node" cx="700" cy="580" r="3" style="animation-delay:-2s"/>
-          <circle class="map-node" cx="1000" cy="450" r="3" style="animation-delay:-2.5s"/>
-          <circle class="map-ring" cx="500" cy="350" r="5"/>
-          <circle class="map-ring" cx="800" cy="300" r="5" style="animation-delay:-1.5s"/>
-          <circle class="map-ring" cx="350" cy="600" r="5" style="animation-delay:-2.5s"/>
-        </svg>
-        <div class="more-scan"></div>
-      </div>
-
       <!-- Content -->
       <div class="more-content">
 
