@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Privacy Policy | AvicnKnov Web</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{overflow-x:hidden;scroll-behavior:smooth}
+body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,sans-serif;background:#000;color:#fff;min-height:100vh;line-height:1.7;position:relative}
+body::before{content:"";position:fixed;inset:0;background:radial-gradient(circle at 70% 20%,rgba(255,255,255,.08) 0,transparent 50%),radial-gradient(circle at 30% 80%,rgba(255,255,255,.05) 0,transparent 50%);pointer-events:none;z-index:0;animation:bgShift 20s ease-in-out infinite}
+@keyframes bgShift{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+.grid-bg{position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:50px 50px;z-index:0;animation:gridMove 20s linear infinite}
+@keyframes gridMove{0%{transform:translate(0,0)}100%{transform:translate(50px,50px)}}
+.back-btn{position:fixed;top:20px;left:20px;width:50px;height:50px;border-radius:50%;background:rgba(255,255,255,.08);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:1000;transition:all .4s cubic-bezier(.4,0,.2,1);text-decoration:none;color:#fff}
+.back-btn:hover{background:#fff;color:#000;transform:translateX(-3px) scale(1.05);box-shadow:0 0 30px rgba(255,255,255,.4)}
+.back-btn svg{width:22px;height:22px}
+.container{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:100px 24px 60px}
+.hero{text-align:center;margin-bottom:80px;animation:fadeUp 1s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+.hero h1{font-size:clamp(2.2rem,6vw,4.5rem);font-weight:800;letter-spacing:-2px;background:linear-gradient(135deg,#fff 0%,#888 50%,#fff 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;background-size:200% 200%;animation:shine 4s ease infinite}
+@keyframes shine{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.hero p{margin-top:20px;font-size:clamp(1rem,2vw,1.2rem);color:#aaa;max-width:700px;margin-left:auto;margin-right:auto}
+.divider{width:80px;height:3px;background:linear-gradient(90deg,transparent,#fff,transparent);margin:30px auto;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.5;width:80px}50%{opacity:1;width:120px}}
+.section{margin-bottom:50px;padding:35px;background:rgba(255,255,255,.03);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.08);border-radius:20px;opacity:0;transform:translateY(50px);transition:all .8s cubic-bezier(.25,.46,.45,.94);position:relative;overflow:hidden}
+.section.visible{opacity:1;transform:translateY(0)}
+.section::before{content:"";position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.05),transparent);transition:left .8s}
+.section:hover::before{left:100%}
+.section:hover{border-color:rgba(255,255,255,.25);transform:translateY(-5px);box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.sec-head{display:flex;align-items:center;gap:18px;margin-bottom:20px}
+.sec-icon{width:55px;height:55px;border-radius:14px;background:linear-gradient(135deg,#fff,#bbb);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 25px rgba(255,255,255,.3);animation:glow 3s ease-in-out infinite}
+@keyframes glow{0%,100%{box-shadow:0 0 25px rgba(255,255,255,.3)}50%{box-shadow:0 0 40px rgba(255,255,255,.6)}}
+.sec-icon svg{width:28px;height:28px;color:#000}
+.sec-num{font-size:.85rem;color:#666;font-weight:600;letter-spacing:2px}
+.sec-title{font-size:clamp(1.3rem,3vw,1.7rem);font-weight:700;color:#fff;margin-top:4px}
+.sec-body{color:#bbb;font-size:1rem;text-align:justify}
+.sec-body p{margin-bottom:12px}
+.highlight{color:#fff;font-weight:600}
+.links{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-top:60px}
+.link-card{padding:25px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:16px;text-decoration:none;color:#fff;transition:all .4s;display:flex;align-items:center;gap:15px}
+.link-card:hover{background:#fff;color:#000;transform:translateY(-5px);box-shadow:0 15px 40px rgba(255,255,255,.2)}
+.link-card svg{width:24px;height:24px;flex-shrink:0}
+.link-card span{font-weight:600;font-size:1rem}
+.footer{text-align:center;margin-top:80px;padding:30px;color:#666;font-size:.9rem;border-top:1px solid rgba(255,255,255,.08)}
+.footer a{color:#fff;text-decoration:none}
+@media(max-width:600px){.container{padding:90px 16px 40px}.section{padding:25px 20px}.sec-head{gap:12px}.sec-icon{width:45px;height:45px}.sec-icon svg{width:22px;height:22px}}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<a href="index.html" class="back-btn" aria-label="Back">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+</a>
+<div class="container">
+<div class="hero">
+<h1>Privacy Policy</h1>
+<div class="divider"></div>
+<p>Your privacy is our highest priority. Learn how AvicnKnov Web protects, processes, and respects your information.</p>
+</div>
+
+<div class="section"><div class="sec-head"><div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div><div class="sec-num">PART 01</div><div class="sec-title">Introduction</div></div></div><div class="sec-body"><p>At <span class="highlight">AvicnKnov Web</span>, we recognize that privacy is a fundamental right. This Privacy Policy outlines our practices regarding the collection, use, and protection of your personal information.</p><p>By using our services, you agree to the terms outlined in this document. We encourage every user to read this policy carefully.</p></div></div>
+
+<div class="section"><div class="sec-head"><div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg></div><div><div class="sec-num">PART 02</div><div class="sec-title">Information We Collect</div></div></div><div class="sec-body"><p>We collect only the information necessary to provide our services. This may include name, email, device identifiers, and usage data — collected through transparent and lawful means.</p><p>We never collect more than what is essential for delivering value to our users.</p></div></div>
+
+<div class="section"><div class="sec-head"><div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div><div><div class="sec-num">PART 03</div><div class="sec-title">How We Use Your Information</div></div></div><div class="sec-body"><p>Your information is used solely to operate, improve, and personalize your experience with AvicnKnov Web. This includes account management, security verification, and service optimization.</p><p>We <span class="highlight">never sell your data</span> to third parties under any circumstances.</p></div></div>
+
+<div class="section"><div class="sec-head"><div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div><div><div class="sec-num">PART 04</div><div class="sec-title">Data Encryption</div></div></div><div class="sec-body"><p>All sensitive data is encrypted using industry-standard protocols, both in transit and at rest. Our cryptographic standards meet or exceed global security benchmarks.</p><p>Your information remains <span class="highlight">unreadable to unauthorized parties</span> at all times.</p></div></div>
+
+<div class="section"><div class="sec-head"><div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div><div class="sec-num">PART 05</div><div class="sec-title">User Accounts</div></div></div><div class="sec-body"><p>Account holders are responsible for maintaining the confidentiality of their credentials. We strongly recommend using strong, unique passwords and enabling all available security features.</p><p>AvicnKnov Web is not liable for unauthorized access resulting from user negligence.</p></div></div>
+
+<div class="section"><div class="sec-head"><div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/></svg></div><div><div class="sec-num">PART 06</div><div class="sec-title">Cookies & Tracking</div></div></div><div class="sec-body"><p>We use cookies and similar technologies to enhance functionality, analyze usage patterns, and personalize content. Users can manage cookie preferences through their browser settings.</p><p>We do not engage in invasive tracking practices.</p></div></div>
+
+<div class="section"><div class="sec-head"><div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg></div><div><div class="sec-num">PART 07</div><div class="sec-title">Third-Party Services</div></div></div><div class="sec-body"><p>Some features may integrate with trusted third-party services. These partners are bound by strict confidentiality agreements and must comply with our privacy standards.</p><p>We carefully vet every external integration before deployment.</p></div></div>
+
+<div class="section"><div class="sec-head"><div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div><div class="sec-num">PART 08</div><div class="sec-title">Data Retention</div></div></div><div class="sec-body"><p>We retain user data only as long as necessary to provide our services or comply with legal obligations. Once data is no longer needed, it is securely deleted or anonymized.</p><p>You may request deletion of your data at any time.</p></div></div>
+
+<div class="section"><div class="sec-head"><div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4M21 12c0 5-3.5 9-9 9s-9-4-9-9 3.5-9 9-9 9 4 9 9z"/></svg></div><div><div class="sec-num">PART 09</div><div class="sec-title">Your Rights</div></div></div><div class="sec-body"><p>You have the right to access, correct, delete, or export your personal data. You may also withdraw consent for specific data processing activities at any time.</p><p>Reach out to our support team to exercise any of these rights.</p></div></div>
+
+<div class="section"><div class="sec-head"><div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg></div><div><div class="sec-num">PART 10</div><div class="sec-title">Children's Privacy</div></div></div><div class="sec-body"><p>AvicnKnov Web is not intended for users under the age of 13. We do not knowingly collect information from children. If we discover such data, it will be promptly deleted.</p><p>Parents or guardians may contact us with any concerns.</p></div></div>
+
+<div class="section"><div class="sec-head"><div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1018 0 9 9 0 00-18 0zM12 7v5l3 2"/></svg></div><div><div class="sec-num">PART 11</div><div class="sec-title">Account Security</div></div></div><div class="sec-body"><p>We employ multi-layered security protocols including encryption, access controls, intrusion detection, and continuous monitoring to keep your account safe.</p><p>Security is <span class="highlight">never compromised</span> at AvicnKnov Web.</p></div></div>
+
+<div class="section"><div class="sec-head"><div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div><div><div class="sec-num">PART 12</div><div class="sec-title">Communications</div></div></div><div class="sec-body"><p>We may send important service-related communications, including updates, security notices, and policy changes. Promotional communications are sent only with your consent.</p><p>You can opt out of marketing communications at any time.</p></div></div>
+
+<div class="section"><div class="sec-head"><div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div><div><div class="sec-num">PART 13</div><div class="sec-title">International Data Transfers</div></div></div><div class="sec-body"><p>Your data may be processed in countries other than your own. We ensure that all international transfers comply with applicable data protection laws.</p><p>Cross-border processing is conducted with the highest safeguards.</p></div></div>
+
+<div class="section"><div class="sec-head"><div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7v10l10 5 10-5V7L12 2z"/></svg></div><div><div class="sec-num">PART 14</div><div class="sec-title">Legal Compliance</div></div></div><div class="sec-body"><p>AvicnKnov Web complies with all applicable data protection regulations and privacy laws. We continuously update our practices to align with evolving legal standards.</p><p>Compliance is a <span class="highlight">non-negotiable commitment</span>.</p></div></div>
+
+<div class="section"><div class="sec-head"><div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><div><div class="sec-num">PART 15</div><div class="sec-title">Incident Response</div></div></div><div class="sec-body"><p>In the unlikely event of a security incident, we will notify affected users promptly and transparently. Our incident response team operates around the clock.</p><p>Transparency in adversity is part of our promise.</p></div></div>
+
+<div class="section"><div class="sec-head"><div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6v6H9z"/></svg></div><div><div class="sec-num">PART 16</div><div class="sec-title">Anonymous Usage</div></div></div><div class="sec-body"><p>Wherever possible, we anonymize or aggregate data to protect individual identities. Analytics are conducted in a privacy-preserving manner.</p><p>Your identity is never linked to analytical insights without explicit purpose.</p></div></div>
+
+<div class="section"><div class="sec-head"><div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/></svg></div><div><div class="sec-num">PART 17</div><div class="sec-title">Account Deletion</div></div></div><div class="sec-body"><p>You may delete your account at any time. Upon deletion, your personal data will be removed from our active systems within a reasonable timeframe.</p><p>Some data may be retained for legal or security purposes only.</p></div></div>
+
+<div class="section"><div class="sec-head"><div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg></div><div><div class="sec-num">PART 18</div><div class="sec-title">Physical Security</div></div></div><div class="sec-body"><p>Our infrastructure is housed in highly secure data centers with strict physical access controls, redundant power, and continuous environmental monitoring.</p><p>Security extends from <span class="highlight">code to concrete</span>.</p></div></div>
+
+<div class="section"><div class="sec-head"><div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></div><div><div class="sec-num">PART 19</div><div class="sec-title">Access Controls</div></div></div><div class="sec-body"><p>Only authorized personnel with a legitimate need can access user data. Every access is logged, audited, and subject to internal review.</p><p>Accountability is embedded into every layer of our operations.</p></div></div>
+
+<div class="section"><div class="sec-head"><div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div><div><div class="sec-num">PART 20</div><div class="sec-title">Consent Management</div></div></div><div class="sec-body"><p>We respect user consent as the foundation of all data processing. You may grant, modify, or revoke consent for specific data uses through your account settings.</p><p>Your choice is <span class="highlight">always respected</span>.</p></div></div>
+
+<div class="section"><div class="sec-head"><div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4"/></svg></div><div><div class="sec-num">PART 21</div><div class="sec-title">Policy Updates</div></div></div><div class="sec-body"><p>We may update this policy periodically to reflect changes in our practices or legal requirements. Significant changes will be communicated to all users in advance.</p><p>Continued use after updates constitutes acceptance of the revised policy.</p></div></div>
+
+<div class="section"><div class="sec-head"><div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><div><div class="sec-num">PART 22</div><div class="sec-title">Monitoring & Audits</div></div></div><div class="sec-body"><p>Our systems undergo regular security audits, both internal and by independent third parties. Findings drive continuous improvements to our security posture.</p><p>We invest heavily in proactive defense.</p></div></div>
+
+<div class="section"><div class="sec-head"><div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M16 12l-4-4-4 4M12 8v8"/></svg></div><div><div class="sec-num">PART 23</div><div class="sec-title">Data Portability</div></div></div><div class="sec-body"><p>You have the right to receive a copy of your personal data in a structured, machine-readable format and transfer it to another service.</p><p>Your data belongs to <span class="highlight">you, always</span>.</p></div></div>
+
+<div class="section"><div class="sec-head"><div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2h-4M9 11V7a3 3 0 116 0v4M9 11h6"/></svg></div><div><div class="sec-num">PART 24</div><div class="sec-title">Confidentiality</div></div></div><div class="sec-body"><p>All employees, contractors, and partners are bound by strict confidentiality agreements. Breach of these terms results in immediate disciplinary action.</p><p>Trust is built — and protected — at every level.</p></div></div>
+
+<div class="section"><div class="sec-head"><div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></div><div><div class="sec-num">PART 25</div><div class="sec-title">Transparency Reports</div></div></div><div class="sec-body"><p>We periodically publish transparency reports detailing requests for user data, security incidents, and policy enforcement actions.</p><p>Openness is our default state.</p></div></div>
+
+<div class="section"><div class="sec-head"><div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></div><div><div class="sec-num">PART 26</div><div class="sec-title">No Hidden Practices</div></div></div><div class="sec-body"><p>Everything we do regarding your data is documented and accessible. There are no hidden agendas, no buried clauses, and no surprises.</p><p>What you read here is <span class="highlight">exactly what we practice</span>.</p></div></div>
+
+<div class="section"><div class="sec-head"><div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/></svg></div><div><div class="sec-num">PART 27</div><div class="sec-title">User Education</div></div></div><div class="sec-body"><p>We provide accessible educational resources to help users understand privacy best practices, secure their accounts, and make informed decisions.</p><p>An empowered user is a protected user.</p></div></div>
+
+<div class="section"><div class="sec-head"><div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div><div class="sec-num">PART 28</div><div class="sec-title">Breach Notification</div></div></div><div class="sec-body"><p>If a data breach poses a risk to user rights, we will notify affected individuals and relevant authorities within the timeframes required by law.</p><p>Speed and honesty are essential during incidents.</p></div></div>
+
+<div class="section"><div class="sec-head"><div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div><div class="sec-num">PART 29</div><div class="sec-title">Contact Our Privacy Team</div></div></div><div class="sec-body"><p>For any privacy-related questions, concerns, or requests, our dedicated privacy team is available at <span class="highlight">help.avicnkvonteam@gmail.com</span>.</p><p>We respond promptly and thoughtfully to every inquiry.</p></div></div>
+
+<div class="section"><div class="sec-head"><div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div><div><div class="sec-num">PART 30</div><div class="sec-title">Final Commitment</div></div></div><div class="sec-body"><p>This Privacy Policy reflects our unwavering commitment to user trust. At AvicnKnov Web, privacy is not a checkbox — it is a <span class="highlight">core value</span>.</p><p>Thank you for trusting us with your digital experience.</p></div></div>
+
+<div class="links">
+<a href="about.html" class="link-card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><span>About Us</span></a>
+<a href="service.html" class="link-card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6"/></svg><span>Our Services</span></a>
+<a href="help.html" class="link-card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/></svg><span>Help & Support</span></a>
+</div>
+
+<div class="footer">Need assistance? Contact <a href="mailto:help.avicnkvonteam@gmail.com">help.avicnkvonteam@gmail.com</a><br>&copy; AvicnKnov Web. All rights reserved.</div>
+</div>
+<script>
+const obs=new IntersectionObserver((e)=>{e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('visible');obs.unobserve(x.target)}})},{threshold:.15});
+document.querySelectorAll('.section').forEach(s=>obs.observe(s));
+</script>
+</body>
+                                                                                                                                               </html>
