@@ -259,10 +259,6 @@ function init_tabContentMore(){
         stroke:#fff;stroke-width:1.8;fill:none;
         filter:drop-shadow(0 2px 4px rgba(255,255,255,0.2));
       }
-      .card-icon-wrap.emoji-icon{
-        font-size:26px;
-        line-height:1;
-      }
       /* Icon live pulse ring */
       .card-icon-wrap::after{
         content:'';
@@ -521,15 +517,23 @@ function init_tabContentMore(){
         background:rgba(255,255,255,0.04);
         border:1px solid rgba(255,255,255,0.15);
         display:flex;align-items:center;justify-content:center;
-        font-size:20px;
         box-shadow:0 0 20px rgba(255,255,255,0.05);
         z-index:3;
         transition:all .4s;
         cursor:default;
       }
+      .roadmap-node svg{
+        width:20px;height:20px;
+        stroke:#fff;stroke-width:1.6;fill:none;
+        filter:drop-shadow(0 0 6px rgba(255,255,255,0.4));
+        transition:all .4s;
+      }
       .roadmap-item.visible .roadmap-node{
         border-color:rgba(255,255,255,0.4);
         box-shadow:0 0 30px rgba(255,255,255,0.15), 0 0 60px rgba(255,255,255,0.05);
+      }
+      .roadmap-item.visible .roadmap-node svg{
+        filter:drop-shadow(0 0 10px rgba(255,255,255,0.7));
       }
       .roadmap-node-ring{
         position:absolute;inset:-8px;
@@ -743,8 +747,8 @@ function init_tabContentMore(){
           <!-- FUTURES CARD -->
           <a class="glass-card" href="futures.html" style="animation-delay:.15s">
             <span class="card-live-badge">LIVE</span>
-            <div class="card-icon-wrap emoji-icon" style="font-size:28px;">
-              🛸
+            <div class="card-icon-wrap">
+              <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
             </div>
             <div class="card-title">FUTURES &amp; DERIVATIVES</div>
             <div class="card-desc">Access perpetual contracts with up to 100x leverage. View detailed market depth, funding rates, open interest, and execute high-conviction trades on our advanced derivatives engine.</div>
@@ -778,15 +782,17 @@ function init_tabContentMore(){
             <div class="roadmap-item" data-index="0">
               <div class="roadmap-card-wrap">
                 <div class="roadmap-card">
-                  <div class="roadmap-card-tag hot">🔥 DROPPING FIRST</div>
-                  <div class="roadmap-card-title">⚡ AI NEURAL INTELLIGENCE</div>
+                  <div class="roadmap-card-tag hot">DROPPING FIRST</div>
+                  <div class="roadmap-card-title">AI NEURAL INTELLIGENCE</div>
                   <div class="roadmap-card-desc">A proprietary neural engine trained on 240+ live market signals — whale tracking, sentiment radar, predictive setups. It reads the market so you don't have to. Your edge, supercharged.</div>
                   <div class="roadmap-card-eta">ETA · Q3 2025</div>
                 </div>
               </div>
               <div class="roadmap-node-col">
                 <div class="roadmap-connector" style="width:calc(100% - 22px); right:22px; left:auto;"></div>
-                <div class="roadmap-node">🤖</div>
+                <div class="roadmap-node">
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
+                </div>
                 <div class="roadmap-node-ring"></div>
                 <div class="roadmap-node-ring2"></div>
               </div>
@@ -798,14 +804,16 @@ function init_tabContentMore(){
               <div class="roadmap-spacer"></div>
               <div class="roadmap-node-col">
                 <div class="roadmap-connector" style="width:calc(100% - 22px); left:22px;"></div>
-                <div class="roadmap-node">🎯</div>
+                <div class="roadmap-node">
+                  <svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+                </div>
                 <div class="roadmap-node-ring"></div>
                 <div class="roadmap-node-ring2"></div>
               </div>
               <div class="roadmap-card-wrap">
                 <div class="roadmap-card">
-                  <div class="roadmap-card-tag cool">💠 LIVE EVENTS ENGINE</div>
-                  <div class="roadmap-card-title">🎪 MARKET EVENTS &amp; ALERTS</div>
+                  <div class="roadmap-card-tag cool">LIVE EVENTS ENGINE</div>
+                  <div class="roadmap-card-title">MARKET EVENTS &amp; ALERTS</div>
                   <div class="roadmap-card-desc">Real-time event feeds — token launches, listings, protocol upgrades, macro announcements. Get notified the second something market-moving happens. First to know. First to act.</div>
                   <div class="roadmap-card-eta">ETA · Q3 2025</div>
                 </div>
@@ -816,15 +824,17 @@ function init_tabContentMore(){
             <div class="roadmap-item" data-index="2">
               <div class="roadmap-card-wrap">
                 <div class="roadmap-card">
-                  <div class="roadmap-card-tag hot">🔥 HIGH DEMAND</div>
-                  <div class="roadmap-card-title">👥 TRADER GROUPS &amp; SIGNALS</div>
+                  <div class="roadmap-card-tag hot">HIGH DEMAND</div>
+                  <div class="roadmap-card-title">TRADER GROUPS &amp; SIGNALS</div>
                   <div class="roadmap-card-desc">Join private trader collectives, share calls, copy top-performing wallets and get access to curated signal groups — all inside AvicnKnov. The alpha is here. You just have to claim it.</div>
                   <div class="roadmap-card-eta">ETA · Q4 2025</div>
                 </div>
               </div>
               <div class="roadmap-node-col">
                 <div class="roadmap-connector" style="width:calc(100% - 22px); right:22px; left:auto;"></div>
-                <div class="roadmap-node">🌐</div>
+                <div class="roadmap-node">
+                  <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
                 <div class="roadmap-node-ring"></div>
                 <div class="roadmap-node-ring2"></div>
               </div>
@@ -836,14 +846,16 @@ function init_tabContentMore(){
               <div class="roadmap-spacer"></div>
               <div class="roadmap-node-col">
                 <div class="roadmap-connector" style="width:calc(100% - 22px); left:22px;"></div>
-                <div class="roadmap-node">💸</div>
+                <div class="roadmap-node">
+                  <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                </div>
                 <div class="roadmap-node-ring"></div>
                 <div class="roadmap-node-ring2"></div>
               </div>
               <div class="roadmap-card-wrap">
                 <div class="roadmap-card">
-                  <div class="roadmap-card-tag">📡 LAUNCHING SOON</div>
-                  <div class="roadmap-card-title">🚀 REFERRAL EMPIRE</div>
+                  <div class="roadmap-card-tag">LAUNCHING SOON</div>
+                  <div class="roadmap-card-title">REFERRAL EMPIRE</div>
                   <div class="roadmap-card-desc">Invite your network, earn up to 40% lifetime commissions on every trade they make. Build your own passive revenue stream inside AvicnKnov. Stack forever, not just once.</div>
                   <div class="roadmap-card-eta">ETA · Q4 2025</div>
                 </div>
@@ -854,15 +866,17 @@ function init_tabContentMore(){
             <div class="roadmap-item" data-index="4">
               <div class="roadmap-card-wrap">
                 <div class="roadmap-card">
-                  <div class="roadmap-card-tag cool">🌊 GAME CHANGER</div>
-                  <div class="roadmap-card-title">📊 COPY TRADING VAULTS</div>
+                  <div class="roadmap-card-tag cool">GAME CHANGER</div>
+                  <div class="roadmap-card-title">COPY TRADING VAULTS</div>
                   <div class="roadmap-card-desc">One click. Mirror the moves of elite traders in real time. Allocate capital into verified strategy vaults and let the pros do the work while you capture the upside. Passive never looked this active.</div>
                   <div class="roadmap-card-eta">ETA · Q1 2026</div>
                 </div>
               </div>
               <div class="roadmap-node-col">
                 <div class="roadmap-connector" style="width:calc(100% - 22px); right:22px; left:auto;"></div>
-                <div class="roadmap-node">🧬</div>
+                <div class="roadmap-node">
+                  <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                </div>
                 <div class="roadmap-node-ring"></div>
                 <div class="roadmap-node-ring2"></div>
               </div>
@@ -874,16 +888,144 @@ function init_tabContentMore(){
               <div class="roadmap-spacer"></div>
               <div class="roadmap-node-col">
                 <div class="roadmap-connector" style="width:calc(100% - 22px); left:22px;"></div>
-                <div class="roadmap-node">🌌</div>
+                <div class="roadmap-node">
+                  <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                </div>
                 <div class="roadmap-node-ring"></div>
                 <div class="roadmap-node-ring2"></div>
               </div>
               <div class="roadmap-card-wrap">
                 <div class="roadmap-card">
-                  <div class="roadmap-card-tag hot">🔥 ALPHA ACCESS</div>
-                  <div class="roadmap-card-title">🪐 AQUARIUS LAUNCHPAD</div>
+                  <div class="roadmap-card-tag hot">ALPHA ACCESS</div>
+                  <div class="roadmap-card-title">AQUARIUS LAUNCHPAD</div>
                   <div class="roadmap-card-desc">AI-vetted token launches with exclusive early access for AvicnKnov members. Only hyper-curated projects make the cut. Be first. Be inside. Be Aquarius.</div>
                   <div class="roadmap-card-eta">ETA · Q1 2026</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ITEM 7: Portfolio Analytics -->
+            <div class="roadmap-item" data-index="6">
+              <div class="roadmap-card-wrap">
+                <div class="roadmap-card">
+                  <div class="roadmap-card-tag cool">PRECISION TOOL</div>
+                  <div class="roadmap-card-title">PORTFOLIO ANALYTICS ENGINE</div>
+                  <div class="roadmap-card-desc">Deep-dive dashboards with PnL heatmaps, risk exposure scores, asset correlation matrices and drawdown analytics. Know exactly where you stand — at all times. Institutional-grade clarity for every trader.</div>
+                  <div class="roadmap-card-eta">ETA · Q2 2026</div>
+                </div>
+              </div>
+              <div class="roadmap-node-col">
+                <div class="roadmap-connector" style="width:calc(100% - 22px); right:22px; left:auto;"></div>
+                <div class="roadmap-node">
+                  <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                </div>
+                <div class="roadmap-node-ring"></div>
+                <div class="roadmap-node-ring2"></div>
+              </div>
+              <div class="roadmap-spacer"></div>
+            </div>
+
+            <!-- ITEM 8: On-Chain Scanner -->
+            <div class="roadmap-item" data-index="7">
+              <div class="roadmap-spacer"></div>
+              <div class="roadmap-node-col">
+                <div class="roadmap-connector" style="width:calc(100% - 22px); left:22px;"></div>
+                <div class="roadmap-node">
+                  <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                </div>
+                <div class="roadmap-node-ring"></div>
+                <div class="roadmap-node-ring2"></div>
+              </div>
+              <div class="roadmap-card-wrap">
+                <div class="roadmap-card">
+                  <div class="roadmap-card-tag hot">ALPHA LEAK</div>
+                  <div class="roadmap-card-title">ON-CHAIN WHALE SCANNER</div>
+                  <div class="roadmap-card-desc">Track every significant wallet move across 12+ chains in real time. Whale accumulation zones, smart money inflows, dormant wallet activations — all surfaced instantly. Follow the money. Always.</div>
+                  <div class="roadmap-card-eta">ETA · Q2 2026</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ITEM 9: Staking & Yield -->
+            <div class="roadmap-item" data-index="8">
+              <div class="roadmap-card-wrap">
+                <div class="roadmap-card">
+                  <div class="roadmap-card-tag cool">PASSIVE POWER</div>
+                  <div class="roadmap-card-title">STAKING &amp; YIELD VAULTS</div>
+                  <div class="roadmap-card-desc">Lock assets into high-yield DeFi vaults with auto-compounding strategies. Earn while you sleep, compound while you breathe. AvicnKnov's yield infrastructure is built for maximum capital efficiency — no complexity required.</div>
+                  <div class="roadmap-card-eta">ETA · Q3 2026</div>
+                </div>
+              </div>
+              <div class="roadmap-node-col">
+                <div class="roadmap-connector" style="width:calc(100% - 22px); right:22px; left:auto;"></div>
+                <div class="roadmap-node">
+                  <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <div class="roadmap-node-ring"></div>
+                <div class="roadmap-node-ring2"></div>
+              </div>
+              <div class="roadmap-spacer"></div>
+            </div>
+
+            <!-- ITEM 10: Strategy Builder -->
+            <div class="roadmap-item" data-index="9">
+              <div class="roadmap-spacer"></div>
+              <div class="roadmap-node-col">
+                <div class="roadmap-connector" style="width:calc(100% - 22px); left:22px;"></div>
+                <div class="roadmap-node">
+                  <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+                </div>
+                <div class="roadmap-node-ring"></div>
+                <div class="roadmap-node-ring2"></div>
+              </div>
+              <div class="roadmap-card-wrap">
+                <div class="roadmap-card">
+                  <div class="roadmap-card-tag">BUILDER MODE</div>
+                  <div class="roadmap-card-title">NO-CODE STRATEGY BUILDER</div>
+                  <div class="roadmap-card-desc">Construct, backtest, and deploy automated trading strategies with a drag-and-drop builder — zero coding required. From simple grid bots to complex multi-leg conditional strategies. Your rules. Your edge. Automated.</div>
+                  <div class="roadmap-card-eta">ETA · Q3 2026</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ITEM 11: NFT & Web3 Hub -->
+            <div class="roadmap-item" data-index="10">
+              <div class="roadmap-card-wrap">
+                <div class="roadmap-card">
+                  <div class="roadmap-card-tag hot">WEB3 FRONTIER</div>
+                  <div class="roadmap-card-title">NFT &amp; WEB3 HUB</div>
+                  <div class="roadmap-card-desc">A full-spectrum Web3 marketplace embedded inside AvicnKnov — NFT trading, multi-chain wallet management, dApp browser, and on-chain governance voting. The full Web3 stack, unified in one premium interface.</div>
+                  <div class="roadmap-card-eta">ETA · Q4 2026</div>
+                </div>
+              </div>
+              <div class="roadmap-node-col">
+                <div class="roadmap-connector" style="width:calc(100% - 22px); right:22px; left:auto;"></div>
+                <div class="roadmap-node">
+                  <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                </div>
+                <div class="roadmap-node-ring"></div>
+                <div class="roadmap-node-ring2"></div>
+              </div>
+              <div class="roadmap-spacer"></div>
+            </div>
+
+            <!-- ITEM 12: Global OTC Desk -->
+            <div class="roadmap-item" data-index="11">
+              <div class="roadmap-spacer"></div>
+              <div class="roadmap-node-col">
+                <div class="roadmap-connector" style="width:calc(100% - 22px); left:22px;"></div>
+                <div class="roadmap-node">
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                </div>
+                <div class="roadmap-node-ring"></div>
+                <div class="roadmap-node-ring2"></div>
+              </div>
+              <div class="roadmap-card-wrap">
+                <div class="roadmap-card">
+                  <div class="roadmap-card-tag cool">INSTITUTIONAL</div>
+                  <div class="roadmap-card-title">GLOBAL OTC DESK</div>
+                  <div class="roadmap-card-desc">Private, high-volume OTC trading desk for institutional players and high-net-worth traders. Zero slippage on large block trades, white-glove settlement, and dedicated relationship management. Built for the biggest moves in the market.</div>
+                  <div class="roadmap-card-eta">ETA · Q4 2026</div>
                 </div>
               </div>
             </div>
