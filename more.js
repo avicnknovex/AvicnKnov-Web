@@ -1262,7 +1262,7 @@
     });
     map.appendChild(nodesWrap);
     main.appendChild(map);
-    document.body.appendChild(main);
+    document.body.prepend(main);
 
     /* ── Modal ── */
     const ov = document.createElement('div');
