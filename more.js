@@ -1,1093 +1,1473 @@
-// ===========================================
-// more.js — AvicnKnov Premium "More" Section
-// Glassmorphic · Live Animated · Fully Responsive
-// ===========================================
+/*!
+ * more.js — AvicnKnov Web  |  Premium Experience Module
+ * Self-contained: injects fonts, styles, canvas, and full DOM.
+ * No dependencies. Fully responsive.
+ */
+(function () {
+  'use strict';
 
-function init_tabContentMore(){
-  const container = document.getElementById('tabContentMore');
-  if(!container) return;
-
-  // Inject styles (scoped to this section)
-  if(!document.getElementById('moreStyles')){
-    const style = document.createElement('style');
-    style.id = 'moreStyles';
-    style.textContent = `
-      /* ===== MORE SECTION ROOT ===== */
-      .more-root{
-        position:relative;
-        width:100%;
-        min-height:100vh;
-        padding:40px clamp(16px,4vw,60px) 80px;
-        overflow:hidden;
-        background:#000;
-      }
-
-      /* ===== LIVE ANIMATED TREASURE-MAP BACKGROUND ===== */
-      .more-bg{
-        position:absolute;inset:0;z-index:0;pointer-events:none;
-        background:
-          radial-gradient(ellipse at 20% 10%, rgba(255,255,255,0.05) 0%, transparent 40%),
-          radial-gradient(ellipse at 80% 90%, rgba(255,255,255,0.04) 0%, transparent 45%),
-          #050505;
-      }
-      .more-bg-grid{
-        position:absolute;inset:0;
-        background-image:
-          linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
-        background-size:60px 60px;
-        mask-image:radial-gradient(ellipse at center, #000 30%, transparent 80%);
-        -webkit-mask-image:radial-gradient(ellipse at center, #000 30%, transparent 80%);
-        animation:gridShift 40s linear infinite;
-      }
-      @keyframes gridShift{
-        0%{background-position:0 0,0 0;}
-        100%{background-position:60px 60px,60px 60px;}
-      }
-      .more-bg svg.map-svg{
-        position:absolute;inset:0;width:100%;height:100%;
-        opacity:0.18;
-      }
-      .map-path{
-        fill:none;stroke:#fff;stroke-width:1.2;
-        stroke-dasharray:8 6;
-        animation:dashFlow 18s linear infinite;
-      }
-      @keyframes dashFlow{to{stroke-dashoffset:-300;}}
-      .map-node{
-        fill:#fff;
-        animation:nodePulse 2.2s ease-in-out infinite;
-      }
-      @keyframes nodePulse{
-        0%,100%{opacity:0.3;r:3;}
-        50%{opacity:1;r:5;}
-      }
-      .map-ring{
-        fill:none;stroke:#fff;stroke-width:1;
-        transform-origin:center;
-        animation:ringExpand 4s ease-out infinite;
-      }
-      @keyframes ringExpand{
-        0%{r:5;opacity:0.8;}
-        100%{r:40;opacity:0;}
-      }
-
-      /* Floating particles */
-      .more-particle{
-        position:absolute;
-        width:3px;height:3px;
-        background:#fff;border-radius:50%;
-        opacity:0;
-        pointer-events:none;
-        box-shadow:0 0 8px #fff;
-      }
-
-      /* Scanning beam */
-      .more-scan{
-        position:absolute;top:0;left:-100%;width:60%;height:100%;
-        background:linear-gradient(90deg,transparent,rgba(255,255,255,0.025),transparent);
-        animation:scanMove 8s linear infinite;
-        pointer-events:none;
-      }
-      @keyframes scanMove{
-        0%{left:-60%;}
-        100%{left:100%;}
-      }
-
-      /* ===== CONTENT WRAPPER ===== */
-      .more-content{
-        position:relative;z-index:2;
-        max-width:1400px;margin:0 auto;
-      }
-
-      /* ===== HEADER ===== */
-      .more-header{
-        text-align:center;
-        margin-bottom:50px;
-        animation:fadeUpMore .8s ease both;
-      }
-      @keyframes fadeUpMore{
-        from{opacity:0;transform:translateY(30px);}
-        to{opacity:1;transform:translateY(0);}
-      }
-      .more-badge{
-        display:inline-flex;align-items:center;gap:8px;
-        padding:6px 16px;
-        background:rgba(255,255,255,0.04);
-        border:1px solid rgba(255,255,255,0.12);
-        border-radius:100px;
-        backdrop-filter:blur(20px);
-        -webkit-backdrop-filter:blur(20px);
-        font-size:11px;letter-spacing:2px;text-transform:uppercase;
-        color:#aaa;
-        margin-bottom:18px;
-      }
-      .more-badge-dot{
-        width:6px;height:6px;border-radius:50%;
-        background:#00e676;
-        box-shadow:0 0 10px #00e676;
-        animation:pulseDot 1.8s infinite;
-      }
-      @keyframes pulseDot{0%,100%{opacity:1;}50%{opacity:0.4;}}
-      .more-title{
-        font-family:'Bebas Neue',sans-serif;
-        font-size:clamp(38px,6vw,72px);
-        letter-spacing:4px;
-        background:linear-gradient(180deg,#fff 0%,#888 100%);
-        -webkit-background-clip:text;
-        background-clip:text;
-        -webkit-text-fill-color:transparent;
-        line-height:1;
-        margin-bottom:14px;
-      }
-      .more-subtitle{
-        font-size:clamp(13px,1.5vw,15px);
-        color:#888;
-        max-width:600px;
-        margin:0 auto;
-        line-height:1.7;
-      }
-
-      /* ===== PREMIUM GLASS GRID ===== */
-      .more-grid{
-        display:grid;
-        grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-        gap:20px;
-        margin-bottom:60px;
-      }
-
-      /* Wider featured cards */
-      .more-grid.featured{
-        grid-template-columns:repeat(auto-fit,minmax(340px,1fr));
-        gap:24px;
-      }
-
-      /* ===== PREMIUM 3D GLASS BUTTON CARD ===== */
-      .glass-card{
-        position:relative;
-        background:linear-gradient(135deg,rgba(255,255,255,0.06) 0%,rgba(255,255,255,0.02) 100%);
-        border:1px solid rgba(255,255,255,0.1);
-        border-radius:20px;
-        padding:28px 24px;
-        backdrop-filter:blur(24px) saturate(180%);
-        -webkit-backdrop-filter:blur(24px) saturate(180%);
-        cursor:pointer;
-        overflow:hidden;
-        transition:all .4s cubic-bezier(.2,.8,.2,1);
-        text-decoration:none;
-        color:#fff;
-        display:flex;flex-direction:column;
-        opacity:0;
-        transform:translateY(40px);
-        animation:cardEntry .8s ease forwards;
-        will-change:transform;
-        box-shadow:
-          0 8px 24px rgba(0,0,0,0.4),
-          inset 0 1px 0 rgba(255,255,255,0.1),
-          inset 0 -1px 0 rgba(0,0,0,0.3);
-      }
-      @keyframes cardEntry{
-        to{opacity:1;transform:translateY(0);}
-      }
-
-      /* Shimmer overlay */
-      .glass-card::before{
-        content:'';
-        position:absolute;
-        top:-50%;left:-50%;
-        width:200%;height:200%;
-        background:linear-gradient(115deg,
-          transparent 30%,
-          rgba(255,255,255,0.08) 45%,
-          rgba(255,255,255,0.15) 50%,
-          rgba(255,255,255,0.08) 55%,
-          transparent 70%
-        );
-        transform:translateX(-100%) translateY(-100%) rotate(0deg);
-        transition:transform 1.2s cubic-bezier(.2,.8,.2,1);
-        pointer-events:none;
-      }
-      .glass-card:hover::before{
-        transform:translateX(50%) translateY(50%) rotate(0deg);
-      }
-
-      /* Glow border on hover */
-      .glass-card::after{
-        content:'';
-        position:absolute;inset:0;
-        border-radius:20px;
-        padding:1px;
-        background:linear-gradient(135deg,rgba(255,255,255,0.4),rgba(255,255,255,0) 50%,rgba(255,255,255,0.2));
-        -webkit-mask:linear-gradient(#000,#000) content-box,linear-gradient(#000,#000);
-        -webkit-mask-composite:xor;
-        mask-composite:exclude;
-        opacity:0;
-        transition:opacity .4s;
-        pointer-events:none;
-      }
-      .glass-card:hover::after{opacity:1;}
-
-      .glass-card:hover{
-        transform:translateY(-6px) scale(1.01);
-        border-color:rgba(255,255,255,0.25);
-        background:linear-gradient(135deg,rgba(255,255,255,0.1) 0%,rgba(255,255,255,0.04) 100%);
-        box-shadow:
-          0 20px 60px rgba(0,0,0,0.6),
-          0 0 40px rgba(255,255,255,0.08),
-          inset 0 1px 0 rgba(255,255,255,0.2);
-      }
-      .glass-card:active{transform:translateY(-2px) scale(0.99);}
-
-      /* Card icon */
-      .card-icon-wrap{
-        position:relative;
-        width:56px;height:56px;
-        border-radius:16px;
-        background:linear-gradient(135deg,rgba(255,255,255,0.12),rgba(255,255,255,0.04));
-        border:1px solid rgba(255,255,255,0.15);
-        display:flex;align-items:center;justify-content:center;
-        margin-bottom:20px;
-        box-shadow:inset 0 1px 0 rgba(255,255,255,0.2),0 4px 12px rgba(0,0,0,0.3);
-        transition:all .4s;
-      }
-      .glass-card:hover .card-icon-wrap{
-        transform:rotate(-5deg) scale(1.08);
-        background:linear-gradient(135deg,rgba(255,255,255,0.2),rgba(255,255,255,0.08));
-      }
-      .card-icon-wrap svg{
-        width:26px;height:26px;
-        stroke:#fff;stroke-width:1.8;fill:none;
-        filter:drop-shadow(0 2px 4px rgba(255,255,255,0.2));
-      }
-      /* Icon live pulse ring */
-      .card-icon-wrap::after{
-        content:'';
-        position:absolute;inset:-4px;
-        border-radius:18px;
-        border:1px solid rgba(255,255,255,0.2);
-        opacity:0;
-        animation:iconRing 3s ease-in-out infinite;
-      }
-      @keyframes iconRing{
-        0%{opacity:0;transform:scale(0.9);}
-        50%{opacity:1;transform:scale(1.05);}
-        100%{opacity:0;transform:scale(1.15);}
-      }
-
-      .card-title{
-        font-family:'Bebas Neue',sans-serif;
-        font-size:22px;letter-spacing:2px;
-        margin-bottom:10px;
-        color:#fff;
-      }
-      .card-desc{
-        font-size:13px;
-        color:#999;
-        line-height:1.65;
-        margin-bottom:20px;
-        flex:1;
-      }
-
-      /* Action button inside card */
-      .card-action{
-        display:flex;align-items:center;justify-content:space-between;
-        padding:12px 18px;
-        background:rgba(255,255,255,0.04);
-        border:1px solid rgba(255,255,255,0.1);
-        border-radius:12px;
-        font-size:13px;font-weight:600;
-        color:#fff;
-        transition:all .3s;
-        text-transform:uppercase;
-        letter-spacing:1.5px;
-      }
-      .glass-card:hover .card-action{
-        background:rgba(255,255,255,0.95);
-        color:#000;
-        border-color:#fff;
-      }
-      .card-action svg{
-        width:16px;height:16px;
-        transition:transform .3s;
-      }
-      .glass-card:hover .card-action svg{transform:translateX(4px);}
-
-      /* Live indicator badge */
-      .card-live-badge{
-        position:absolute;top:18px;right:18px;
-        display:inline-flex;align-items:center;gap:5px;
-        padding:3px 9px;
-        background:rgba(0,230,118,0.1);
-        border:1px solid rgba(0,230,118,0.3);
-        border-radius:100px;
-        font-family:'Space Mono',monospace;
-        font-size:9px;font-weight:700;
-        color:#00e676;
-        letter-spacing:1px;
-        backdrop-filter:blur(10px);
-      }
-      .card-live-badge::before{
-        content:'';
-        width:5px;height:5px;border-radius:50%;
-        background:#00e676;
-        box-shadow:0 0 6px #00e676;
-        animation:pulseDot 1.5s infinite;
-      }
-
-      /* Soon badge */
-      .card-soon-badge{
-        position:absolute;top:18px;right:18px;
-        padding:3px 9px;
-        background:rgba(255,255,255,0.06);
-        border:1px solid rgba(255,255,255,0.15);
-        border-radius:100px;
-        font-family:'Space Mono',monospace;
-        font-size:9px;font-weight:700;
-        color:#aaa;
-        letter-spacing:1px;
-      }
-
-      /* ===== SECTION DIVIDER ===== */
-      .more-section-title{
-        font-family:'Bebas Neue',sans-serif;
-        font-size:clamp(22px,3vw,30px);
-        letter-spacing:3px;
-        color:#fff;
-        margin:60px 0 8px;
-        display:flex;align-items:center;gap:14px;
-      }
-      .more-section-title::before{
-        content:'';
-        width:4px;height:24px;
-        background:linear-gradient(180deg,#fff,#555);
-        border-radius:2px;
-      }
-      .more-section-sub{
-        font-size:12px;
-        color:#666;
-        text-transform:uppercase;
-        letter-spacing:1.5px;
-        margin-bottom:28px;
-      }
-
-      /* ===== CTA FOOTER PANEL ===== */
-      .cta-panel{
-        position:relative;
-        padding:50px 40px;
-        background:linear-gradient(135deg,rgba(255,255,255,0.05),rgba(255,255,255,0.01));
-        border:1px solid rgba(255,255,255,0.12);
-        border-radius:24px;
-        text-align:center;
-        backdrop-filter:blur(20px);
-        overflow:hidden;
-      }
-      .cta-panel::before{
-        content:'';
-        position:absolute;inset:0;
-        background:radial-gradient(circle at 50% 0%,rgba(255,255,255,0.1),transparent 70%);
-        pointer-events:none;
-      }
-      .cta-title{
-        font-family:'Bebas Neue',sans-serif;
-        font-size:clamp(28px,4vw,42px);
-        letter-spacing:3px;
-        margin-bottom:12px;
-        position:relative;
-      }
-      .cta-desc{
-        font-size:14px;color:#999;
-        max-width:560px;margin:0 auto 24px;
-        line-height:1.7;
-        position:relative;
-      }
-      .cta-buttons{
-        display:flex;justify-content:center;gap:14px;flex-wrap:wrap;
-        position:relative;
-      }
-      .cta-btn{
-        padding:14px 32px;
-        border-radius:12px;
-        font-family:'DM Sans',sans-serif;
-        font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
-        text-decoration:none;
-        cursor:pointer;
-        transition:all .3s cubic-bezier(.2,.8,.2,1);
-        display:inline-flex;align-items:center;gap:8px;
-      }
-      .cta-btn-primary{
-        background:#fff;color:#000;
-        border:1px solid #fff;
-        box-shadow:0 4px 20px rgba(255,255,255,0.2);
-      }
-      .cta-btn-primary:hover{
-        transform:translateY(-3px);
-        box-shadow:0 8px 30px rgba(255,255,255,0.35);
-      }
-      .cta-btn-secondary{
-        background:rgba(255,255,255,0.05);
-        color:#fff;
-        border:1px solid rgba(255,255,255,0.2);
-        backdrop-filter:blur(10px);
-      }
-      .cta-btn-secondary:hover{
-        background:rgba(255,255,255,0.1);
-        border-color:#fff;
-        transform:translateY(-3px);
-      }
-
-      /* ===== COMING SOON ROADMAP ===== */
-      .roadmap-section{
-        position:relative;
-        margin:80px 0 60px;
-      }
-      .roadmap-svg-track{
-        position:absolute;
-        left:50%;
-        top:0;
-        transform:translateX(-50%);
-        width:4px;
-        height:100%;
-        pointer-events:none;
-        z-index:1;
-      }
-      @media(max-width:768px){
-        .roadmap-svg-track{left:28px;transform:none;}
-      }
-      .roadmap-track-line{
-        stroke:#222;
-        stroke-width:2;
-        fill:none;
-      }
-      .roadmap-track-live{
-        stroke:url(#roadGrad);
-        stroke-width:2;
-        fill:none;
-        stroke-dasharray:6 4;
-        animation:dashFlow 3s linear infinite;
-      }
-      .roadmap-items{
-        position:relative;
-        z-index:2;
-        display:flex;
-        flex-direction:column;
-        gap:0;
-      }
-      .roadmap-item{
-        display:grid;
-        grid-template-columns:1fr 60px 1fr;
-        align-items:center;
-        min-height:160px;
-        opacity:0;
-        transform:translateY(30px);
-        transition:opacity .7s ease, transform .7s ease;
-      }
-      .roadmap-item.visible{
-        opacity:1;
-        transform:translateY(0);
-      }
-      .roadmap-item:nth-child(even) .roadmap-card-wrap{ grid-column:3; }
-      .roadmap-item:nth-child(even) .roadmap-spacer{ grid-column:1; order:-1; }
-      .roadmap-item:nth-child(even) .roadmap-node-col{ grid-column:2; order:0; }
-
-      @media(max-width:768px){
-        .roadmap-item{
-          grid-template-columns:60px 1fr;
-          grid-template-rows:auto;
-        }
-        .roadmap-item .roadmap-node-col{ grid-column:1; }
-        .roadmap-item .roadmap-card-wrap{ grid-column:2; }
-        .roadmap-item .roadmap-spacer{ display:none; }
-        .roadmap-item:nth-child(even) .roadmap-card-wrap{ grid-column:2; }
-        .roadmap-item:nth-child(even) .roadmap-spacer{ display:none; }
-        .roadmap-item:nth-child(even) .roadmap-node-col{ grid-column:1; order:0; }
-      }
-
-      .roadmap-node-col{
-        display:flex;
-        flex-direction:column;
-        align-items:center;
-        justify-content:center;
-        position:relative;
-        height:100%;
-      }
-      .roadmap-node{
-        position:relative;
-        width:44px;height:44px;
-        border-radius:50%;
-        background:rgba(255,255,255,0.04);
-        border:1px solid rgba(255,255,255,0.15);
-        display:flex;align-items:center;justify-content:center;
-        box-shadow:0 0 20px rgba(255,255,255,0.05);
-        z-index:3;
-        transition:all .4s;
-        cursor:default;
-      }
-      .roadmap-node svg{
-        width:20px;height:20px;
-        stroke:#fff;stroke-width:1.6;fill:none;
-        filter:drop-shadow(0 1px 3px rgba(255,255,255,0.3));
-      }
-      .roadmap-item.visible .roadmap-node{
-        border-color:rgba(255,255,255,0.4);
-        box-shadow:0 0 30px rgba(255,255,255,0.15), 0 0 60px rgba(255,255,255,0.05);
-      }
-      .roadmap-node-ring{
-        position:absolute;inset:-8px;
-        border-radius:50%;
-        border:1px solid rgba(255,255,255,0.15);
-        animation:nodeRingPulse 2.5s ease-in-out infinite;
-      }
-      @keyframes nodeRingPulse{
-        0%{opacity:0;transform:scale(0.85);}
-        50%{opacity:1;transform:scale(1);}
-        100%{opacity:0;transform:scale(1.2);}
-      }
-      .roadmap-node-ring2{
-        position:absolute;inset:-18px;
-        border-radius:50%;
-        border:1px solid rgba(255,255,255,0.06);
-        animation:nodeRingPulse 2.5s 0.8s ease-in-out infinite;
-      }
-
-      /* Connector line from node to card */
-      .roadmap-connector{
-        position:absolute;
-        top:50%;
-        height:1px;
-        background:linear-gradient(90deg, rgba(255,255,255,0.3), rgba(255,255,255,0.05));
-        transform-origin:left center;
-        transform:scaleX(0);
-        transition:transform 0.6s 0.3s ease;
-        z-index:2;
-        pointer-events:none;
-      }
-      .roadmap-item.visible .roadmap-connector{
-        transform:scaleX(1);
-      }
-      /* For even items (right side), flip direction */
-      .roadmap-item:nth-child(even) .roadmap-connector{
-        background:linear-gradient(90deg, rgba(255,255,255,0.05), rgba(255,255,255,0.3));
-        transform-origin:right center;
-        right:0;
-        left:auto;
-      }
-      @media(max-width:768px){
-        .roadmap-connector{ display:none; }
-      }
-
-      .roadmap-card-wrap{
-        padding:16px;
-      }
-      .roadmap-card{
-        position:relative;
-        background:linear-gradient(135deg,rgba(255,255,255,0.05) 0%,rgba(255,255,255,0.01) 100%);
-        border:1px solid rgba(255,255,255,0.08);
-        border-radius:18px;
-        padding:22px 20px;
-        backdrop-filter:blur(20px);
-        overflow:hidden;
-        transition:all .4s cubic-bezier(.2,.8,.2,1);
-      }
-      .roadmap-item.visible .roadmap-card{
-        border-color:rgba(255,255,255,0.15);
-        box-shadow:0 8px 32px rgba(0,0,0,0.4), 0 0 20px rgba(255,255,255,0.03);
-      }
-      .roadmap-card::before{
-        content:'';
-        position:absolute;top:0;left:-200%;width:80%;height:1px;
-        background:linear-gradient(90deg,transparent,rgba(255,255,255,0.4),transparent);
-        animation:topBeam 4s linear infinite;
-      }
-      @keyframes topBeam{0%{left:-80%;}100%{left:120%;}}
-
-      .roadmap-card-tag{
-        display:inline-flex;align-items:center;gap:6px;
-        padding:3px 10px;
-        background:rgba(255,255,255,0.05);
-        border:1px solid rgba(255,255,255,0.12);
-        border-radius:100px;
-        font-family:'Space Mono',monospace;
-        font-size:9px;letter-spacing:1.5px;text-transform:uppercase;
-        color:#888;
-        margin-bottom:12px;
-      }
-      .roadmap-card-tag.hot{
-        background:rgba(255,100,0,0.08);
-        border-color:rgba(255,100,0,0.25);
-        color:#ff6400;
-      }
-      .roadmap-card-tag.hot::before{
-        content:'';
-        width:5px;height:5px;border-radius:50%;
-        background:#ff6400;
-        box-shadow:0 0 6px #ff6400;
-        animation:pulseDot 1.5s infinite;
-      }
-      .roadmap-card-tag.cool::before{
-        content:'';
-        width:5px;height:5px;border-radius:50%;
-        background:#00b4ff;
-        box-shadow:0 0 6px #00b4ff;
-        animation:pulseDot 1.8s infinite;
-      }
-      .roadmap-card-tag.cool{
-        background:rgba(0,180,255,0.06);
-        border-color:rgba(0,180,255,0.2);
-        color:#00b4ff;
-      }
-
-      .roadmap-card-title{
-        font-family:'Bebas Neue',sans-serif;
-        font-size:20px;letter-spacing:2px;
-        color:#fff;
-        margin-bottom:8px;
-      }
-      .roadmap-card-desc{
-        font-size:12px;
-        color:#888;
-        line-height:1.7;
-      }
-      .roadmap-card-eta{
-        margin-top:14px;
-        font-family:'Space Mono',monospace;
-        font-size:10px;
-        color:#555;
-        letter-spacing:1px;
-        display:flex;align-items:center;gap:6px;
-      }
-      .roadmap-card-eta::before{
-        content:'';
-        display:inline-block;
-        width:12px;height:1px;
-        background:#555;
-      }
-      .roadmap-spacer{ }
-
-      /* ===== RESPONSIVE ===== */
-      @media(max-width:768px){
-        .more-root{padding:24px 16px 60px;}
-        .more-grid,.more-grid.featured{grid-template-columns:1fr;gap:16px;}
-        .glass-card{padding:24px 20px;}
-        .cta-panel{padding:32px 22px;}
-        .cta-buttons{flex-direction:column;}
-        .cta-btn{width:100%;justify-content:center;}
-      }
-      @media(max-width:420px){
-        .more-title{font-size:38px;}
-      }
-    `;
-    document.head.appendChild(style);
+  /* ═══════════════════════════════════════════════════════════
+     1.  FONTS
+  ═══════════════════════════════════════════════════════════ */
+  document.head.appendChild(
+    Object.assign(document.createElement('link'), {
+      rel: 'stylesheet',
+      href: 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Sans:opsz,wght@9..40,200;9..40,300;9..40,400;9..40,500&display=swap'
+    })
+  );
+  if (!document.querySelector('meta[name="viewport"]')) {
+    document.head.appendChild(
+      Object.assign(document.createElement('meta'), {
+        name: 'viewport',
+        content: 'width=device-width, initial-scale=1'
+      })
+    );
   }
 
-  // ===== SVG ICONS =====
-  const SVG = {
-    ai: `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>`,
-    event: `<svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>`,
-    group: `<svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,
-    referral: `<svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`,
-    copy: `<svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>`,
-    launchpad: `<svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>`,
-    wallet: `<svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M16 12h.01"/><path d="M2 10h20"/></svg>`,
-    nft: `<svg viewBox="0 0 24 24"><path d="M12 2l9 4.9V17L12 22l-9-4.9V7z"/><polyline points="12 22 12 12"/><polyline points="21 7 12 12"/><polyline points="3 7 12 12"/></svg>`,
-    staking: `<svg viewBox="0 0 24 24"><path d="M12 22V8"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/><path d="M12 8l4-4-4-4-4 4 4 4z"/></svg>`,
-    analytics: `<svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>`,
-  };
+  /* ═══════════════════════════════════════════════════════════
+     2.  STYLES
+  ═══════════════════════════════════════════════════════════ */
+  const CSS = `
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: #000;
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.18); border-radius: 2px; }
 
-  // ===== BUILD HTML =====
-  container.innerHTML = `
-    <div class="more-root">
-      <!-- Animated Background -->
-      <div class="more-bg">
-        <div class="more-bg-grid"></div>
-        <svg class="map-svg" viewBox="0 0 1200 800" preserveAspectRatio="none">
-          <defs>
-            <radialGradient id="nodeGrad">
-              <stop offset="0%" stop-color="#fff" stop-opacity="0.8"/>
-              <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
-            </radialGradient>
-          </defs>
-          <path class="map-path" d="M50,400 Q200,200 400,350 T800,300 Q1000,250 1150,450"/>
-          <path class="map-path" d="M100,600 Q300,500 500,650 T900,550 Q1050,500 1180,600" style="animation-delay:-3s"/>
-          <path class="map-path" d="M80,150 Q280,80 480,180 T880,150 Q1040,120 1170,200" style="animation-delay:-6s"/>
-          <circle class="map-node" cx="200" cy="280" r="3"/>
-          <circle class="map-node" cx="500" cy="350" r="3" style="animation-delay:-0.5s"/>
-          <circle class="map-node" cx="800" cy="300" r="3" style="animation-delay:-1s"/>
-          <circle class="map-node" cx="350" cy="600" r="3" style="animation-delay:-1.5s"/>
-          <circle class="map-node" cx="700" cy="580" r="3" style="animation-delay:-2s"/>
-          <circle class="map-node" cx="1000" cy="450" r="3" style="animation-delay:-2.5s"/>
-          <circle class="map-ring" cx="500" cy="350" r="5"/>
-          <circle class="map-ring" cx="800" cy="300" r="5" style="animation-delay:-1.5s"/>
-          <circle class="map-ring" cx="350" cy="600" r="5" style="animation-delay:-2.5s"/>
-        </svg>
-        <div class="more-scan"></div>
-      </div>
-
-      <!-- Content -->
-      <div class="more-content">
-
-        <!-- Header -->
-        <div class="more-header">
-          <div class="more-badge">
-            <span class="more-badge-dot"></span>
-            EXPLORE THE ECOSYSTEM
-          </div>
-          <div class="more-title">MORE FROM AVICNKNOV</div>
-          <div class="more-subtitle">Discover everything our platform offers — from live trading and futures to upcoming launches, advanced tools and the entire AvicnKnov universe.</div>
-        </div>
-
-        <!-- Primary Trading Section -->
-        <div class="more-section-title">CORE TRADING</div>
-        <div class="more-section-sub">Direct access to live markets and derivatives</div>
-        <div class="more-grid featured">
-
-          <!-- SPOT TRADING CARD -->
-          <a class="glass-card" href="trading.html" style="animation-delay:.05s">
-            <span class="card-live-badge">LIVE</span>
-            <div class="card-icon-wrap">
-              <svg viewBox="0 0 24 24"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
-            </div>
-            <div class="card-title">SPOT TRADING</div>
-            <div class="card-desc">Trade 150+ crypto pairs instantly on AvicnKnov's lightning-fast spot engine. Click the action below to enter the live trading terminal and start trading right now with deep liquidity and sub-millisecond execution.</div>
-            <div class="card-action">
-              <span>Start Trading Now</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-            </div>
-          </a>
-
-          <!-- FUTURES CARD -->
-          <a class="glass-card" href="futures.html" style="animation-delay:.15s">
-            <span class="card-live-badge">LIVE</span>
-            <div class="card-icon-wrap">
-              <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-            </div>
-            <div class="card-title">FUTURES &amp; DERIVATIVES</div>
-            <div class="card-desc">Access perpetual contracts with up to 100x leverage. View detailed market depth, funding rates, open interest, and execute high-conviction trades on our advanced derivatives engine.</div>
-            <div class="card-action">
-              <span>Explore Futures</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-            </div>
-          </a>
-        </div>
-
-        <!-- Coming Soon Roadmap -->
-        <div class="more-section-title">WHAT'S COMING</div>
-        <div class="more-section-sub">The next evolution of the AvicnKnov universe — lock in, it's about to get wild</div>
-
-        <div class="roadmap-section" id="roadmapSection">
-          <!-- SVG track line drawn by JS -->
-          <svg class="roadmap-svg-track" id="roadmapTrackSvg" viewBox="0 0 4 1000" preserveAspectRatio="none">
-            <defs>
-              <linearGradient id="roadGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="rgba(255,255,255,0.5)"/>
-                <stop offset="100%" stop-color="rgba(255,255,255,0.1)"/>
-              </linearGradient>
-            </defs>
-            <line x1="2" y1="0" x2="2" y2="1000" class="roadmap-track-line"/>
-            <line x1="2" y1="0" x2="2" y2="1000" class="roadmap-track-live" id="roadmapLiveLine"/>
-          </svg>
-
-          <div class="roadmap-items" id="roadmapItems">
-
-            <!-- ITEM 1: AI Intelligence -->
-            <div class="roadmap-item" data-index="0">
-              <div class="roadmap-card-wrap">
-                <div class="roadmap-card">
-                  <div class="roadmap-card-tag hot">DROPPING FIRST</div>
-                  <div class="roadmap-card-title">AI NEURAL INTELLIGENCE</div>
-                  <div class="roadmap-card-desc">A proprietary neural engine trained on 240+ live market signals — whale tracking, sentiment radar, predictive setups. It reads the market so you don't have to. Our AI intelligence layer monitors every on-chain movement, cross-references global macro data, and surfaces only the highest-probability trade setups straight to your dashboard. Your edge, supercharged, running 24/7 without sleep.</div>
-                  <div class="roadmap-card-eta">ETA · Q3 2025</div>
-                </div>
-              </div>
-              <div class="roadmap-node-col">
-                <div class="roadmap-connector" style="width:calc(100% - 22px); right:22px; left:auto;"></div>
-                <div class="roadmap-node">${SVG.ai}</div>
-                <div class="roadmap-node-ring"></div>
-                <div class="roadmap-node-ring2"></div>
-              </div>
-              <div class="roadmap-spacer"></div>
-            </div>
-
-            <!-- ITEM 2: Live Events -->
-            <div class="roadmap-item" data-index="1">
-              <div class="roadmap-spacer"></div>
-              <div class="roadmap-node-col">
-                <div class="roadmap-connector" style="width:calc(100% - 22px); left:22px;"></div>
-                <div class="roadmap-node">${SVG.event}</div>
-                <div class="roadmap-node-ring"></div>
-                <div class="roadmap-node-ring2"></div>
-              </div>
-              <div class="roadmap-card-wrap">
-                <div class="roadmap-card">
-                  <div class="roadmap-card-tag cool">LIVE EVENTS ENGINE</div>
-                  <div class="roadmap-card-title">MARKET EVENTS &amp; ALERTS</div>
-                  <div class="roadmap-card-desc">Real-time event feeds — token launches, listings, protocol upgrades, macro announcements. Get notified the second something market-moving happens. Our smart alert system filters out the noise and delivers only events that are statistically proven to create volatility, giving you a decisive first-mover advantage every single time the market shifts.</div>
-                  <div class="roadmap-card-eta">ETA · Q3 2025</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- ITEM 3: Groups / Community -->
-            <div class="roadmap-item" data-index="2">
-              <div class="roadmap-card-wrap">
-                <div class="roadmap-card">
-                  <div class="roadmap-card-tag hot">HIGH DEMAND</div>
-                  <div class="roadmap-card-title">TRADER GROUPS &amp; SIGNALS</div>
-                  <div class="roadmap-card-desc">Join private trader collectives, share calls, copy top-performing wallets and get access to curated signal groups — all inside AvicnKnov. The alpha is here. You just have to claim it. Each group is performance-verified with a live track record, so you always know exactly whose calls you're following and what their win rate actually is before you commit a single dollar.</div>
-                  <div class="roadmap-card-eta">ETA · Q4 2025</div>
-                </div>
-              </div>
-              <div class="roadmap-node-col">
-                <div class="roadmap-connector" style="width:calc(100% - 22px); right:22px; left:auto;"></div>
-                <div class="roadmap-node">${SVG.group}</div>
-                <div class="roadmap-node-ring"></div>
-                <div class="roadmap-node-ring2"></div>
-              </div>
-              <div class="roadmap-spacer"></div>
-            </div>
-
-            <!-- ITEM 4: Referral -->
-            <div class="roadmap-item" data-index="3">
-              <div class="roadmap-spacer"></div>
-              <div class="roadmap-node-col">
-                <div class="roadmap-connector" style="width:calc(100% - 22px); left:22px;"></div>
-                <div class="roadmap-node">${SVG.referral}</div>
-                <div class="roadmap-node-ring"></div>
-                <div class="roadmap-node-ring2"></div>
-              </div>
-              <div class="roadmap-card-wrap">
-                <div class="roadmap-card">
-                  <div class="roadmap-card-tag">LAUNCHING SOON</div>
-                  <div class="roadmap-card-title">REFERRAL EMPIRE</div>
-                  <div class="roadmap-card-desc">Invite your network, earn up to 40% lifetime commissions on every trade they make. Build your own passive revenue stream inside AvicnKnov. Stack forever, not just once. Your commissions compound automatically across every product — spot, futures, copy trading — so a single referral today pays you indefinitely as the platform grows alongside them.</div>
-                  <div class="roadmap-card-eta">ETA · Q4 2025</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- ITEM 5: Copy Trading -->
-            <div class="roadmap-item" data-index="4">
-              <div class="roadmap-card-wrap">
-                <div class="roadmap-card">
-                  <div class="roadmap-card-tag cool">GAME CHANGER</div>
-                  <div class="roadmap-card-title">COPY TRADING VAULTS</div>
-                  <div class="roadmap-card-desc">One click. Mirror the moves of elite traders in real time. Allocate capital into verified strategy vaults and let the pros do the work while you capture the upside. Passive never looked this active. Every vault displays a full audited performance history, maximum drawdown stats, and live risk ratings so you can match a strategy precisely to your own risk tolerance and capital size.</div>
-                  <div class="roadmap-card-eta">ETA · Q1 2026</div>
-                </div>
-              </div>
-              <div class="roadmap-node-col">
-                <div class="roadmap-connector" style="width:calc(100% - 22px); right:22px; left:auto;"></div>
-                <div class="roadmap-node">${SVG.copy}</div>
-                <div class="roadmap-node-ring"></div>
-                <div class="roadmap-node-ring2"></div>
-              </div>
-              <div class="roadmap-spacer"></div>
-            </div>
-
-            <!-- ITEM 6: Aquarius Launchpad -->
-            <div class="roadmap-item" data-index="5">
-              <div class="roadmap-spacer"></div>
-              <div class="roadmap-node-col">
-                <div class="roadmap-connector" style="width:calc(100% - 22px); left:22px;"></div>
-                <div class="roadmap-node">${SVG.launchpad}</div>
-                <div class="roadmap-node-ring"></div>
-                <div class="roadmap-node-ring2"></div>
-              </div>
-              <div class="roadmap-card-wrap">
-                <div class="roadmap-card">
-                  <div class="roadmap-card-tag hot">ALPHA ACCESS</div>
-                  <div class="roadmap-card-title">AQUARIUS LAUNCHPAD</div>
-                  <div class="roadmap-card-desc">AI-vetted token launches with exclusive early access for AvicnKnov members. Only hyper-curated projects make the cut. Be first. Be inside. Be Aquarius. Every project listed on Aquarius undergoes a rigorous 72-hour due-diligence process including smart contract audits, team verification, and tokenomics analysis — so you invest in potential, not promises.</div>
-                  <div class="roadmap-card-eta">ETA · Q1 2026</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- ITEM 7: Smart Wallet -->
-            <div class="roadmap-item" data-index="6">
-              <div class="roadmap-card-wrap">
-                <div class="roadmap-card">
-                  <div class="roadmap-card-tag cool">NEXT GEN</div>
-                  <div class="roadmap-card-title">SMART WALLET SUITE</div>
-                  <div class="roadmap-card-desc">A fully non-custodial smart wallet built directly into AvicnKnov — manage, swap, bridge and deploy assets across 30+ chains without ever leaving the platform. Multi-sig security, biometric auth, and one-tap DeFi integrations give you institutional-grade asset control in a sleek mobile-first interface that moves as fast as the market does.</div>
-                  <div class="roadmap-card-eta">ETA · Q2 2026</div>
-                </div>
-              </div>
-              <div class="roadmap-node-col">
-                <div class="roadmap-connector" style="width:calc(100% - 22px); right:22px; left:auto;"></div>
-                <div class="roadmap-node">${SVG.wallet}</div>
-                <div class="roadmap-node-ring"></div>
-                <div class="roadmap-node-ring2"></div>
-              </div>
-              <div class="roadmap-spacer"></div>
-            </div>
-
-            <!-- ITEM 8: NFT & Digital Assets -->
-            <div class="roadmap-item" data-index="7">
-              <div class="roadmap-spacer"></div>
-              <div class="roadmap-node-col">
-                <div class="roadmap-connector" style="width:calc(100% - 22px); left:22px;"></div>
-                <div class="roadmap-node">${SVG.nft}</div>
-                <div class="roadmap-node-ring"></div>
-                <div class="roadmap-node-ring2"></div>
-              </div>
-              <div class="roadmap-card-wrap">
-                <div class="roadmap-card">
-                  <div class="roadmap-card-tag">COMING SOON</div>
-                  <div class="roadmap-card-title">NFT &amp; DIGITAL ASSETS</div>
-                  <div class="roadmap-card-desc">Trade, collect, and fractionalize blue-chip NFTs directly inside AvicnKnov with zero gas friction. Our integrated NFT marketplace aggregates floor prices, rarity scores, and volume trends across all major collections in real time. Spot undervalued gems, set limit bids, and flip with precision using the same execution tools you already trust for crypto trading.</div>
-                  <div class="roadmap-card-eta">ETA · Q2 2026</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- ITEM 9: Staking & Yield -->
-            <div class="roadmap-item" data-index="8">
-              <div class="roadmap-card-wrap">
-                <div class="roadmap-card">
-                  <div class="roadmap-card-tag hot">HIGH YIELD</div>
-                  <div class="roadmap-card-title">STAKING &amp; YIELD VAULTS</div>
-                  <div class="roadmap-card-desc">Put idle capital to work with AvicnKnov's curated staking and yield vault system. Earn optimized APY across battle-tested DeFi protocols while maintaining full liquidity control with flexible lock-up terms. Our automated yield optimizer continuously rebalances allocations across pools to ensure your capital always captures the highest available return without manual intervention.</div>
-                  <div class="roadmap-card-eta">ETA · Q3 2026</div>
-                </div>
-              </div>
-              <div class="roadmap-node-col">
-                <div class="roadmap-connector" style="width:calc(100% - 22px); right:22px; left:auto;"></div>
-                <div class="roadmap-node">${SVG.staking}</div>
-                <div class="roadmap-node-ring"></div>
-                <div class="roadmap-node-ring2"></div>
-              </div>
-              <div class="roadmap-spacer"></div>
-            </div>
-
-            <!-- ITEM 10: Advanced Analytics -->
-            <div class="roadmap-item" data-index="9">
-              <div class="roadmap-spacer"></div>
-              <div class="roadmap-node-col">
-                <div class="roadmap-connector" style="width:calc(100% - 22px); left:22px;"></div>
-                <div class="roadmap-node">${SVG.analytics}</div>
-                <div class="roadmap-node-ring"></div>
-                <div class="roadmap-node-ring2"></div>
-              </div>
-              <div class="roadmap-card-wrap">
-                <div class="roadmap-card">
-                  <div class="roadmap-card-tag cool">PRO TOOLS</div>
-                  <div class="roadmap-card-title">ADVANCED ANALYTICS HUB</div>
-                  <div class="roadmap-card-desc">Institutional-grade market analytics brought directly to retail traders — on-chain flow analysis, derivatives heat maps, liquidation cluster mapping, and cross-exchange order book depth aggregated into a single unified dashboard. Understand exactly where the big money is positioned before the next major move unfolds, and build a data-driven strategy that consistently outperforms the market.</div>
-                  <div class="roadmap-card-eta">ETA · Q3 2026</div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- Final CTA Panel -->
-        <div class="cta-panel">
-          <div class="cta-title">READY TO TRADE?</div>
-          <div class="cta-desc">Join 2 million+ traders already using AvicnKnov to navigate the world's deepest crypto markets with institutional precision.</div>
-          <div class="cta-buttons">
-            <a class="cta-btn cta-btn-secondary" href="futures.html">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-              View Futures
-            </a>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  `;
-
-  // ===== FLOATING PARTICLES =====
-  const bg = container.querySelector('.more-bg');
-  for(let i=0;i<22;i++){
-    const p = document.createElement('div');
-    p.className = 'more-particle';
-    p.style.left = Math.random()*100 + '%';
-    p.style.top = Math.random()*100 + '%';
-    const dur = 8 + Math.random()*12;
-    const delay = Math.random()*8;
-    p.style.animation = `partFloat ${dur}s ${delay}s linear infinite`;
-    bg.appendChild(p);
-  }
-  if(!document.getElementById('moreParticleAnim')){
-    const s = document.createElement('style');
-    s.id = 'moreParticleAnim';
-    s.textContent = `
-      @keyframes partFloat{
-        0%{transform:translateY(0) translateX(0);opacity:0;}
-        10%{opacity:0.6;}
-        50%{transform:translateY(-100px) translateX(20px);opacity:1;}
-        90%{opacity:0.4;}
-        100%{transform:translateY(-200px) translateX(-10px);opacity:0;}
-      }
-    `;
-    document.head.appendChild(s);
-  }
-
-  // ===== CARD 3D TILT (mouse) =====
-  container.querySelectorAll('.glass-card').forEach(card=>{
-    card.addEventListener('mousemove', e=>{
-      const r = card.getBoundingClientRect();
-      const x = e.clientX - r.left;
-      const y = e.clientY - r.top;
-      const cx = r.width/2, cy = r.height/2;
-      const rotX = ((y-cy)/cy) * -4;
-      const rotY = ((x-cx)/cx) * 4;
-      card.style.transform = `translateY(-6px) perspective(900px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale(1.01)`;
-    });
-    card.addEventListener('mouseleave', ()=>{
-      card.style.transform = '';
-    });
-  });
-
-  // ===== ROADMAP SCROLL REVEAL =====
-  const roadmapItems = container.querySelectorAll('.roadmap-item');
-  const roadmapSection = container.querySelector('#roadmapSection');
-  const liveLine = container.querySelector('#roadmapLiveLine');
-
-  function updateRoadmap(){
-    if(!roadmapSection) return;
-    const sectionRect = roadmapSection.getBoundingClientRect();
-    const sectionH = roadmapSection.offsetHeight;
-    const windowH = window.innerHeight;
-
-    // How far through the section we are (0 to 1)
-    const scrolled = Math.max(0, Math.min(1, (windowH - sectionRect.top) / (sectionH + windowH)));
-
-    // Animate the dashed live line height
-    if(liveLine){
-      const drawPct = Math.min(scrolled * 1.4, 1);
-      liveLine.setAttribute('y2', Math.floor(drawPct * 1000));
+    /* ── CANVAS BG ── */
+    #avBg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
     }
 
-    // Reveal each roadmap item
-    roadmapItems.forEach((item, i)=>{
-      const rect = item.getBoundingClientRect();
-      const triggerPoint = windowH * 0.82;
-      if(rect.top < triggerPoint){
-        item.classList.add('visible');
+    /* ── WRAPPER ── */
+    #avMain {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ══════════════════ HERO ══════════════════ */
+    .av-hero {
+      text-align: center;
+      padding: clamp(70px,10vw,110px) 24px clamp(40px,6vw,70px);
+    }
+    .av-brand-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    .av-orn-line {
+      flex: 1;
+      max-width: 100px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.45));
+    }
+    .av-orn-line.r {
+      background: linear-gradient(90deg, rgba(255,255,255,.45), transparent);
+    }
+    .av-orn-ico {
+      width: 26px; height: 26px;
+      animation: avSpinSlow 28s linear infinite;
+      flex-shrink: 0;
+    }
+    @keyframes avSpinSlow { to { transform: rotate(360deg); } }
+
+    .av-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.8rem, 9.5vw, 6rem);
+      font-weight: 300;
+      letter-spacing: .1em;
+      line-height: 1;
+      background: linear-gradient(140deg, #ffffff 0%, #888 45%, #ffffff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      background-size: 200% 200%;
+      animation: avTitleShimmer 5s ease-in-out infinite;
+    }
+    .av-title em {
+      font-style: italic;
+      font-weight: 700;
+    }
+    @keyframes avTitleShimmer {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    .av-tagline {
+      font-size: clamp(.6rem, 1.8vw, .74rem);
+      letter-spacing: .42em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.26);
+      margin-top: 14px;
+      font-weight: 300;
+    }
+    .av-live-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 20px;
+      padding: 5px 16px;
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 30px;
+      background: rgba(255,255,255,.04);
+      font-size: .6rem;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.32);
+    }
+    .av-ldot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.65);
+      position: relative;
+      animation: avLPulse 1.9s ease-in-out infinite;
+    }
+    .av-ldot::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.3);
+      animation: avLRing 1.9s ease-in-out infinite;
+    }
+    @keyframes avLPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.35)} }
+    @keyframes avLRing  { 0%{transform:scale(1);opacity:1} 100%{transform:scale(2.8);opacity:0} }
+
+    /* ══════════════════ BUTTONS ══════════════════ */
+    .av-btns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: clamp(16px,3vw,28px);
+      justify-content: center;
+      padding: clamp(20px,4vw,50px) clamp(16px,5vw,48px);
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .av-btn-card {
+      flex: 1;
+      min-width: min(100%, 300px);
+      max-width: 450px;
+      position: relative;
+      border-radius: 22px;
+      overflow: hidden;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      transition: transform .45s cubic-bezier(.23,1,.32,1), box-shadow .45s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .av-btn-card:hover {
+      transform: translateY(-9px) scale(1.015);
+      box-shadow: 0 24px 60px rgba(255,255,255,.06);
+    }
+    .av-btn-card:active { transform: scale(.97) !important; }
+
+    /* Animated shimmer border via pseudo */
+    .av-btn-card::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: 23px;
+      z-index: -1;
+      background: linear-gradient(
+        var(--av-deg, 0deg),
+        rgba(255,255,255,.01) 0%,
+        rgba(255,255,255,.45) 25%,
+        rgba(255,255,255,.01) 50%
+      );
+      animation: avBorderRot 4s linear infinite;
+    }
+    @keyframes avBorderRot {
+      from { --av-deg: 0deg; }
+      to   { --av-deg: 360deg; }
+    }
+    /* Fallback for browsers without @property */
+    @supports not (background: linear-gradient(var(--av-deg), white, black)) {
+      .av-btn-card::before {
+        background: linear-gradient(135deg,
+          rgba(255,255,255,.02) 0%,
+          rgba(255,255,255,.4) 30%,
+          rgba(255,255,255,.02) 60%,
+          rgba(255,255,255,.35) 100%);
+        animation: avBorderFade 3s ease-in-out infinite;
       }
+      @keyframes avBorderFade { 0%,100%{opacity:.5} 50%{opacity:1} }
+    }
+
+    .av-btn-glass {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        135deg,
+        rgba(255,255,255,.12) 0%,
+        rgba(255,255,255,.04) 50%,
+        rgba(255,255,255,.08) 100%
+      );
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 22px;
+      z-index: 0;
+    }
+    .av-btn-glass::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 55%;
+      background: linear-gradient(180deg, rgba(255,255,255,.07), transparent);
+      border-radius: 22px 22px 0 0;
+    }
+
+    .av-btn-inner {
+      position: relative;
+      z-index: 1;
+      padding: clamp(24px,4vw,36px) clamp(22px,4vw,32px);
+    }
+    .av-btn-head {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    .av-btn-ico-box {
+      width: 58px; height: 58px;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .av-btn-ico-box::after {
+      content: '';
+      position: absolute;
+      top: -100%; left: -100%;
+      width: 300%; height: 300%;
+      background: linear-gradient(
+        135deg,
+        transparent 30%,
+        rgba(255,255,255,.09) 50%,
+        transparent 70%
+      );
+      animation: avIconSheen 3.5s ease-in-out infinite;
+    }
+    @keyframes avIconSheen {
+      0%  { transform: translateX(-100%) translateY(-100%); opacity: 0; }
+      35% { opacity: 1; }
+      100%{ transform: translateX(50%) translateY(50%); opacity: 0; }
+    }
+    .av-btn-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.3rem,3.2vw,1.7rem);
+      font-weight: 600;
+      letter-spacing: .04em;
+      color: #fff;
+      line-height: 1.1;
+    }
+    .av-btn-sub {
+      font-size: .6rem;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.3);
+      margin-top: 4px;
+    }
+    .av-btn-desc {
+      font-size: clamp(.75rem,1.6vw,.83rem);
+      line-height: 1.85;
+      color: rgba(255,255,255,.5);
+      font-weight: 300;
+    }
+    .av-btn-desc b {
+      color: rgba(255,255,255,.85);
+      font-weight: 400;
+    }
+    .av-btn-cta {
+      margin-top: 22px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: .62rem;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.38);
+    }
+    .av-cta-line {
+      height: 1px;
+      width: 22px;
+      background: rgba(255,255,255,.35);
+      transition: width .35s ease;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .av-cta-line::after {
+      content: '';
+      position: absolute;
+      right: 0; top: -3px;
+      width: 7px; height: 7px;
+      border-top: 1px solid rgba(255,255,255,.35);
+      border-right: 1px solid rgba(255,255,255,.35);
+      transform: rotate(45deg);
+    }
+    .av-btn-card:hover .av-cta-line { width: 42px; }
+
+    /* Ripple */
+    .av-ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,.14);
+      transform: scale(0);
+      animation: avRipple .75s linear;
+      pointer-events: none;
+      z-index: 20;
+    }
+    @keyframes avRipple { to { transform: scale(6); opacity: 0; } }
+
+    /* ══════════════════ MAP INTRO ══════════════════ */
+    .av-map-intro {
+      text-align: center;
+      padding: 70px 24px 30px;
+      position: relative;
+    }
+    .av-map-intro::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 1px; height: 56px;
+      background: linear-gradient(180deg, transparent, rgba(255,255,255,.28), transparent);
+    }
+    .av-map-intro-label {
+      font-size: .64rem;
+      letter-spacing: .42em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.22);
+      margin-bottom: 10px;
+    }
+    .av-map-intro-heading {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.5rem,4.5vw,2.4rem);
+      font-weight: 300;
+      letter-spacing: .06em;
+      color: rgba(255,255,255,.65);
+    }
+    .av-map-intro-heading em {
+      font-style: italic;
+      color: #fff;
+    }
+
+    /* ══════════════════ TREASURE MAP ══════════════════ */
+    .av-map {
+      position: relative;
+      max-width: 940px;
+      margin: 0 auto;
+      padding: 20px 0 120px;
+    }
+
+    /* Center track line */
+    .av-track {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      top: 0; bottom: 0;
+      width: 2px;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .av-track-bg {
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,.05);
+    }
+    .av-track-fill {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 0;
+      background: linear-gradient(
+        180deg,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,.55) 25%,
+        rgba(255,255,255,.4) 75%,
+        rgba(255,255,255,0) 100%
+      );
+      transition: height .12s linear;
+    }
+    .av-track-ptcl {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px; height: 18px;
+      background: linear-gradient(
+        180deg,
+        rgba(255,255,255,0),
+        rgba(255,255,255,.7),
+        rgba(255,255,255,0)
+      );
+      border-radius: 2px;
+      animation: avPtclFlow var(--d,3s) linear infinite;
+      animation-delay: var(--dl,0s);
+      opacity: 0;
+    }
+    @keyframes avPtclFlow {
+      0%   { top: 0%;  opacity: 0; }
+      8%   { opacity: 1; }
+      92%  { opacity: 1; }
+      100% { top: 100%; opacity: 0; }
+    }
+
+    /* Nodes container */
+    .av-nodes {
+      position: relative;
+      z-index: 1;
+      padding: 0 clamp(14px,4vw,48px);
+    }
+
+    /* Individual node row */
+    .av-node {
+      display: flex;
+      align-items: center;
+      position: relative;
+      margin-bottom: clamp(18px,3.5vw,38px);
+      opacity: 0;
+      transition: opacity .72s ease, transform .72s cubic-bezier(.23,1,.32,1);
+    }
+    .av-node.av-left {
+      flex-direction: row;
+      justify-content: flex-end;
+      padding-right: calc(50% + 30px);
+      transform: translateX(-55px);
+    }
+    .av-node.av-right {
+      flex-direction: row;
+      justify-content: flex-start;
+      padding-left: calc(50% + 30px);
+      transform: translateX(55px);
+    }
+    .av-node.av-vis {
+      opacity: 1;
+      transform: translateX(0) !important;
+    }
+
+    /* Glowing dot on track */
+    .av-ndot {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%,-50%);
+      width: 14px; height: 14px;
+      z-index: 5;
+    }
+    .av-ndot-core {
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 0 14px rgba(255,255,255,.55),
+                  0 0 30px rgba(255,255,255,.2);
+      animation: avDotGlow 2.4s ease-in-out infinite;
+    }
+    .av-ndot-ring {
+      position: absolute;
+      inset: -5px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.3);
+      animation: avDotRing 2.4s ease-in-out infinite;
+    }
+    @keyframes avDotGlow {
+      0%,100%{ box-shadow:0 0 10px rgba(255,255,255,.4),0 0 20px rgba(255,255,255,.1); }
+      50%    { box-shadow:0 0 22px rgba(255,255,255,.85),0 0 44px rgba(255,255,255,.28); }
+    }
+    @keyframes avDotRing {
+      0%,100%{ transform:scale(1); opacity:.5; }
+      50%    { transform:scale(1.5); opacity:1; }
+    }
+
+    /* Card */
+    .av-ncard {
+      position: relative;
+      width: 100%;
+      max-width: min(390px, 43vw);
+      border-radius: 18px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform .35s cubic-bezier(.23,1,.32,1),
+                  box-shadow .35s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .av-ncard:hover {
+      transform: scale(1.04) translateY(-4px);
+      box-shadow: 0 18px 50px rgba(255,255,255,.05);
+    }
+    .av-ncard:active { transform: scale(.97); }
+
+    .av-ncard-glass {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        135deg,
+        rgba(255,255,255,.1) 0%,
+        rgba(255,255,255,.03) 60%,
+        rgba(255,255,255,.07) 100%
+      );
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255,255,255,.09);
+      border-radius: 18px;
+      z-index: 0;
+    }
+    .av-ncard-glass::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 15%; right: 15%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.22), transparent);
+    }
+
+    .av-ncard-inner {
+      position: relative;
+      z-index: 1;
+      padding: clamp(16px,3vw,24px);
+    }
+    .av-ncard-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .av-ncard-ico {
+      width: 38px; height: 38px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .av-ncard-meta { flex: 1; min-width: 0; }
+    .av-ncard-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(.9rem,2.2vw,1.1rem);
+      font-weight: 600;
+      letter-spacing: .03em;
+      color: rgba(255,255,255,.95);
+      line-height: 1.25;
+    }
+    .av-ncard-badge {
+      display: inline-block;
+      margin-top: 5px;
+      font-size: .54rem;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.28);
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.08);
+      padding: 2px 7px;
+      border-radius: 10px;
+    }
+    .av-ncard-desc {
+      font-size: clamp(.68rem,1.4vw,.75rem);
+      line-height: 1.85;
+      color: rgba(255,255,255,.4);
+      font-weight: 300;
+      margin-bottom: 12px;
+    }
+    .av-ncard-feats { display: flex; flex-direction: column; gap: 5px; }
+    .av-ncard-feat {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: clamp(.63rem,1.3vw,.7rem);
+      color: rgba(255,255,255,.36);
+      line-height: 1.55;
+    }
+    .av-ncard-feat::before {
+      content: '';
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.28);
+      flex-shrink: 0;
+      margin-top: 5px;
+    }
+    .av-ncard-foot {
+      margin-top: 14px;
+      padding-top: 11px;
+      border-top: 1px solid rgba(255,255,255,.06);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: .58rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.2);
+    }
+    .av-ncard-sdot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.3);
+      animation: avSDotBlink 2.6s ease-in-out infinite;
+    }
+    @keyframes avSDotBlink {
+      0%,100%{ opacity:.3; box-shadow:none; }
+      50%    { opacity:1; box-shadow:0 0 7px rgba(255,255,255,.55); }
+    }
+
+    /* Click hint */
+    .av-ncard-hint {
+      position: absolute;
+      bottom: 10px; right: 14px;
+      font-size: .54rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.18);
+    }
+
+    /* ══════════════════ MODAL ══════════════════ */
+    .av-modal-ov {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.84);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      z-index: 9000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .38s ease;
+    }
+    .av-modal-ov.av-open { opacity: 1; pointer-events: all; }
+
+    .av-modal {
+      position: relative;
+      max-width: 530px;
+      width: 100%;
+      border-radius: 26px;
+      overflow: hidden;
+      transform: scale(.72) translateY(44px);
+      transition: transform .42s cubic-bezier(.23,1,.32,1);
+      max-height: 88vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .av-modal-ov.av-open .av-modal {
+      transform: scale(1) translateY(0);
+    }
+    .av-modal-glass {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(155deg, rgba(24,24,24,.97), rgba(6,6,6,.99));
+      backdrop-filter: blur(40px);
+      border: 1px solid rgba(255,255,255,.11);
+      border-radius: 26px;
+    }
+    .av-modal-glass::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 15%; right: 15%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.22), transparent);
+    }
+    .av-modal-scroll {
+      position: relative;
+      z-index: 1;
+      overflow-y: auto;
+      padding: 36px 30px 32px;
+      max-height: 88vh;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,.14) transparent;
+    }
+    .av-modal-close {
+      position: absolute;
+      top: 18px; right: 18px;
+      width: 34px; height: 34px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.09);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+      transition: background .2s;
+      flex-shrink: 0;
+    }
+    .av-modal-close:hover { background: rgba(255,255,255,.12); }
+    .av-modal-icon {
+      width: 62px; height: 62px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 18px;
+    }
+    .av-modal-badge {
+      display: block;
+      font-size: .58rem;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.27);
+      margin-bottom: 8px;
+    }
+    .av-modal-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.5rem,4.5vw,2.1rem);
+      font-weight: 600;
+      letter-spacing: .04em;
+      color: #fff;
+      margin-bottom: 16px;
+      line-height: 1.15;
+    }
+    .av-modal-desc {
+      font-size: clamp(.75rem,1.6vw,.83rem);
+      line-height: 1.92;
+      color: rgba(255,255,255,.5);
+      font-weight: 300;
+      margin-bottom: 22px;
+    }
+    .av-modal-feats-label {
+      font-size: .6rem;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.22);
+      margin-bottom: 10px;
+    }
+    .av-modal-feats { display: flex; flex-direction: column; gap: 7px; }
+    .av-modal-feat {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 14px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.06);
+      border-radius: 10px;
+      font-size: clamp(.72rem,1.5vw,.78rem);
+      color: rgba(255,255,255,.48);
+      line-height: 1.65;
+    }
+    .av-modal-feat-n {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      color: rgba(255,255,255,.18);
+      flex-shrink: 0;
+      line-height: 1.5;
+      width: 20px;
+      text-align: right;
+    }
+
+    /* ══════════════════ RESPONSIVE ══════════════════ */
+    @media (max-width: 650px) {
+      .av-node.av-left, .av-node.av-right {
+        flex-direction: column;
+        padding: 0 0 0 32px;
+        justify-content: flex-start;
+        align-items: flex-start;
+      }
+      .av-node.av-left  { transform: translateX(-35px); }
+      .av-node.av-right { transform: translateX(35px); }
+      .av-ndot {
+        left: 0;
+        transform: translate(-50%, -50%);
+      }
+      .av-track {
+        left: 15px;
+        transform: none;
+      }
+      .av-ncard { max-width: 100%; }
+      .av-modal-scroll { padding: 30px 22px 28px; }
+    }
+  `;
+  const styleEl = document.createElement('style');
+  styleEl.textContent = CSS;
+  document.head.appendChild(styleEl);
+
+  /* ═══════════════════════════════════════════════════════════
+     3.  SVG ICONS
+  ═══════════════════════════════════════════════════════════ */
+
+  /* Trading — animated candlestick + trend line */
+  const ICON_TRADING = `<svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <style>
+      .tb1{transform-box:fill-box;transform-origin:50% 100%;animation:avBar1 2.1s ease-in-out infinite}
+      .tb2{transform-box:fill-box;transform-origin:50% 100%;animation:avBar2 2.6s ease-in-out infinite}
+      .tb3{transform-box:fill-box;transform-origin:50% 100%;animation:avBar3 1.9s ease-in-out infinite}
+      .tl{stroke-dasharray:44;stroke-dashoffset:44;animation:avTLine 2s ease-out forwards,avTLinePulse 2s 2s ease-in-out infinite}
+      @keyframes avBar1{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.38)}}
+      @keyframes avBar2{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.65)}}
+      @keyframes avBar3{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.28)}}
+      @keyframes avTLine{to{stroke-dashoffset:0}}
+      @keyframes avTLinePulse{0%,100%{opacity:.55}50%{opacity:1}}
+    </style>
+    <line x1="1" y1="29" x2="33" y2="29" stroke="rgba(255,255,255,.14)" stroke-width=".8"/>
+    <line x1="1" y1="21" x2="33" y2="21" stroke="rgba(255,255,255,.07)" stroke-width=".6"/>
+    <line x1="1" y1="13" x2="33" y2="13" stroke="rgba(255,255,255,.07)" stroke-width=".6"/>
+    <g class="tb1">
+      <line x1="4" y1="11" x2="4" y2="28" stroke="rgba(255,255,255,.2)" stroke-width=".7"/>
+      <rect x="1.5" y="16" width="5" height="9" rx=".9" fill="rgba(255,255,255,.72)"/>
+    </g>
+    <g class="tb2">
+      <line x1="13" y1="9" x2="13" y2="25" stroke="rgba(255,255,255,.2)" stroke-width=".7"/>
+      <rect x="10.5" y="13" width="5" height="8.5" rx=".9" fill="rgba(255,255,255,.22)" stroke="rgba(255,255,255,.5)" stroke-width=".8"/>
+    </g>
+    <g class="tb3">
+      <line x1="22" y1="7" x2="22" y2="23" stroke="rgba(255,255,255,.2)" stroke-width=".7"/>
+      <rect x="19.5" y="10" width="5" height="10" rx=".9" fill="rgba(255,255,255,.76)"/>
+    </g>
+    <polyline class="tl" points="2,27 7,20 13,22 19,14 25,9 32,5" stroke="rgba(255,255,255,.65)" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>`;
+
+  /* Futures — orbiting rocket */
+  const ICON_FUTURES = `<svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <style>
+      .fr{transform-box:fill-box;transform-origin:50% 50%;animation:avFRise 2.2s ease-in-out infinite}
+      .fo1{transform-box:fill-box;transform-origin:17px 18px;animation:avFOrb 3.2s linear infinite}
+      .fo2{transform-box:fill-box;transform-origin:17px 18px;animation:avFOrb 5s linear infinite reverse}
+      .ff{animation:avFFlame 1.3s ease-in-out infinite}
+      @keyframes avFRise{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+      @keyframes avFOrb{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+      @keyframes avFFlame{0%,100%{opacity:.35}50%{opacity:.9}}
+    </style>
+    <ellipse cx="17" cy="19" rx="12" ry="5" stroke="rgba(255,255,255,.11)" stroke-width=".8" fill="none"/>
+    <ellipse cx="17" cy="17" rx="9" ry="3.5" stroke="rgba(255,255,255,.07)" stroke-width=".7" fill="none" transform="rotate(-28 17 17)"/>
+    <g class="fo1">
+      <circle cx="29" cy="19" r="2" fill="rgba(255,255,255,.55)"/>
+    </g>
+    <g class="fo2">
+      <circle cx="17" cy="27.5" r="1.4" fill="rgba(255,255,255,.35)"/>
+    </g>
+    <g class="fr">
+      <path d="M17 4 C17 4 12.5 12 12.5 17 L17 20.5 L21.5 17 C21.5 12 17 4 17 4Z"
+        fill="rgba(255,255,255,.88)"/>
+      <path d="M12.5 17 L10 21.5 L17 20.5Z" fill="rgba(255,255,255,.38)"/>
+      <path d="M21.5 17 L24 21.5 L17 20.5Z" fill="rgba(255,255,255,.38)"/>
+      <circle cx="17" cy="12" r="2.2" fill="rgba(0,0,0,.55)"/>
+      <path class="ff" d="M15.2 20.5 Q17 25.5 18.8 20.5" stroke="rgba(255,255,255,.65)" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+    </g>
+  </svg>`;
+
+  /* Small node icons */
+  function nodeIcon(t) {
+    const I = {
+      ai:`<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><style>.ni1{animation:niPls 1.5s ease-in-out infinite}.ni2{animation:niPls 1.5s .3s ease-in-out infinite}.ni3{animation:niPls 1.5s .6s ease-in-out infinite}@keyframes niPls{0%,100%{opacity:.4}50%{opacity:1}}</style><circle cx="11" cy="11" r="2.5" fill="rgba(255,255,255,.85)"/><circle class="ni1" cx="3.5" cy="5" r="1.5" fill="rgba(255,255,255,.55)"/><circle class="ni2" cx="18.5" cy="5" r="1.5" fill="rgba(255,255,255,.55)"/><circle class="ni3" cx="3.5" cy="17" r="1.5" fill="rgba(255,255,255,.55)"/><circle class="ni1" cx="18.5" cy="17" r="1.5" fill="rgba(255,255,255,.55)"/><line x1="5" y1="5.8" x2="9" y2="9.3" stroke="rgba(255,255,255,.25)" stroke-width=".8"/><line x1="17" y1="5.8" x2="13" y2="9.3" stroke="rgba(255,255,255,.25)" stroke-width=".8"/><line x1="5" y1="16.2" x2="9" y2="12.7" stroke="rgba(255,255,255,.25)" stroke-width=".8"/><line x1="17" y1="16.2" x2="13" y2="12.7" stroke="rgba(255,255,255,.25)" stroke-width=".8"/></svg>`,
+      events:`<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><style>.nev{transform-box:fill-box;transform-origin:50% 50%;animation:nevAn 2s ease-in-out infinite}@keyframes nevAn{0%,100%{transform:scaleX(1)}50%{transform:scaleX(.6)}}</style><rect x="3" y="4" width="16" height="15" rx="2.5" stroke="rgba(255,255,255,.52)" stroke-width=".9" fill="none"/><line x1="3" y1="9" x2="19" y2="9" stroke="rgba(255,255,255,.28)" stroke-width=".8"/><line x1="7" y1="2.5" x2="7" y2="5.5" stroke="rgba(255,255,255,.52)" stroke-width="1.2" stroke-linecap="round"/><line x1="15" y1="2.5" x2="15" y2="5.5" stroke="rgba(255,255,255,.52)" stroke-width="1.2" stroke-linecap="round"/><rect class="nev" x="5.5" y="12" width="4" height="3" rx="1" fill="rgba(255,255,255,.52)"/><rect class="nev" x="12.5" y="12" width="4" height="3" rx="1" fill="rgba(255,255,255,.32)"/></svg>`,
+      community:`<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><style>.nc1{animation:ncAn 2s ease-in-out infinite}.nc2{animation:ncAn 2s .5s ease-in-out infinite}.nc3{animation:ncAn 2s 1s ease-in-out infinite}@keyframes ncAn{0%,100%{opacity:.4}50%{opacity:1}}</style><circle class="nc1" cx="11" cy="6.5" r="3" stroke="rgba(255,255,255,.7)" stroke-width=".9" fill="rgba(255,255,255,.1)"/><circle class="nc2" cx="5" cy="14" r="2.4" stroke="rgba(255,255,255,.5)" stroke-width=".9" fill="rgba(255,255,255,.07)"/><circle class="nc3" cx="17" cy="14" r="2.4" stroke="rgba(255,255,255,.5)" stroke-width=".9" fill="rgba(255,255,255,.07)"/><line x1="8.8" y1="9" x2="6.5" y2="11.8" stroke="rgba(255,255,255,.22)" stroke-width=".8"/><line x1="13.2" y1="9" x2="15.5" y2="11.8" stroke="rgba(255,255,255,.22)" stroke-width=".8"/></svg>`,
+      call:`<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><style>.nca{transform-box:fill-box;transform-origin:50% 50%;animation:ncaAn 1.6s ease-in-out infinite}@keyframes ncaAn{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}</style><g class="nca"><path d="M7 4C7 4 5 4 5 7L5 9C5 9 5 10 6 10.8 7.5 11.8 9.5 13.8 10.5 15.2 11 16.2 12 16 14 16 17 16 17 14 17 14 16 12.5 15 12 14 11.5 13.5 11.5 13 12L12.5 12.5C11.5 11.5 9.5 9.5 8.5 8.5L9 8C9.5 7.5 9.5 7 9 6 8.5 5 7 4 7 4Z" stroke="rgba(255,255,255,.7)" stroke-width=".9" fill="rgba(255,255,255,.1)"/></g><path d="M15 3.5 Q19.5 5.5 19.5 9.5" stroke="rgba(255,255,255,.3)" stroke-width=".9" fill="none" stroke-linecap="round"/><path d="M14 5.5 Q17.5 7 17.5 9.5" stroke="rgba(255,255,255,.18)" stroke-width=".9" fill="none" stroke-linecap="round"/></svg>`,
+      join:`<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><style>.nj{stroke-dasharray:52;animation:njAn 2.8s linear infinite}@keyframes njAn{0%{stroke-dashoffset:52}100%{stroke-dashoffset:0}}</style><polygon class="nj" points="11,2.5 13.5,8.5 19.5,9 15,13.5 16.5,20 11,17 5.5,20 7,13.5 2.5,9 8.5,8.5" stroke="rgba(255,255,255,.7)" stroke-width="1" fill="rgba(255,255,255,.1)" stroke-linejoin="round"/><polygon points="11,6 12.6,9.8 16.8,10.4 14,13.1 14.6,17.4 11,15.5 7.4,17.4 8,13.1 5.2,10.4 9.4,9.8" fill="rgba(255,255,255,.18)"/></svg>`,
+      achievement:`<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><style>.nac{transform-box:fill-box;transform-origin:11px 9px;animation:nacAn 2s ease-in-out infinite}@keyframes nacAn{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}</style><g class="nac"><circle cx="11" cy="9" r="5.5" stroke="rgba(255,255,255,.68)" stroke-width=".9" fill="rgba(255,255,255,.06)"/><path d="M11 5.5L12.2 8.2H15L12.8 9.8 13.5 12.5 11 11 8.5 12.5 9.2 9.8 7 8.2H9.8Z" fill="rgba(255,255,255,.65)"/></g><path d="M8 14.5L6.5 19.5L11 17.5L15.5 19.5L14 14.5" stroke="rgba(255,255,255,.32)" stroke-width=".9" fill="none" stroke-linejoin="round"/></svg>`,
+      quint:`<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><style>.nqu{transform-box:fill-box;transform-origin:11px 11px;animation:nquAn 8s linear infinite}@keyframes nquAn{to{transform:rotate(360deg)}}</style><g class="nqu"><polygon points="11,2 13.3,8 19.5,8 14.5,11.8 16.5,18 11,14.5 5.5,18 7.5,11.8 2.5,8 8.7,8" stroke="rgba(255,255,255,.48)" stroke-width=".8" fill="rgba(255,255,255,.06)" stroke-linejoin="round"/></g><circle cx="11" cy="11" r="2.5" fill="rgba(255,255,255,.55)"/></svg>`,
+      avicn:`<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><style>.nav{stroke-dasharray:62;animation:navAn 2.8s ease-in-out infinite}@keyframes navAn{0%{stroke-dashoffset:62}60%{stroke-dashoffset:0}100%{stroke-dashoffset:0}}</style><path class="nav" d="M3 19 L11 3 L19 19" stroke="rgba(255,255,255,.8)" stroke-width="1.3" fill="none" stroke-linejoin="round" stroke-linecap="round"/><line x1="7" y1="14" x2="15" y2="14" stroke="rgba(255,255,255,.35)" stroke-width=".9" stroke-linecap="round"/><circle cx="11" cy="11" r="1.6" fill="rgba(255,255,255,.65)"/></svg>`,
+      neural:`<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><style>.nn1{animation:nnAn 1.5s ease-in-out infinite}.nn2{animation:nnAn 1.5s .25s ease-in-out infinite}.nn3{animation:nnAn 1.5s .5s ease-in-out infinite}.nn4{animation:nnAn 1.5s .75s ease-in-out infinite}@keyframes nnAn{0%,100%{opacity:.3}50%{opacity:1}}</style><circle class="nn1" cx="4.5" cy="4.5" r="2" fill="rgba(255,255,255,.7)"/><circle class="nn2" cx="17.5" cy="4.5" r="2" fill="rgba(255,255,255,.7)"/><circle class="nn3" cx="4.5" cy="17.5" r="2" fill="rgba(255,255,255,.7)"/><circle class="nn4" cx="17.5" cy="17.5" r="2" fill="rgba(255,255,255,.7)"/><circle cx="11" cy="11" r="2.8" fill="rgba(255,255,255,.88)"/><line x1="6.3" y1="5.3" x2="9.2" y2="8.8" stroke="rgba(255,255,255,.2)" stroke-width=".8"/><line x1="15.7" y1="5.3" x2="12.8" y2="8.8" stroke="rgba(255,255,255,.2)" stroke-width=".8"/><line x1="6.3" y1="16.7" x2="9.2" y2="13.2" stroke="rgba(255,255,255,.2)" stroke-width=".8"/><line x1="15.7" y1="16.7" x2="12.8" y2="13.2" stroke="rgba(255,255,255,.2)" stroke-width=".8"/></svg>`,
+      portfolio:`<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><style>.npf{transform-box:fill-box;transform-origin:11px 11px;animation:npfAn 6s linear infinite}@keyframes npfAn{to{transform:rotate(360deg)}}</style><g class="npf"><path d="M11 2.5 A8.5 8.5 0 0 1 19.5 11" stroke="rgba(255,255,255,.85)" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M19.5 11 A8.5 8.5 0 0 1 11 19.5" stroke="rgba(255,255,255,.45)" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M11 19.5 A8.5 8.5 0 0 1 2.5 11" stroke="rgba(255,255,255,.2)" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M2.5 11 A8.5 8.5 0 0 1 11 2.5" stroke="rgba(255,255,255,.08)" stroke-width="1.5" fill="none" stroke-linecap="round"/></g><circle cx="11" cy="11" r="2.2" fill="rgba(255,255,255,.55)"/></svg>`,
+      alert:`<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><style>.nal{transform-box:fill-box;transform-origin:11px 7px;animation:nalAn 1.3s ease-in-out infinite}@keyframes nalAn{0%,100%{transform:rotate(-9deg)}50%{transform:rotate(9deg)}}</style><g class="nal"><path d="M5 15 Q5 7.5 11 7.5 Q17 7.5 17 15Z" stroke="rgba(255,255,255,.7)" stroke-width=".9" fill="rgba(255,255,255,.08)"/><line x1="3" y1="15" x2="19" y2="15" stroke="rgba(255,255,255,.5)" stroke-width=".9" stroke-linecap="round"/><path d="M9.5 15.5 Q11 18 12.5 15.5" stroke="rgba(255,255,255,.5)" stroke-width=".9" fill="none" stroke-linecap="round"/><circle cx="11" cy="5.5" r="1.3" fill="rgba(255,255,255,.75)"/></g></svg>`,
+      vip:`<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><style>.nvip{animation:nvipAn 2s ease-in-out infinite}@keyframes nvipAn{0%,100%{opacity:.55}50%{opacity:1}}</style><path class="nvip" d="M11 2 L13.5 7.8 L20 8.2 L15 13 L16.5 19.5 L11 16.5 L5.5 19.5 L7 13 L2 8.2 L8.5 7.8 Z" stroke="rgba(255,255,255,.68)" stroke-width=".9" fill="rgba(255,255,255,.08)" stroke-linejoin="round"/><text x="7.3" y="13.5" font-size="5.5" font-family="DM Sans,sans-serif" fill="rgba(255,255,255,.75)" font-weight="600" letter-spacing=".5">VIP</text></svg>`,
+      academy:`<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><style>.nacd{transform-box:fill-box;transform-origin:11px 8px;animation:nacdAn 2.2s ease-in-out infinite}@keyframes nacdAn{0%,100%{transform:translateY(0)}50%{transform:translateY(-2.5px)}}</style><g class="nacd"><polygon points="11,3 20,8 11,13 2,8" stroke="rgba(255,255,255,.7)" stroke-width=".9" fill="rgba(255,255,255,.08)" stroke-linejoin="round"/></g><path d="M6 11 L6 16 Q11 18.5 16 16 L16 11" stroke="rgba(255,255,255,.38)" stroke-width=".9" fill="none"/><line x1="19" y1="8" x2="19" y2="14" stroke="rgba(255,255,255,.28)" stroke-width="1" stroke-linecap="round"/></svg>`,
+      leaderboard:`<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><style>.nlb1{transform-box:fill-box;transform-origin:50% 100%;animation:nlbAn 2s ease-in-out infinite}.nlb2{transform-box:fill-box;transform-origin:50% 100%;animation:nlbAn 2s .4s ease-in-out infinite}.nlb3{transform-box:fill-box;transform-origin:50% 100%;animation:nlbAn 2s .8s ease-in-out infinite}@keyframes nlbAn{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.18)}}</style><g class="nlb1"><rect x="3.5" y="13.5" width="4" height="5" rx=".8" fill="rgba(255,255,255,.42)"/></g><g class="nlb2"><rect x="9" y="8" width="4" height="10.5" rx=".8" fill="rgba(255,255,255,.78)"/></g><g class="nlb3"><rect x="14.5" y="10.5" width="4" height="8" rx=".8" fill="rgba(255,255,255,.58)"/></g><line x1="2" y1="19.5" x2="20" y2="19.5" stroke="rgba(255,255,255,.28)" stroke-width=".8"/></svg>`,
+      dex:`<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><style>.ndx{stroke-dasharray:32;animation:ndxAn 2s linear infinite}@keyframes ndxAn{0%{stroke-dashoffset:32}100%{stroke-dashoffset:0}}</style><path class="ndx" d="M4 8 Q8 4 11 8 Q14 12 18 8" stroke="rgba(255,255,255,.7)" stroke-width="1.1" fill="none" stroke-linecap="round"/><path class="ndx" d="M4 14 Q8 18 11 14 Q14 10 18 14" stroke="rgba(255,255,255,.4)" stroke-width="1.1" fill="none" stroke-linecap="round" style="animation-delay:.6s"/><path d="M16.5 6 L18.5 8 L16.5 10" stroke="rgba(255,255,255,.45)" stroke-width=".9" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 12 L3.5 14 L5.5 16" stroke="rgba(255,255,255,.45)" stroke-width=".9" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+      chart:`<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><style>.nch{stroke-dasharray:58;animation:nchAn 2.6s ease-in-out infinite}@keyframes nchAn{0%{stroke-dashoffset:58}70%{stroke-dashoffset:0}100%{stroke-dashoffset:0}}</style><line x1="3" y1="3" x2="3" y2="19" stroke="rgba(255,255,255,.28)" stroke-width=".8"/><line x1="3" y1="19" x2="19" y2="19" stroke="rgba(255,255,255,.28)" stroke-width=".8"/><polyline class="nch" points="4,16 7,10.5 10,12.5 14,6.5 19,4" stroke="rgba(255,255,255,.82)" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+    };
+    return I[t] || I.ai;
+  }
+
+  /* Ornament icon for hero */
+  function ornamentIcon() {
+    return `<svg class="av-orn-ico" width="26" height="26" viewBox="0 0 26 26" fill="none">
+      <polygon points="13,2 15.5,9 23,9 17,13.5 19,20.5 13,17 7,20.5 9,13.5 3,9 10.5,9"
+        stroke="rgba(255,255,255,.32)" stroke-width=".8" fill="rgba(255,255,255,.07)" stroke-linejoin="round"/>
+    </svg>`;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     4.  NODES DATA
+  ═══════════════════════════════════════════════════════════ */
+  const NODES = [
+    {
+      id:'ai-signals', icon:'ai', title:'Live AI Trading Signals', badge:'Q3 2025',
+      side:'left', status:'In Development',
+      desc:'AvicnKnov is engineering a real-time artificial intelligence signal engine built on deep neural networks trained on over a decade of global market data. This system will surface high-confidence entry and exit signals with full reasoning transparency, confidence scores, and recommended risk parameters — all displayed directly inside your dashboard so you can act without ever leaving the platform.',
+      features:[
+        'Neural network trained on 10+ years of multi-asset market history for precise pattern recognition',
+        'Real-time signal delivery with 0–100 confidence scores and clear risk-to-reward breakdowns',
+        'Coverage across cryptocurrency, forex, commodities, and equity derivatives markets',
+        'Automated stop-loss and take-profit suggestions generated alongside every signal issued',
+        'Full signal performance history with accuracy statistics, win rates, and drawdown metrics',
+        'Push notification integration for instant mobile delivery of critical market signals',
+        'Built-in backtesting module to validate any signal strategy against historical price data',
+      ]
+    },
+    {
+      id:'global-events', icon:'events', title:'Global Events Hub', badge:'Q4 2025',
+      side:'right', status:'Planning',
+      desc:'The Global Events Hub will be the central broadcasting and calendar system for everything happening inside the AvicnKnov ecosystem. From educational webinars and market outlook sessions to platform milestone celebrations, every event will be fully listed, categorized, and accessible to all registered users. An intelligent reminder system ensures you are always prepared before anything important begins.',
+      features:[
+        'Centralized calendar with advanced category filters, search, and personalized event feeds',
+        'Embedded live webinar streams accessible directly from within the AvicnKnov dashboard interface',
+        'Speaker profiles, detailed agendas, and pre-event materials published well in advance',
+        'RSVP and seat reservation system for limited-capacity premium and exclusive event formats',
+        'Post-event recording archive with chapters and searchable transcripts for every session',
+        'Built-in global timezone converter on every event card so scheduling is never confusing',
+        'Community event submission pipeline allowing verified users to propose and host their own events',
+      ]
+    },
+    {
+      id:'community', icon:'community', title:'AvicnKnov Community Network', badge:'Q4 2025',
+      side:'left', status:'Planning',
+      desc:'A powerful social and networking layer is being integrated directly into AvicnKnov connecting traders, analysts, and market enthusiasts from across the globe. Share insights, discuss live strategies, follow high-performing members, and build your personal professional network within a moderated and transparent environment. Community activity will be deeply tied to trading features so acting on information is instant.',
+      features:[
+        'Verified trader profiles displaying public performance history and portfolio snapshot statistics',
+        'Structured discussion threads organized by market sector, asset class, and trading methodology',
+        'Follow system allowing you to track posts, signals, and analysis from specific trusted members',
+        'Reputation and endorsement system based on accuracy and community contribution over time',
+        'End-to-end encrypted private messaging for confidential strategy and research discussions',
+        'Community trading competitions and periodic challenges with real prizes and recognition',
+        'AI-assisted moderation filtering spam, misinformation, and manipulative content automatically',
+      ]
+    },
+    {
+      id:'live-call', icon:'call', title:'Live Call Sessions', badge:'Q1 2026',
+      side:'right', status:'Roadmap',
+      desc:'AvicnKnov Live Call is a structured real-time audio and video session format where experienced analysts and core team members will walk participants through current market conditions, break down live trades, and take direct questions from the audience. Sessions will run as both open public broadcasts and exclusive calls reserved solely for premium account holders on the platform.',
+      features:[
+        'HD audio and video sessions embedded natively within the AvicnKnov platform interface',
+        'Live question and answer module allowing viewers to submit and vote on questions in real time',
+        'Screen sharing capability enabling live chart walkthroughs and platform demonstrations',
+        'Automatic session recording with transcript generation and chapter markers for later review',
+        'Premium-tier exclusive calls with strictly limited attendance and direct analyst interaction',
+        'Multi-language subtitle generation for global accessibility across all session recordings',
+        'Synchronized live chat sidebar for real-time community reactions throughout each broadcast',
+      ]
+    },
+    {
+      id:'join-events', icon:'join', title:'Join Events Program', badge:'Q1 2026',
+      side:'left', status:'Roadmap',
+      desc:'The Join Events Program is an interactive participation and rewards system that recognizes users for consistent and meaningful engagement across the AvicnKnov platform. Attending events, completing learning milestones, and contributing to community growth will earn exclusive event passes, digital collectibles, and early access privileges. Participation transforms from passive viewing into an active and genuinely rewarding journey.',
+      features:[
+        'Digital event passport tracking every attended event and completed program milestone',
+        'Exclusive collectibles and commemorative items issued for attending major launch events',
+        'Early access passes to beta features unlocked for active and consistent event participants',
+        'Referral bonus system rewarding users who bring new verified members to the ecosystem',
+        'Tiered participation levels unlocking progressively greater privileges and platform benefits',
+        'Monthly program highlights showcasing top contributors and memorable event moments',
+        'Cross-platform partnership events offering bonus rewards from projects allied with AvicnKnov',
+      ]
+    },
+    {
+      id:'achievements', icon:'achievement', title:'Achievements and Badges', badge:'Q2 2026',
+      side:'right', status:'Roadmap',
+      desc:'The Achievements System transforms your entire AvicnKnov journey into a visible record of skill, consistency, and contribution. Every meaningful platform milestone — from executing your first trade to topping the community leaderboard — is permanently honored with a collectible badge and optional public display. Rare limited-edition achievements will only be available during specific platform events, making timing and dedication matter.',
+      features:[
+        'Over 200 unique achievement badges spanning trading, education, and community contribution categories',
+        'Five-tier rarity system from standard to diamond status with escalating prestige and platform visibility',
+        'Public achievement showcase panel on every user profile for transparent community recognition',
+        'Limited-edition event badges permanently closed after their launch window expires without exception',
+        'Progress tracking with exact percentage completion figures and personalized tips to unlock each badge',
+        'Daily and weekly streak badges rewarding consistent platform engagement and active trading habits',
+        'Custom title system activated by completing major achievement sets to display alongside your username',
+      ]
+    },
+    {
+      id:'quint', icon:'quint', title:'Quint Options Platform', badge:'Q2 2026',
+      side:'left', status:'In Development',
+      desc:'Quint Options is a proprietary derivatives trading module being designed exclusively for the AvicnKnov exchange. It brings institutional-grade options functionality to all experience levels through a simplified yet powerful interface. Payoff curve visualizations, AI strategy recommendations, and clear Greeks displays will make complex instruments genuinely accessible without sacrificing the depth that experienced traders demand.',
+      features:[
+        'Simplified options chain interface with intuitive call and put selection and expiry navigation',
+        'Real-time interactive payoff diagram showing exact profit and loss at every potential price level',
+        'AI strategy recommender suggesting covered calls, straddles, and spreads based on current market context',
+        'Full Greeks panel displaying delta, gamma, theta, and vega updated tick-by-tick for active positions',
+        'Paper trading mode allowing full strategy simulation with zero real capital exposure or risk',
+        'Multi-leg order builder supporting complex spread construction through a visual drag interface',
+        'Expiry heatmap displaying open interest concentration across all available strike prices',
+      ]
+    },
+    {
+      id:'avicntqz', icon:'avicn', title:'Avicn and TQZ Launch', badge:'Q3 2026',
+      side:'right', status:'Upcoming',
+      desc:'The Avicn and TQZ Launch is the most anticipated milestone on the entire AvicnKnov roadmap and marks the beginning of the complete live platform era. The full public exchange will open, the TQZ utility token will activate, and a coordinated global campaign will celebrate early adopters who believed from the beginning. This single event transitions AvicnKnov from a building platform into a fully operational trading ecosystem.',
+      features:[
+        'Full public exchange activation with all trading pairs, order books, and matching engines live',
+        'TQZ token generation event with a fully transparent supply distribution and vesting schedule',
+        'Early adopter bonus program delivering special rewards to every user registered before launch day',
+        'Global live launch broadcast including an all-hands team AMA and community celebration event',
+        'TQZ staking program activated on day one with competitive annual yield rates and flexible terms',
+        'Simultaneous listing announcements on major external platforms coordinated with the launch timeline',
+        'Full media campaign including press releases, content partnerships, and influencer coordination',
+      ]
+    },
+    {
+      id:'neural', icon:'neural', title:'Neural Market Analytics', badge:'Q3 2026',
+      side:'left', status:'Research',
+      desc:'Neural Market Analytics is a deep intelligence layer that goes far beyond standard technical indicators to surface the invisible forces shaping market behavior. Cross-asset correlations, sentiment regime shifts, and structural breakout conditions will all be detected automatically and surfaced through a clean analytical interface. The goal is to give every AvicnKnov user a genuine and lasting information advantage over the broader market.',
+      features:[
+        'Real-time cross-asset correlation matrix identifying dangerous portfolio concentration and hedging opportunities',
+        'Sentiment analysis pipeline processing news feeds, social media volumes, and on-chain transaction flows',
+        'Anomaly detection system flagging unusual order flow and volume profiles before breakouts occur publicly',
+        'Global macro cycle tracker linking price action phase to economic indicators and central bank event data',
+        'Composite health index scoring every watched asset on momentum, structure, and sentiment simultaneously',
+        'Pattern recognition library capable of identifying over 150 classical and modern chart formations automatically',
+        'Predictive volume profiling estimating expected liquidity concentration at upcoming price levels and sessions',
+      ]
+    },
+    {
+      id:'portfolio', icon:'portfolio', title:'Smart Portfolio Manager', badge:'Q4 2026',
+      side:'right', status:'Research',
+      desc:'The Smart Portfolio Manager will automate the ongoing management of your trading positions using a combination of rule-based logic and adaptive AI-driven strategy execution. Define your target allocation and risk parameters once, and the system will continuously monitor, rebalance, and enforce discipline without requiring you to be present. It is the closest experience to having a dedicated professional managing your capital around the clock.',
+      features:[
+        'Continuous automated rebalancing maintaining your target asset allocation within defined tolerance bands',
+        'Dynamic position sizing calculator adapting to current account equity and real-time volatility conditions',
+        'Visual strategy builder using drag-and-drop logic blocks requiring no programming knowledge to use',
+        'Live performance attribution analysis showing exactly which positions are contributing or detracting returns',
+        'Automatic drawdown protection rules reducing exposure progressively as portfolio loss thresholds are approached',
+        'Tax optimization module identifying harvesting opportunities and wash-sale conflicts in taxable accounts',
+        'Multi-exchange portfolio aggregation pulling external wallet balances into a single consolidated view',
+      ]
+    },
+    {
+      id:'alerts', icon:'alert', title:'Quantum Price Alerts', badge:'Q4 2026',
+      side:'left', status:'Roadmap',
+      desc:'Quantum Price Alerts is an ultra-low latency notification infrastructure built directly at the exchange data feed level to guarantee you receive critical market signals faster than any conventional third-party alert service. Millisecond delivery, complex multi-condition triggers, and fully customizable delivery channels make this the most responsive and flexible alerting system available to retail traders anywhere.',
+      features:[
+        'Sub-10 millisecond alert delivery from trigger condition detection to final user notification',
+        'Complex multi-condition triggers combining price levels, volume thresholds, and indicator values together',
+        'Alert chaining system allowing one triggered alert to automatically activate a sequence of further alerts',
+        'Multi-channel delivery supporting push notifications, email, SMS, and outbound webhook integrations',
+        'Alert performance history showing historical frequency, false positive rate, and accuracy over time',
+        'Intelligent grouping preventing notification overload during extreme volatility or rapid price movement',
+        'Shared community alert templates enabling one-click deployment of proven strategies from top members',
+      ]
+    },
+    {
+      id:'vip', icon:'vip', title:'VIP Mentorship Program', badge:'Q1 2027',
+      side:'right', status:'Planning',
+      desc:'The VIP Mentorship Program is the most exclusive and personalized offering within the entire AvicnKnov ecosystem. Qualified participants are individually matched with verified professional traders for a structured multi-week engagement including one-on-one sessions, live trade reviews, personalized written feedback, and direct access to mentor market intelligence. This program is designed exclusively for serious traders committed to reaching consistent and sustainable profitability.',
+      features:[
+        'Curated mentor-mentee matching based on trading style, market focus, and stated performance objectives',
+        'Weekly one-on-one video sessions with a dedicated professional analyst assigned specifically to you',
+        'Live trade review meetings where your actual open and closed positions are analyzed line by line',
+        'Detailed written performance feedback reports delivered after every significant trade you execute',
+        'Shared access to your assigned mentor private watchlists and signal alerts throughout the program',
+        'Progress benchmarking report comparing your development trajectory against defined program milestones',
+        'Graduation certificate recognized across the AvicnKnov platform and partner community ecosystem',
+      ]
+    },
+    {
+      id:'academy', icon:'academy', title:'AvicnKnov Academy', badge:'Q1 2027',
+      side:'left', status:'Planning',
+      desc:'AvicnKnov Academy will be a comprehensive multi-level educational platform embedded directly inside the exchange interface. Covering everything from what a candlestick is for complete beginners to advanced options pricing theory and quantitative strategy design for professionals, the Academy offers structured learning paths that grow alongside your evolving skill level. All content is produced by verified practitioners and updated to reflect real current market conditions.',
+      features:[
+        'Full structured learning tracks from absolute beginner through to advanced professional trading methodology',
+        'Over 500 video lessons produced by certified trading professionals and credentialed finance practitioners',
+        'Interactive module quizzes and knowledge assessments following every lesson for measurable retention',
+        'Simulated trading exercises using real historical market data for safe and practical hands-on learning',
+        'Completion certificates and achievement badges tied to finishing each Academy learning track milestone',
+        'Live workshop integration connecting specific course content directly to current real-market events',
+        'Personalized curriculum engine recommending content based on your trading activity and learning history',
+      ]
+    },
+    {
+      id:'leaderboard', icon:'leaderboard', title:'Global Rankings Leaderboard', badge:'Q2 2027',
+      side:'right', status:'Roadmap',
+      desc:'The Global Rankings Leaderboard will publicly rank all active platform participants across a sophisticated set of risk-adjusted performance metrics, creating healthy competition and a powerful new layer of social proof and reputation within the broader community. Rankings reward responsible and consistent profitability rather than raw returns alone, ensuring that the most visible traders on the platform are genuinely worth following and learning from.',
+      features:[
+        'Risk-adjusted scoring using Sharpe ratio, Sortino ratio, and maximum drawdown in the ranking calculation',
+        'Separate leaderboard views for weekly, monthly, quarterly, and all-time performance across all asset classes',
+        'Anonymous participation option allowing skilled traders to compete without revealing personal identity',
+        'Exclusive rewards for top 100 ranked traders including platform credits, fee discounts, and VIP upgrades',
+        'Voluntary strategy transparency toggle letting ranked members share their methodology with followers',
+        'Team and group leaderboard mode enabling corporate entities and trading groups to compete collectively',
+        'Historical archive preserving every past leaderboard period for permanent study and strategy research',
+      ]
+    },
+    {
+      id:'dex', icon:'dex', title:'Decentralized Exchange Layer', badge:'Q3 2027',
+      side:'left', status:'Research',
+      desc:'AvicnKnov is developing a decentralized settlement layer allowing users to trade directly from self-custody wallets without ever relinquishing control of their assets to a centralized party. This hybrid architecture preserves the speed and liquidity advantages of centralized matching while providing the transparency and security guarantees of on-chain settlement. Users will have complete freedom to choose their preferred interaction model at any time.',
+      features:[
+        'Non-custodial wallet connection supporting all major hardware and software wallet providers natively',
+        'On-chain settlement with fully public transaction verification on auditable blockchain ledgers',
+        'Automated market maker liquidity pools enabling trading of long-tail and low-volume asset pairs',
+        'Cross-chain bridge integration for seamless asset movement between supported blockchain networks',
+        'Governance token voting rights for community participation in protocol parameter and listing decisions',
+        'Optional zero-knowledge proof privacy layer for users requiring transaction confidentiality and anonymity',
+        'Yield generation through liquidity provision with transparent fee distribution and clear reward accounting',
+      ]
+    },
+    {
+      id:'charting', icon:'chart', title:'Advanced Charting Studio', badge:'Q4 2027',
+      side:'right', status:'Research',
+      desc:'The Advanced Charting Studio will be a full professional-grade technical analysis environment built natively into the AvicnKnov platform. Combining a rich drawing tool library, a custom indicator scripting environment, multi-timeframe layouts, and seamless order execution from within any chart view, the studio is designed to meet the demands of the most rigorous technical analysts without requiring any external tools or additional subscriptions.',
+      features:[
+        'Over 100 built-in technical indicators covering all major momentum, trend, volume, and volatility categories',
+        'Custom indicator scripting in a simplified syntax that non-developers can learn and use productively',
+        'Multi-chart layout supporting up to nine simultaneous panels across different assets and timeframes',
+        'Full drawing tool library including Fibonacci retracements, Gann fans, pitchforks, and Elliott wave tools',
+        'Saveable chart templates enabling instant loading of complete multi-indicator analysis configurations',
+        'Community chart sharing allowing published analysis to be viewed and copied by other platform members',
+        'Historical replay mode simulating past price action bar by bar for strategy testing and skill development',
+      ]
+    },
+  ];
+
+  /* ═══════════════════════════════════════════════════════════
+     5.  BUILD DOM
+  ═══════════════════════════════════════════════════════════ */
+  function buildDOM() {
+    /* Background canvas */
+    const cvs = document.createElement('canvas');
+    cvs.id = 'avBg';
+    document.body.insertBefore(cvs, document.body.firstChild);
+
+    const main = document.createElement('div');
+    main.id = 'avMain';
+
+    /* ── Hero ── */
+    const hero = document.createElement('section');
+    hero.className = 'av-hero';
+    hero.innerHTML = `
+      <div class="av-brand-row">
+        <div class="av-orn-line"></div>
+        ${ornamentIcon()}
+        <div class="av-orn-line r"></div>
+      </div>
+      <h1 class="av-title">Avicn<em>Knov</em> Web</h1>
+      <p class="av-tagline">The Future of Intelligent Trading</p>
+      <div class="av-live-pill">
+        <span class="av-ldot"></span>
+        Platform Online
+      </div>
+    `;
+    main.appendChild(hero);
+
+    /* ── Buttons ── */
+    const btns = document.createElement('section');
+    btns.className = 'av-btns';
+    btns.innerHTML = `
+      <a href="trading.html" class="av-btn-card" id="avBtnT">
+        <div class="av-btn-glass"></div>
+        <div class="av-btn-inner">
+          <div class="av-btn-head">
+            <div class="av-btn-ico-box">${ICON_TRADING}</div>
+            <div>
+              <div class="av-btn-name">Trading</div>
+              <div class="av-btn-sub">Live Exchange Platform</div>
+            </div>
+          </div>
+          <p class="av-btn-desc">
+            <b>Step into your first trade.</b> The AvicnKnov Trading terminal is a direct
+            gateway to our live exchange — execute market and limit orders, monitor
+            real-time depth charts, and manage all your positions within one seamless
+            interface. A single click places you live on our infrastructure.
+          </p>
+          <div class="av-btn-cta">
+            <div class="av-cta-line"></div>
+            Enter Exchange
+          </div>
+        </div>
+      </a>
+      <a href="futures.html" class="av-btn-card" id="avBtnF">
+        <div class="av-btn-glass"></div>
+        <div class="av-btn-inner">
+          <div class="av-btn-head">
+            <div class="av-btn-ico-box">${ICON_FUTURES}</div>
+            <div>
+              <div class="av-btn-name">Futures</div>
+              <div class="av-btn-sub">Upcoming Features</div>
+            </div>
+          </div>
+          <p class="av-btn-desc">
+            <b>The horizon expands.</b> Explore the full AvicnKnov roadmap — from
+            AI-powered analytics and live mentorship to decentralized exchange
+            integration. Every upcoming feature is documented in detail so you can
+            track what is coming and be first when it goes live.
+          </p>
+          <div class="av-btn-cta">
+            <div class="av-cta-line"></div>
+            Explore Roadmap
+          </div>
+        </div>
+      </a>
+    `;
+    main.appendChild(btns);
+
+    /* ── Map intro ── */
+    const intro = document.createElement('div');
+    intro.className = 'av-map-intro';
+    intro.innerHTML = `
+      <p class="av-map-intro-label">The Road Ahead</p>
+      <h2 class="av-map-intro-heading">Upcoming <em>Milestones</em></h2>
+    `;
+    main.appendChild(intro);
+
+    /* ── Treasure map ── */
+    const map = document.createElement('section');
+    map.className = 'av-map';
+
+    /* Track */
+    const track = document.createElement('div');
+    track.className = 'av-track';
+    track.innerHTML = `
+      <div class="av-track-bg"></div>
+      <div class="av-track-fill" id="avTFill"></div>
+      ${Array.from({length:7},(_,i)=>`<div class="av-track-ptcl" style="--d:${2.4+i*.42}s;--dl:${i*.55}s"></div>`).join('')}
+    `;
+    map.appendChild(track);
+
+    /* Nodes */
+    const nodesWrap = document.createElement('div');
+    nodesWrap.className = 'av-nodes';
+    NODES.forEach((n, i) => {
+      const row = document.createElement('div');
+      row.className = `av-node ${n.side === 'left' ? 'av-left' : 'av-right'}`;
+      row.dataset.id = n.id;
+      row.style.transitionDelay = (i * 55) + 'ms';
+      row.innerHTML = `
+        <div class="av-ndot">
+          <div class="av-ndot-core"></div>
+          <div class="av-ndot-ring"></div>
+        </div>
+        <div class="av-ncard" data-id="${n.id}">
+          <div class="av-ncard-glass"></div>
+          <div class="av-ncard-inner">
+            <div class="av-ncard-top">
+              <div class="av-ncard-ico">${nodeIcon(n.icon)}</div>
+              <div class="av-ncard-meta">
+                <div class="av-ncard-title">${n.title}</div>
+                <span class="av-ncard-badge">${n.badge}</span>
+              </div>
+            </div>
+            <p class="av-ncard-desc">${n.desc.substring(0, 185).trim()}...</p>
+            <div class="av-ncard-feats">
+              ${n.features.slice(0, 3).map(f => `<div class="av-ncard-feat">${f}</div>`).join('')}
+            </div>
+            <div class="av-ncard-foot">
+              <div class="av-ncard-sdot"></div>
+              ${n.status}
+            </div>
+          </div>
+          <span class="av-ncard-hint">Tap to expand</span>
+        </div>
+      `;
+      nodesWrap.appendChild(row);
+    });
+    map.appendChild(nodesWrap);
+    main.appendChild(map);
+    document.body.appendChild(main);
+
+    /* ── Modal ── */
+    const ov = document.createElement('div');
+    ov.className = 'av-modal-ov';
+    ov.id = 'avMOv';
+    ov.innerHTML = `
+      <div class="av-modal" id="avModal">
+        <div class="av-modal-glass"></div>
+        <button class="av-modal-close" id="avMClose">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <line x1="2" y1="2" x2="12" y2="12" stroke="rgba(255,255,255,.65)" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="12" y1="2" x2="2" y2="12" stroke="rgba(255,255,255,.65)" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <div class="av-modal-scroll" id="avMScroll">
+          <div class="av-modal-icon" id="avMIcon"></div>
+          <span class="av-modal-badge" id="avMBadge"></span>
+          <h2 class="av-modal-title" id="avMTitle"></h2>
+          <p class="av-modal-desc" id="avMDesc"></p>
+          <p class="av-modal-feats-label">Key Features</p>
+          <div class="av-modal-feats" id="avMFeats"></div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(ov);
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     6.  BACKGROUND CANVAS  (flowing river particles)
+  ═══════════════════════════════════════════════════════════ */
+  function initCanvas() {
+    const cvs = document.getElementById('avBg');
+    const ctx = cvs.getContext('2d');
+    let W, H, pts;
+
+    function resize() {
+      W = cvs.width  = window.innerWidth;
+      H = cvs.height = window.innerHeight;
+    }
+
+    function makePts() {
+      pts = Array.from({length: 130}, () => ({
+        x:  Math.random() * W,
+        y:  Math.random() * H,
+        vx: (Math.random() - .5) * .28,
+        vy: Math.random() * .45 + .12,
+        r:  Math.random() * 1.4 + .15,
+        o:  Math.random() * .22 + .04,
+        ph: Math.random() * Math.PI * 2,
+        ps: Math.random() * .012 + .005,
+        pa: Math.random() * 18 + 6,
+      }));
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      pts.forEach(p => {
+        p.ph += p.ps;
+        p.x  += p.vx + Math.sin(p.ph) * .12;
+        p.y  += p.vy;
+        if (p.y > H + 8) { p.y = -8; p.x = Math.random() * W; }
+        if (p.x < -8)    p.x = W + 8;
+        if (p.x > W + 8) p.x = -8;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${p.o})`;
+        ctx.fill();
+      });
+      /* Connection lines */
+      for (let i = 0; i < pts.length; i++) {
+        for (let j = i + 1; j < pts.length; j++) {
+          const dx = pts[i].x - pts[j].x;
+          const dy = pts[i].y - pts[j].y;
+          const d  = dx*dx + dy*dy;
+          if (d < 6400) { /* 80^2 */
+            ctx.beginPath();
+            ctx.moveTo(pts[i].x, pts[i].y);
+            ctx.lineTo(pts[j].x, pts[j].y);
+            ctx.strokeStyle = `rgba(255,255,255,${.038 * (1 - d/6400)})`;
+            ctx.lineWidth = .5;
+            ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(draw);
+    }
+
+    window.addEventListener('resize', () => { resize(); makePts(); }, {passive:true});
+    resize(); makePts(); draw();
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     7.  SCROLL ANIMATIONS
+  ═══════════════════════════════════════════════════════════ */
+  function initScroll() {
+    const rows = document.querySelectorAll('.av-node');
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) e.target.classList.add('av-vis');
+      });
+    }, { threshold: .12, rootMargin: '0px 0px -50px 0px' });
+    rows.forEach(r => io.observe(r));
+
+    function trackFill() {
+      const mapEl = document.querySelector('.av-map');
+      const fill  = document.getElementById('avTFill');
+      if (!mapEl || !fill) return;
+      const top = mapEl.getBoundingClientRect().top + window.scrollY;
+      const h   = mapEl.offsetHeight;
+      const pct = Math.min(100, Math.max(0,
+        ((window.scrollY + window.innerHeight - top) / h) * 100
+      ));
+      fill.style.height = pct + '%';
+    }
+    window.addEventListener('scroll', trackFill, {passive:true});
+    trackFill();
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     8.  MODAL
+  ═══════════════════════════════════════════════════════════ */
+  let _activeModal = null;
+
+  function openModal(id) {
+    const n = NODES.find(x => x.id === id);
+    if (!n) return;
+    document.getElementById('avMIcon').innerHTML  = nodeIcon(n.icon);
+    document.getElementById('avMBadge').textContent = n.badge + ' · ' + n.status;
+    document.getElementById('avMTitle').textContent = n.title;
+    document.getElementById('avMDesc').textContent  = n.desc;
+    document.getElementById('avMFeats').innerHTML   = n.features.map((f,i) =>
+      `<div class="av-modal-feat">
+        <span class="av-modal-feat-n">${String(i+1).padStart(2,'0')}</span>
+        <span>${f}</span>
+      </div>`
+    ).join('');
+    document.getElementById('avMScroll').scrollTop = 0;
+    document.getElementById('avMOv').classList.add('av-open');
+    document.body.style.overflow = 'hidden';
+    _activeModal = id;
+  }
+
+  function closeModal() {
+    document.getElementById('avMOv').classList.remove('av-open');
+    document.body.style.overflow = '';
+    _activeModal = null;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     9.  RIPPLE
+  ═══════════════════════════════════════════════════════════ */
+  function ripple(el, e) {
+    const r   = el.getBoundingClientRect();
+    const div = document.createElement('div');
+    const sz  = Math.max(r.width, r.height);
+    div.className = 'av-ripple';
+    div.style.cssText = `width:${sz}px;height:${sz}px;left:${e.clientX-r.left-sz/2}px;top:${e.clientY-r.top-sz/2}px`;
+    el.appendChild(div);
+    div.addEventListener('animationend', () => div.remove());
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     10.  EVENT LISTENERS
+  ═══════════════════════════════════════════════════════════ */
+  function initEvents() {
+    /* Button ripple */
+    document.querySelectorAll('.av-btn-card').forEach(btn => {
+      btn.addEventListener('click', function(e) { ripple(this, e); });
+    });
+
+    /* Node card click → modal */
+    document.querySelectorAll('.av-ncard').forEach(card => {
+      card.addEventListener('click', function(e) {
+        ripple(this, e);
+        const id = this.dataset.id;
+        setTimeout(() => openModal(id), 140);
+      });
+    });
+
+    /* Modal close */
+    document.getElementById('avMClose').addEventListener('click', closeModal);
+    document.getElementById('avMOv').addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
+
+    /* Keyboard */
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && _activeModal) closeModal();
     });
   }
 
-  // Listen on the scroll parent (could be a tab container or window)
-  window.addEventListener('scroll', updateRoadmap, { passive:true });
-  // Also try the container's scroll parent
-  let scrollParent = container.parentElement;
-  while(scrollParent && scrollParent !== document.body){
-    scrollParent.addEventListener('scroll', updateRoadmap, { passive:true });
-    scrollParent = scrollParent.parentElement;
+  /* ═══════════════════════════════════════════════════════════
+     11.  BOOT
+  ═══════════════════════════════════════════════════════════ */
+  function boot() {
+    buildDOM();
+    initCanvas();
+    initScroll();
+    initEvents();
   }
-  // Initial check
-  setTimeout(updateRoadmap, 100);
 
-  // Cleanup hook
-  container._cleanup = ()=>{
-    window.removeEventListener('scroll', updateRoadmap);
-  };
-}
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
 
-// Auto-run if already loaded
-if(document.getElementById('tabContentMore') && document.getElementById('tabContentMore').classList.contains('active')){
-  init_tabContentMore();
-}
+})();
