@@ -897,7 +897,7 @@ async function logDownload(sectionNames, sectionCount) {
     const userEmail = currentUser ? (currentUser.email || '—') : '—';
     const userId    = currentUser ? (currentUser.id || null) : null;
 
-    const { error } = await sb.from('paper_control').insert({
+    const { error } = await sb.from('paper_histroy').insert({
       user_name:            userName,
       user_email:           userEmail,
       user_id:              userId,
