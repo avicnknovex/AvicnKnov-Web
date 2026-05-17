@@ -397,7 +397,7 @@ async function logDownload(sections){
   const userEmail = user?(user.email||'—'):'—';
   const userId = user?(user.id||null):null;
   try{
-    await sb.from('paper_history').insert({
+    await sb.from('paper_control').insert({
       user_name:userName, user_email:userEmail, user_id:userId,
       sections_downloaded:sections.join(', '), section_count:sections.length,
       downloaded_at:new Date().toISOString()
