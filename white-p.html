@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AvicnKnov — White Paper v1.0</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Space+Mono:wght@400;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #000000;
+    --white: #ffffff;
+    --silver: #c8c8c8;
+    --dim: #888888;
+    --line: rgba(255,255,255,0.12);
+  }
+
+  html, body {
+    width: 800px;
+    height: 1100px;
+    overflow: hidden;
+    background: #000;
+  }
+
+  .card {
+    width: 800px;
+    height: 1100px;
+    background: #000;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    overflow: hidden;
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* ── grid texture overlay ── */
+  .grid-overlay {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* ── radial glow centre ── */
+  .glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(ellipse at center,
+      rgba(255,255,255,0.07) 0%,
+      rgba(255,255,255,0.03) 30%,
+      transparent 70%);
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* ── corner marks ── */
+  .corner {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    z-index: 10;
+  }
+  .corner.tl { top: 28px; left: 28px; border-top: 1.5px solid #fff; border-left: 1.5px solid #fff; }
+  .corner.tr { top: 28px; right: 28px; border-top: 1.5px solid #fff; border-right: 1.5px solid #fff; }
+  .corner.bl { bottom: 28px; left: 28px; border-bottom: 1.5px solid #fff; border-left: 1.5px solid #fff; }
+  .corner.br { bottom: 28px; right: 28px; border-bottom: 1.5px solid #fff; border-right: 1.5px solid #fff; }
+
+  /* ── top bar ── */
+  .topbar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, #fff 30%, #fff 70%, transparent);
+    z-index: 10;
+  }
+
+  /* ── site label top ── */
+  .site-label {
+    position: absolute;
+    top: 44px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    color: var(--dim);
+    text-transform: uppercase;
+    z-index: 10;
+    white-space: nowrap;
+  }
+
+  /* ── main content ── */
+  .content {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding-top: 90px;
+  }
+
+  /* ── logo wrapper ── */
+  .logo-wrap {
+    position: relative;
+    width: 160px;
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0;
+  }
+
+  .logo-ring {
+    position: absolute;
+    inset: -18px;
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 50%;
+  }
+  .logo-ring-2 {
+    position: absolute;
+    inset: -36px;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 50%;
+  }
+  .logo-ring-3 {
+    position: absolute;
+    inset: -54px;
+    border: 1px solid rgba(255,255,255,0.03);
+    border-radius: 50%;
+  }
+
+  .logo-hex-bg {
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 50%;
+  }
+
+  .logo-img {
+    width: 110px;
+    height: 110px;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+    position: relative;
+    z-index: 2;
+  }
+
+  /* ── exchange name ── */
+  .exchange-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 72px;
+    color: #fff;
+    letter-spacing: 0.12em;
+    line-height: 1;
+    margin-top: 52px;
+    text-align: center;
+    position: relative;
+  }
+  .exchange-name::after {
+    content: 'AVICNKNOV';
+    position: absolute;
+    left: 0; top: 4px;
+    width: 100%;
+    color: rgba(255,255,255,0.06);
+    font-size: 72px;
+    letter-spacing: 0.12em;
+    z-index: -1;
+  }
+
+  .exchange-tagline {
+    font-size: 10.5px;
+    color: var(--dim);
+    letter-spacing: 0.38em;
+    text-transform: uppercase;
+    margin-top: 8px;
+  }
+
+  /* ── divider ── */
+  .divider {
+    width: 560px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25) 30%, rgba(255,255,255,0.25) 70%, transparent);
+    margin: 40px auto;
+  }
+
+  /* ── headline ── */
+  .headline-wrap {
+    text-align: center;
+    padding: 0 60px;
+  }
+
+  .badge {
+    display: inline-block;
+    border: 1px solid rgba(255,255,255,0.3);
+    color: var(--silver);
+    font-size: 9px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    padding: 6px 18px;
+    margin-bottom: 28px;
+  }
+
+  .headline-main {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 52px;
+    font-weight: 300;
+    color: #fff;
+    line-height: 1.15;
+    letter-spacing: 0.01em;
+    margin-bottom: 10px;
+  }
+  .headline-main strong {
+    font-weight: 700;
+    font-style: italic;
+  }
+
+  .headline-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 0.04em;
+    font-style: italic;
+  }
+
+  /* ── version badge ── */
+  .version-block {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-top: 36px;
+  }
+  .version-line { width: 60px; height: 1px; background: rgba(255,255,255,0.2); }
+  .version-text {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--silver);
+    text-transform: uppercase;
+  }
+
+  /* ── info row ── */
+  .info-row {
+    display: flex;
+    gap: 0;
+    width: 620px;
+    margin-top: 48px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .info-cell {
+    flex: 1;
+    padding: 22px 24px;
+    border-right: 1px solid rgba(255,255,255,0.1);
+    text-align: center;
+  }
+  .info-cell:last-child { border-right: none; }
+  .info-label {
+    font-size: 8.5px;
+    letter-spacing: 0.32em;
+    color: var(--dim);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .info-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: 0.04em;
+  }
+
+  /* ── description text ── */
+  .description {
+    width: 580px;
+    text-align: center;
+    margin-top: 42px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.48);
+    line-height: 1.75;
+    letter-spacing: 0.02em;
+    font-style: italic;
+  }
+
+  /* ── button area ── */
+  .cta-wrap {
+    display: flex;
+    gap: 16px;
+    margin-top: 44px;
+    align-items: center;
+  }
+
+  .btn-primary {
+    background: #fff;
+    color: #000;
+    border: none;
+    padding: 16px 38px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.1);
+    transition: left 0.3s;
+  }
+  .btn-primary:hover::before { left: 0; }
+
+  .btn-outline {
+    background: transparent;
+    color: rgba(255,255,255,0.7);
+    border: 1px solid rgba(255,255,255,0.25);
+    padding: 15px 32px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-outline:hover { border-color: rgba(255,255,255,0.6); color: #fff; }
+
+  /* ── bottom bar ── */
+  .bottombar {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4) 30%, rgba(255,255,255,0.4) 70%, transparent);
+    z-index: 10;
+  }
+
+  .footer-text {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    color: rgba(255,255,255,0.2);
+    text-transform: uppercase;
+    white-space: nowrap;
+    z-index: 10;
+  }
+
+  /* ── scan line effect ── */
+  .scanlines {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 3px,
+      rgba(0,0,0,0.04) 3px,
+      rgba(0,0,0,0.04) 4px
+    );
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  /* ── noise texture ── */
+  .noise {
+    position: absolute;
+    inset: 0;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 256px 256px;
+    pointer-events: none;
+    z-index: 4;
+  }
+
+  /* ── animated pulse ring ── */
+  @keyframes pulse {
+    0%   { transform: scale(1);   opacity: 0.18; }
+    50%  { transform: scale(1.08); opacity: 0.05; }
+    100% { transform: scale(1);   opacity: 0.18; }
+  }
+  .pulse-ring {
+    position: absolute;
+    inset: -70px;
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 50%;
+    animation: pulse 4s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  /* staggered fade-in */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .fade1  { animation: fadeUp 0.7s ease 0.1s both; }
+  .fade2  { animation: fadeUp 0.7s ease 0.25s both; }
+  .fade3  { animation: fadeUp 0.7s ease 0.4s both; }
+  .fade4  { animation: fadeUp 0.7s ease 0.55s both; }
+  .fade5  { animation: fadeUp 0.7s ease 0.7s both; }
+  .fade6  { animation: fadeUp 0.7s ease 0.85s both; }
+  .fade7  { animation: fadeUp 0.7s ease 1.0s both; }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <!-- atmosphere layers -->
+  <div class="grid-overlay"></div>
+  <div class="scanlines"></div>
+  <div class="noise"></div>
+  <div class="glow"></div>
+
+  <!-- corner marks -->
+  <div class="corner tl"></div>
+  <div class="corner tr"></div>
+  <div class="corner bl"></div>
+  <div class="corner br"></div>
+
+  <!-- edge bars -->
+  <div class="topbar"></div>
+  <div class="bottombar"></div>
+
+  <!-- top label -->
+  <div class="site-label fade1">avicnknov.exchange · est. 2025</div>
+
+  <!-- main content -->
+  <div class="content">
+
+    <!-- logo -->
+    <div class="logo-wrap fade2">
+      <div class="logo-ring-3"></div>
+      <div class="logo-ring-2"></div>
+      <div class="logo-ring"></div>
+      <div class="pulse-ring"></div>
+      <div class="logo-hex-bg"></div>
+      <img class="logo-img" src="/mnt/user-data/uploads/1000006970.png" alt="AvicnKnov Logo">
+    </div>
+
+    <!-- name -->
+    <div class="exchange-name fade3">AVICNKNOV</div>
+    <div class="exchange-tagline fade3">Digital Asset Exchange</div>
+
+    <!-- divider -->
+    <div class="divider fade4"></div>
+
+    <!-- headline -->
+    <div class="headline-wrap fade4">
+      <div class="badge">Official Announcement</div>
+      <div class="headline-main">Our <strong>White Papers</strong><br>Have Arrived.</div>
+      <div class="headline-sub">First Version. Officially Live.</div>
+    </div>
+
+    <!-- version -->
+    <div class="version-block fade5">
+      <div class="version-line"></div>
+      <div class="version-text">Version 1.0 — Now Released</div>
+      <div class="version-line"></div>
+    </div>
+
+    <!-- info cells -->
+    <div class="info-row fade6">
+      <div class="info-cell">
+        <div class="info-label">Document</div>
+        <div class="info-value">White Paper</div>
+      </div>
+      <div class="info-cell">
+        <div class="info-label">Version</div>
+        <div class="info-value">V 1.0</div>
+      </div>
+      <div class="info-cell">
+        <div class="info-label">Status</div>
+        <div class="info-value">Live ✦</div>
+      </div>
+    </div>
+
+    <!-- description -->
+    <div class="description fade6">
+      Our inaugural white paper outlines the vision, technology, and framework<br>
+      powering the AvicnKnov Exchange ecosystem. Read, explore, and understand<br>
+      the architecture built for the next generation of trading.
+    </div>
+
+    <!-- CTA buttons -->
+    <div class="cta-wrap fade7">
+      <a class="btn-primary" href="#">Read White Paper</a>
+      <a class="btn-outline" href="#">Download PDF</a>
+    </div>
+
+  </div>
+
+  <!-- footer -->
+  <div class="footer-text">avicnknov.exchange — all rights reserved · 2025</div>
+
+</div>
+</body>
+</html>
