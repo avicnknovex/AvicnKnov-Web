@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>AVICNKNOV EX — Roadmap 2026–2027</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --white: #ffffff;
+    --black: #000000;
+    --gray-100: #f0f0f0;
+    --gray-200: #d0d0d0;
+    --gray-400: #888888;
+    --gray-600: #444444;
+    --gray-800: #1a1a1a;
+    --accent: #ffffff;
+    --glow: rgba(255,255,255,0.12);
+    --river-width: 4px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: #000;
+    color: var(--white);
+    font-family: 'Space Mono', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* ─── NOISE OVERLAY ─── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    opacity: 0.35;
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 18px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    backdrop-filter: blur(20px);
+    background: rgba(0,0,0,0.6);
+  }
+
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(20px, 3vw, 28px);
+    letter-spacing: 0.15em;
+    color: #fff;
+    text-shadow: 0 0 24px rgba(255,255,255,0.4);
+  }
+
+  .logo span { color: var(--gray-400); }
+
+  .back-btn {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #fff;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 10px 18px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+  }
+  .back-btn:hover {
+    background: rgba(255,255,255,0.14);
+    border-color: rgba(255,255,255,0.4);
+    box-shadow: 0 0 20px rgba(255,255,255,0.08);
+  }
+  .back-btn svg { width: 14px; height: 14px; }
+
+  /* ─── HERO ─── */
+  .hero {
+    padding: 140px 32px 60px;
+    text-align: center;
+    position: relative; z-index: 1;
+  }
+  .hero-label {
+    font-size: 10px;
+    letter-spacing: 0.35em;
+    color: var(--gray-400);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    animation: fadeDown 0.8s ease both;
+  }
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 10vw, 110px);
+    line-height: 0.9;
+    letter-spacing: 0.04em;
+    color: #fff;
+    text-shadow: 0 0 60px rgba(255,255,255,0.15);
+    animation: fadeDown 0.8s 0.1s ease both;
+  }
+  .hero-title span { color: var(--gray-400); }
+  .hero-sub {
+    margin-top: 20px;
+    font-size: clamp(10px, 1.5vw, 13px);
+    letter-spacing: 0.2em;
+    color: var(--gray-400);
+    text-transform: uppercase;
+    animation: fadeDown 0.8s 0.2s ease both;
+  }
+  .year-badge {
+    display: inline-block;
+    margin-top: 24px;
+    padding: 6px 20px;
+    border: 1px solid rgba(255,255,255,0.2);
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    color: #fff;
+    animation: fadeDown 0.8s 0.3s ease both;
+  }
+
+  /* ─── ROADMAP CONTAINER ─── */
+  .roadmap-wrap {
+    position: relative; z-index: 1;
+    padding: 40px 20px 100px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  /* ─── RIVER LINE ─── */
+  .river-track {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 0; bottom: 0;
+    width: var(--river-width);
+    background: rgba(255,255,255,0.06);
+    overflow: hidden;
+  }
+
+  /* Flowing particles on river */
+  .river-flow {
+    position: absolute;
+    left: 0; right: 0;
+    height: 120px;
+    background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.7), transparent);
+    animation: riverFlow 2.2s linear infinite;
+    filter: blur(1px);
+  }
+  .river-flow:nth-child(2) { animation-delay: -0.7s; opacity: 0.5; height: 80px; }
+  .river-flow:nth-child(3) { animation-delay: -1.4s; opacity: 0.3; height: 60px; }
+
+  @keyframes riverFlow {
+    from { top: -120px; }
+    to { top: 100%; }
+  }
+
+  /* ─── PHASE ITEMS ─── */
+  .phases { display: flex; flex-direction: column; gap: 0; }
+
+  .phase {
+    display: flex;
+    align-items: flex-start;
+    position: relative;
+    padding: 0 0 72px;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .phase.visible { opacity: 1; transform: translateY(0); }
+
+  /* Alternating left/right */
+  .phase:nth-child(even) { flex-direction: row-reverse; }
+
+  /* Connector from river to card */
+  .phase-connector {
+    position: absolute;
+    top: 38px;
+    height: 2px;
+    background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.3), rgba(255,255,255,0));
+    width: calc(50% - 32px);
+    left: 50%;
+    animation: connectorPulse 2.5s ease-in-out infinite;
+    transform-origin: left;
+  }
+  .phase:nth-child(even) .phase-connector {
+    left: auto; right: 50%;
+    transform-origin: right;
+    background: linear-gradient(270deg, rgba(255,255,255,0), rgba(255,255,255,0.3), rgba(255,255,255,0));
+  }
+
+  @keyframes connectorPulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+  }
+
+  /* Center dot */
+  .phase-dot {
+    position: absolute;
+    left: 50%;
+    top: 30px;
+    transform: translateX(-50%);
+    width: 18px; height: 18px;
+    background: #000;
+    border: 2px solid rgba(255,255,255,0.5);
+    border-radius: 50%;
+    z-index: 10;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .phase-dot::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.15);
+    animation: dotPulse 2s ease-in-out infinite;
+  }
+  .phase-dot.active,
+  .phase:hover .phase-dot {
+    background: #fff;
+    border-color: #fff;
+    box-shadow: 0 0 24px rgba(255,255,255,0.6), 0 0 48px rgba(255,255,255,0.2);
+  }
+
+  @keyframes dotPulse {
+    0%, 100% { transform: scale(1); opacity: 0.3; }
+    50% { transform: scale(1.5); opacity: 0.6; }
+  }
+
+  /* Card side spacer */
+  .phase-spacer { flex: 1; }
+
+  /* Card */
+  .phase-card {
+    flex: 1;
+    max-width: calc(50% - 52px);
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 28px 30px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .phase-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  /* Scan line effect */
+  .phase-card::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    top: -2px;
+    animation: scanLine 4s linear infinite;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .phase-card:hover::before { opacity: 1; }
+  .phase-card:hover::after { opacity: 1; }
+  .phase-card:hover {
+    border-color: rgba(255,255,255,0.35);
+    background: rgba(255,255,255,0.07);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 40px rgba(255,255,255,0.04), inset 0 1px 0 rgba(255,255,255,0.15);
+  }
+  .phase-card.expanded {
+    border-color: rgba(255,255,255,0.4);
+    background: rgba(255,255,255,0.06);
+    box-shadow: 0 0 60px rgba(255,255,255,0.06), inset 0 1px 0 rgba(255,255,255,0.2);
+  }
+
+  @keyframes scanLine {
+    from { top: -2px; }
+    to { top: 102%; }
+  }
+
+  .phase-month {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--gray-400);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .phase-month::before {
+    content: '';
+    display: inline-block;
+    width: 20px; height: 1px;
+    background: var(--gray-400);
+  }
+
+  .phase-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: rgba(255,255,255,0.2);
+    position: absolute;
+    top: 14px; right: 18px;
+  }
+
+  .phase-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(16px, 2.5vw, 22px);
+    line-height: 1.2;
+    color: #fff;
+    margin-bottom: 10px;
+  }
+
+  .phase-tag {
+    display: inline-block;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 3px 10px;
+    color: var(--gray-200);
+    margin-bottom: 14px;
+  }
+
+  .phase-excerpt {
+    font-size: 11px;
+    line-height: 1.7;
+    color: var(--gray-400);
+    margin-bottom: 0;
+  }
+
+  /* Expandable detail */
+  .phase-detail {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.6s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.4s ease;
+    opacity: 0;
+  }
+  .phase-card.expanded .phase-detail {
+    max-height: 600px;
+    opacity: 1;
+  }
+  .phase-detail-inner {
+    padding-top: 18px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    margin-top: 16px;
+    font-size: 11px;
+    line-height: 1.8;
+    color: var(--gray-200);
+  }
+  .phase-detail-inner ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+  }
+  .phase-detail-inner ul li {
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex; align-items: flex-start; gap: 10px;
+  }
+  .phase-detail-inner ul li::before {
+    content: '▸';
+    color: var(--gray-400);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .phase-expand-hint {
+    margin-top: 14px;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.25);
+    display: flex; align-items: center; gap: 6px;
+    transition: color 0.3s;
+  }
+  .phase-card:hover .phase-expand-hint { color: rgba(255,255,255,0.5); }
+  .phase-expand-hint svg { width: 10px; height: 10px; transition: transform 0.3s; }
+  .phase-card.expanded .phase-expand-hint svg { transform: rotate(180deg); }
+  .phase-card.expanded .phase-expand-hint { color: rgba(255,255,255,0.4); }
+
+  /* River glow at active */
+  .phase.active .phase-dot { background: #fff; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    position: relative; z-index: 1;
+    text-align: center;
+    padding: 40px 20px 60px;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: rgba(255,255,255,0.2);
+    text-transform: uppercase;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+
+  /* ─── FLOATING PARTICLES ─── */
+  .particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+  .particle {
+    position: absolute;
+    width: 1px; height: 1px;
+    background: rgba(255,255,255,0.4);
+    border-radius: 50%;
+    animation: floatParticle linear infinite;
+  }
+
+  @keyframes floatParticle {
+    0% { transform: translateY(100vh) translateX(0) scale(0); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 0.5; }
+    100% { transform: translateY(-20px) translateX(calc(var(--dx, 0) * 1px)) scale(1.5); opacity: 0; }
+  }
+
+  /* ─── KEYFRAMES ─── */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 720px) {
+    .phase, .phase:nth-child(even) {
+      flex-direction: column !important;
+      padding-left: 48px;
+      padding-right: 0;
+    }
+    .phase-card {
+      max-width: 100%;
+      width: 100%;
+    }
+    .phase-spacer { display: none; }
+    .river-track { left: 20px; transform: none; }
+    .phase-dot { left: 20px; transform: none; }
+    .phase-connector { display: none; }
+    .roadmap-wrap { padding-left: 0; padding-right: 0; }
+  }
+
+  @media (max-width: 480px) {
+    header { padding: 14px 16px; }
+    .hero { padding: 120px 16px 40px; }
+    .phase-card { padding: 20px 18px; }
+    .roadmap-wrap { padding: 30px 12px 80px; }
+  }
+
+  /* ─── SELECTED HIGHLIGHT ANIMATION ─── */
+  @keyframes cardSelect {
+    0% { box-shadow: 0 0 0 rgba(255,255,255,0); }
+    40% { box-shadow: 0 0 80px rgba(255,255,255,0.18), 0 0 160px rgba(255,255,255,0.06); }
+    100% { box-shadow: 0 0 40px rgba(255,255,255,0.08); }
+  }
+  .phase-card.just-selected { animation: cardSelect 0.8s ease; }
+
+  /* ─── DATA STREAM (decorative) ─── */
+  .data-stream {
+    position: fixed;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    opacity: 0.15;
+    pointer-events: none;
+    z-index: 2;
+    font-size: 8px;
+    letter-spacing: 0.1em;
+    color: #fff;
+    font-family: 'Space Mono', monospace;
+  }
+  .stream-line {
+    animation: streamFade 3s linear infinite;
+    white-space: nowrap;
+  }
+  .stream-line:nth-child(2) { animation-delay: -1s; }
+  .stream-line:nth-child(3) { animation-delay: -2s; }
+  @keyframes streamFade {
+    0%, 100% { opacity: 0; }
+    20%, 80% { opacity: 1; }
+  }
+
+  @media (max-width: 900px) { .data-stream { display: none; } }
+</style>
+</head>
+<body>
+
+<!-- Floating particles -->
+<div class="particles" id="particles"></div>
+
+<!-- Data stream (decorative) -->
+<div class="data-stream">
+  <div class="stream-line">AVICNKNOV_EX</div>
+  <div class="stream-line">CHAIN::ACTIVE</div>
+  <div class="stream-line">SYNC::OK</div>
+</div>
+
+<!-- Header -->
+<header>
+  <div class="logo">AVICNKNOV<span> EX</span></div>
+  <a href="index.html" class="back-btn">
+    <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M9 2L4 7l5 5"/>
+    </svg>
+    Back to Exchange
+  </a>
+</header>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-label">Official Roadmap</div>
+  <div class="hero-title">THE<br><span>ROAD</span><br>AHEAD</div>
+  <div class="hero-sub">AVICNKNOV Exchange — Strategic Timeline</div>
+  <div class="year-badge">JUNE 2026 — JUNE 2027</div>
+</div>
+
+<!-- Roadmap -->
+<div class="roadmap-wrap">
+
+  <!-- River spine -->
+  <div class="river-track">
+    <div class="river-flow"></div>
+    <div class="river-flow"></div>
+    <div class="river-flow"></div>
+  </div>
+
+  <div class="phases" id="phases">
+
+    <!-- Phase 1 -->
+    <div class="phase">
+      <div class="phase-connector"></div>
+      <div class="phase-dot"></div>
+      <div class="phase-card" onclick="togglePhase(this)">
+        <div class="phase-num">01</div>
+        <div class="phase-month">June 2026</div>
+        <div class="phase-tag">Foundation Release</div>
+        <div class="phase-title">Genesis Paper & Community Summit</div>
+        <div class="phase-excerpt">The full vision of AVICNKNOV EX goes public — exchange overview, targets, goals, future plans, and business community framework.</div>
+        <div class="phase-detail">
+          <div class="phase-detail-inner">
+            A detailed whitepaper is released introducing the full AVICNKNOV Exchange ecosystem. The community gathers for a pivotal summit where strategic directions are locked in. Special position papers may also be issued.
+            <ul>
+              <li>Full exchange overview & mission document released</li>
+              <li>Business goals, targets, and future plans published</li>
+              <li>Community structure & partnership framework announced</li>
+              <li>Community Summit hosted — all major topics on the table</li>
+              <li>Special position/strategy papers potentially released</li>
+            </ul>
+            <em style="color:rgba(255,255,255,0.3);font-size:10px;">Exact date within June TBD — announcement 10–15 days prior.</em>
+          </div>
+        </div>
+        <div class="phase-expand-hint">
+          Click to expand
+          <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3.5L5 6.5 8 3.5"/></svg>
+        </div>
+      </div>
+      <div class="phase-spacer"></div>
+    </div>
+
+    <!-- Phase 2 -->
+    <div class="phase">
+      <div class="phase-connector"></div>
+      <div class="phase-dot"></div>
+      <div class="phase-spacer"></div>
+      <div class="phase-card" onclick="togglePhase(this)">
+        <div class="phase-num">02</div>
+        <div class="phase-month">July 2026</div>
+        <div class="phase-tag">Brand Identity</div>
+        <div class="phase-title">Official Visual Identity & Song Video</div>
+        <div class="phase-excerpt">AVICNKNOV EX unveils its full brand presence with a proper production-quality song video — the first visual identity of the exchange goes live.</div>
+        <div class="phase-detail">
+          <div class="phase-detail-inner">
+            The official song video drops — a cinematic brand statement that communicates the exchange's identity, culture, and community spirit. The full visual system of AVICNKNOV EX comes alive.
+            <ul>
+              <li>Official AVICNKNOV EX song video released</li>
+              <li>Brand identity & visual language fully launched</li>
+              <li>Community engagement campaign begins</li>
+            </ul>
+            <em style="color:rgba(255,255,255,0.3);font-size:10px;">July 2026 — exact date confirmed 10–15 days before.</em>
+          </div>
+        </div>
+        <div class="phase-expand-hint">
+          Click to expand
+          <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3.5L5 6.5 8 3.5"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 3 -->
+    <div class="phase">
+      <div class="phase-connector"></div>
+      <div class="phase-dot"></div>
+      <div class="phase-card" onclick="togglePhase(this)">
+        <div class="phase-num">03</div>
+        <div class="phase-month">July – August 2026</div>
+        <div class="phase-tag">Strategic Update</div>
+        <div class="phase-title">Final Roadmap Version Released</div>
+        <div class="phase-excerpt">The definitive, updated roadmap for AVICNKNOV EX drops — replacing all earlier drafts with the official long-term strategic path.</div>
+        <div class="phase-detail">
+          <div class="phase-detail-inner">
+            This milestone marks the transition from planning to execution. The final roadmap document is the authoritative reference for all community members, partners, and investors going forward.
+            <ul>
+              <li>Final v2 roadmap document published</li>
+              <li>All previous drafts superseded</li>
+              <li>Community AMA / Q&A held around release</li>
+              <li>Timeline: Could arrive late July or August — watch for announcement</li>
+            </ul>
+            <em style="color:rgba(255,255,255,0.3);font-size:10px;">Jul/Aug 2026 — date to be revealed 10–15 days prior.</em>
+          </div>
+        </div>
+        <div class="phase-expand-hint">
+          Click to expand
+          <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3.5L5 6.5 8 3.5"/></svg>
+        </div>
+      </div>
+      <div class="phase-spacer"></div>
+    </div>
+
+    <!-- Phase 4 -->
+    <div class="phase">
+      <div class="phase-connector"></div>
+      <div class="phase-dot"></div>
+      <div class="phase-spacer"></div>
+      <div class="phase-card" onclick="togglePhase(this)">
+        <div class="phase-num">04</div>
+        <div class="phase-month">August 2026</div>
+        <div class="phase-tag">Core Document</div>
+        <div class="phase-title">White Paper Release</div>
+        <div class="phase-excerpt">The full technical and strategic whitepaper for AVICNKNOV Exchange is released — laying out architecture, tokenomics, and the complete economic model.</div>
+        <div class="phase-detail">
+          <div class="phase-detail-inner">
+            The whitepaper is the definitive technical document. Everything about the exchange's underlying mechanics, security model, economic design, and governance is detailed here for the world to read and verify.
+            <ul>
+              <li>Full technical architecture document published</li>
+              <li>Exchange mechanics, liquidity model, and fee structure explained</li>
+              <li>Economic model & value proposition formalized</li>
+              <li>Open for public review and audit discussion</li>
+            </ul>
+            <em style="color:rgba(255,255,255,0.3);font-size:10px;">End of August 2026. Announcement 10–15 days prior.</em>
+          </div>
+        </div>
+        <div class="phase-expand-hint">
+          Click to expand
+          <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3.5L5 6.5 8 3.5"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 5 -->
+    <div class="phase">
+      <div class="phase-connector"></div>
+      <div class="phase-dot"></div>
+      <div class="phase-card" onclick="togglePhase(this)">
+        <div class="phase-num">05</div>
+        <div class="phase-month">September 2026</div>
+        <div class="phase-tag">Major Launch</div>
+        <div class="phase-title">Exchange Goes Live</div>
+        <div class="phase-excerpt">AVICNKNOV EX officially launches and becomes available to all users worldwide. The exchange is open — trading begins.</div>
+        <div class="phase-detail">
+          <div class="phase-detail-inner">
+            This is the moment everything has been building toward. AVICNKNOV Exchange opens its doors. Users can onboard, trade, and participate in the ecosystem. Full platform access provided to the community.
+            <ul>
+              <li>AVICNKNOV EX publicly launched</li>
+              <li>Full user access and onboarding opens</li>
+              <li>Live trading and platform features activated</li>
+              <li>Community migration and onboarding campaign</li>
+              <li>Support infrastructure live</li>
+            </ul>
+            <em style="color:rgba(255,255,255,0.3);font-size:10px;">September 2026 — countdown begins 10–15 days prior.</em>
+          </div>
+        </div>
+        <div class="phase-expand-hint">
+          Click to expand
+          <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3.5L5 6.5 8 3.5"/></svg>
+        </div>
+      </div>
+      <div class="phase-spacer"></div>
+    </div>
+
+    <!-- Phase 6 -->
+    <div class="phase">
+      <div class="phase-connector"></div>
+      <div class="phase-dot"></div>
+      <div class="phase-spacer"></div>
+      <div class="phase-card" onclick="togglePhase(this)">
+        <div class="phase-num">06</div>
+        <div class="phase-month">November 2026</div>
+        <div class="phase-tag">Research Paper</div>
+        <div class="phase-title">AVQ Paper Publication</div>
+        <div class="phase-excerpt">A specialized research and strategic paper — the AVQ Paper — is released, providing advanced insight into the quantitative and analytical frameworks of AVICNKNOV EX.</div>
+        <div class="phase-detail">
+          <div class="phase-detail-inner">
+            The AVQ Paper brings data-driven depth to the AVICNKNOV ecosystem. This document explores advanced topics including trading mechanics, market analysis frameworks, and exchange health metrics.
+            <ul>
+              <li>AVQ (Advanced Quantitative) paper published</li>
+              <li>Deep-dive into trading model and analytics</li>
+              <li>Community and institutional review period opens</li>
+            </ul>
+            <em style="color:rgba(255,255,255,0.3);font-size:10px;">November 2026 — details shared 10–15 days in advance.</em>
+          </div>
+        </div>
+        <div class="phase-expand-hint">
+          Click to expand
+          <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3.5L5 6.5 8 3.5"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 7 -->
+    <div class="phase">
+      <div class="phase-connector"></div>
+      <div class="phase-dot"></div>
+      <div class="phase-card" onclick="togglePhase(this)">
+        <div class="phase-num">07</div>
+        <div class="phase-month">December 2026</div>
+        <div class="phase-tag">Platform Expansion</div>
+        <div class="phase-title">New Platform Launch</div>
+        <div class="phase-excerpt">A brand new platform enters the AVICNKNOV ecosystem — expanding the suite of tools, services, and experiences available to the community.</div>
+        <div class="phase-detail">
+          <div class="phase-detail-inner">
+            December brings a significant platform expansion. A new, distinct product within the AVICNKNOV family is introduced — details are revealed closer to the date. Expect something bold.
+            <ul>
+              <li>New platform product launched</li>
+              <li>Ecosystem expansion deepens</li>
+              <li>Integration with the main exchange</li>
+              <li>Early access / beta for existing community members</li>
+            </ul>
+            <em style="color:rgba(255,255,255,0.3);font-size:10px;">December 2026 — announcement 10–15 days before launch.</em>
+          </div>
+        </div>
+        <div class="phase-expand-hint">
+          Click to expand
+          <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3.5L5 6.5 8 3.5"/></svg>
+        </div>
+      </div>
+      <div class="phase-spacer"></div>
+    </div>
+
+    <!-- Phase 8 -->
+    <div class="phase">
+      <div class="phase-connector"></div>
+      <div class="phase-dot"></div>
+      <div class="phase-spacer"></div>
+      <div class="phase-card" onclick="togglePhase(this)">
+        <div class="phase-num">08</div>
+        <div class="phase-month">January 2027</div>
+        <div class="phase-tag">Pro Launch</div>
+        <div class="phase-title">Pro Web Model + Mobile App</div>
+        <div class="phase-excerpt">The full Pro version of AVICNKNOV EX launches on web, and the official mobile app becomes available on Play Store — the exchange in your pocket.</div>
+        <div class="phase-detail">
+          <div class="phase-detail-inner">
+            The exchange reaches full maturity. The Pro Web model brings advanced trading tools and features for power users. Simultaneously, the mobile app launches on Android (Play Store) with full exchange functionality.
+            <ul>
+              <li>AVICNKNOV EX Pro Web Model — final version live</li>
+              <li>Android app available on Google Play Store</li>
+              <li>Full mobile trading experience enabled</li>
+              <li>Pro features: advanced charts, order types, analytics</li>
+            </ul>
+            <em style="color:rgba(255,255,255,0.3);font-size:10px;">January 2027 — countdown shared 10–15 days prior.</em>
+          </div>
+        </div>
+        <div class="phase-expand-hint">
+          Click to expand
+          <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3.5L5 6.5 8 3.5"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 9 -->
+    <div class="phase">
+      <div class="phase-connector"></div>
+      <div class="phase-dot"></div>
+      <div class="phase-card" onclick="togglePhase(this)">
+        <div class="phase-num">09</div>
+        <div class="phase-month">February 2027</div>
+        <div class="phase-tag">Community Contact</div>
+        <div class="phase-title">Direct Contact Initiative</div>
+        <div class="phase-excerpt">A dedicated contact and outreach initiative is established — bridging AVICNKNOV EX directly with its global community in a structured, transparent way.</div>
+        <div class="phase-detail">
+          <div class="phase-detail-inner">
+            A formal channel and program is established to directly connect with community members, partners, and stakeholders. This is about building real relationships — not just notifications.
+            <ul>
+              <li>Structured community contact program launched</li>
+              <li>Direct feedback mechanism established</li>
+              <li>Partner and institutional outreach begins</li>
+              <li>Community representatives program potentially introduced</li>
+            </ul>
+            <em style="color:rgba(255,255,255,0.3);font-size:10px;">February 2027 — confirmed 10–15 days before.</em>
+          </div>
+        </div>
+        <div class="phase-expand-hint">
+          Click to expand
+          <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3.5L5 6.5 8 3.5"/></svg>
+        </div>
+      </div>
+      <div class="phase-spacer"></div>
+    </div>
+
+    <!-- Phase 10 -->
+    <div class="phase">
+      <div class="phase-connector"></div>
+      <div class="phase-dot"></div>
+      <div class="phase-spacer"></div>
+      <div class="phase-card" onclick="togglePhase(this)">
+        <div class="phase-num">10</div>
+        <div class="phase-month">March 2027</div>
+        <div class="phase-tag">Flagship Event</div>
+        <div class="phase-title">AVKN Community PQS</div>
+        <div class="phase-excerpt">The most important milestone in the roadmap. The AVKN Community PQS is an unprecedented event built entirely for the community — expect something historic.</div>
+        <div class="phase-detail">
+          <div class="phase-detail-inner">
+            <strong style="color:#fff">THIS IS THE BIG ONE.</strong><br><br>
+            The AVKN Community PQS is the single most important event in AVICNKNOV Exchange's history. Designed entirely for the community — this is where the full power of the ecosystem is demonstrated. Details are kept deliberately guarded for maximum impact.
+            <ul>
+              <li>Largest community event in AVICNKNOV history</li>
+              <li>PQS framework unveiled and activated</li>
+              <li>Full community participation event</li>
+              <li>Something this community has never seen before</li>
+              <li>All community members should be present</li>
+            </ul>
+            <em style="color:rgba(255,255,255,0.3);font-size:10px;">March 2027 — prepare yourself. 10–15 days notice given.</em>
+          </div>
+        </div>
+        <div class="phase-expand-hint">
+          Click to expand
+          <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3.5L5 6.5 8 3.5"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 11 -->
+    <div class="phase">
+      <div class="phase-connector"></div>
+      <div class="phase-dot"></div>
+      <div class="phase-card" onclick="togglePhase(this)">
+        <div class="phase-num">11</div>
+        <div class="phase-month">April 2027</div>
+        <div class="phase-tag">Operations</div>
+        <div class="phase-title">Financial Infrastructure Setup</div>
+        <div class="phase-excerpt">AVICNKNOV EX establishes its formal financial operations infrastructure — bringing professional-grade accounting and financial management into the ecosystem.</div>
+        <div class="phase-detail">
+          <div class="phase-detail-inner">
+            This milestone secures the operational and financial backbone of the exchange. Professional accountancy and financial oversight systems are brought in to ensure long-term trust and sustainability.
+            <ul>
+              <li>Formal accounting and financial oversight established</li>
+              <li>Compliance infrastructure strengthened</li>
+              <li>Financial reporting framework set up</li>
+              <li>Audit-ready systems activated</li>
+            </ul>
+            <em style="color:rgba(255,255,255,0.3);font-size:10px;">April 2027 — date confirmed 10–15 days prior.</em>
+          </div>
+        </div>
+        <div class="phase-expand-hint">
+          Click to expand
+          <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3.5L5 6.5 8 3.5"/></svg>
+        </div>
+      </div>
+      <div class="phase-spacer"></div>
+    </div>
+
+    <!-- Phase 12 -->
+    <div class="phase">
+      <div class="phase-connector"></div>
+      <div class="phase-dot"></div>
+      <div class="phase-spacer"></div>
+      <div class="phase-card" onclick="togglePhase(this)">
+        <div class="phase-num">12</div>
+        <div class="phase-month">May 2027</div>
+        <div class="phase-tag">Classified</div>
+        <div class="phase-title">The Unexpected — Something Unimaginable</div>
+        <div class="phase-excerpt">The most dangerous, most unexpected thing AVICNKNOV EX has ever done. This is deliberately kept secret. You will find out 2–3 days before May.</div>
+        <div class="phase-detail">
+          <div class="phase-detail-inner">
+            <strong style="color:#fff">CONFIDENTIAL UNTIL REVEALED.</strong><br><br>
+            This milestone is intentionally undisclosed. Whatever it is — it will be the boldest move AVICNKNOV EX has made. The community will receive details just 2–3 days before this event. Be ready. Be watchful. Nothing about this is ordinary.
+            <ul>
+              <li>Details deliberately withheld</li>
+              <li>Will be revealed 2–3 days before the event</li>
+              <li>Expected to be the most impactful announcement</li>
+              <li>All community members should stay alert in May 2027</li>
+            </ul>
+            <em style="color:rgba(255,255,255,0.3);font-size:10px;">MAY 2027 — Stay alert. Watch your notifications.</em>
+          </div>
+        </div>
+        <div class="phase-expand-hint">
+          Click to expand
+          <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3.5L5 6.5 8 3.5"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 13 -->
+    <div class="phase">
+      <div class="phase-connector"></div>
+      <div class="phase-dot"></div>
+      <div class="phase-card" onclick="togglePhase(this)">
+        <div class="phase-num">13</div>
+        <div class="phase-month">June 2027</div>
+        <div class="phase-tag">Completion</div>
+        <div class="phase-title">Light Master Roadmap</div>
+        <div class="phase-excerpt">The cycle completes. The Light Master Roadmap is unveiled — a living, evolving strategic document for the next era of AVICNKNOV Exchange.</div>
+        <div class="phase-detail">
+          <div class="phase-detail-inner">
+            One full year since launch. AVICNKNOV EX has grown, evolved, and delivered. The Light Master Roadmap isn't just a document — it's the beginning of a new chapter. The foundation is set. The ecosystem is running. What comes next is bigger.
+            <ul>
+              <li>Light Master Roadmap released — Year 2 begins</li>
+              <li>Community reflection and Year 1 review</li>
+              <li>New targets and vision for next cycle announced</li>
+              <li>Full ecosystem audit and progress report</li>
+            </ul>
+            <em style="color:rgba(255,255,255,0.3);font-size:10px;">June 2027 — the journey continues.</em>
+          </div>
+        </div>
+        <div class="phase-expand-hint">
+          Click to expand
+          <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3.5L5 6.5 8 3.5"/></svg>
+        </div>
+      </div>
+      <div class="phase-spacer"></div>
+    </div>
+
+  </div><!-- /phases -->
+</div><!-- /roadmap-wrap -->
+
+<footer>
+  &copy; 2026 AVICNKNOV EX — All Milestones Subject to Confirmation 10–15 Days Prior
+</footer>
+
+<script>
+  // ─── PARTICLES ───
+  const pContainer = document.getElementById('particles');
+  for (let i = 0; i < 40; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.cssText = `
+      left: ${Math.random() * 100}%;
+      width: ${Math.random() * 2 + 1}px;
+      height: ${Math.random() * 2 + 1}px;
+      animation-duration: ${8 + Math.random() * 12}s;
+      animation-delay: ${-Math.random() * 20}s;
+      --dx: ${(Math.random() - 0.5) * 100};
+    `;
+    pContainer.appendChild(p);
+  }
+
+  // ─── SCROLL REVEAL ───
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+  document.querySelectorAll('.phase').forEach((el, i) => {
+    el.style.transitionDelay = `${i * 0.04}s`;
+    observer.observe(el);
+  });
+
+  // ─── TOGGLE PHASE CARD ───
+  function togglePhase(card) {
+    const isExpanded = card.classList.contains('expanded');
+
+    // Close all
+    document.querySelectorAll('.phase-card.expanded').forEach(c => {
+      if (c !== card) c.classList.remove('expanded');
+    });
+
+    // Toggle clicked
+    card.classList.toggle('expanded', !isExpanded);
+
+    // Activate dot
+    document.querySelectorAll('.phase-dot').forEach(d => d.classList.remove('active'));
+    if (!isExpanded) {
+      card.closest('.phase').querySelector('.phase-dot').classList.add('active');
+      card.classList.add('just-selected');
+      setTimeout(() => card.classList.remove('just-selected'), 800);
+    }
+  }
+
+  // ─── KEYBOARD SUPPORT ───
+  document.querySelectorAll('.phase-card').forEach(card => {
+    card.setAttribute('tabindex', '0');
+    card.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        togglePhase(card);
+      }
+    });
+  });
+</script>
+</body>
+</html>
